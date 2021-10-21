@@ -1,0 +1,152 @@
+﻿@using Microsoft.EntityFrameworkCore;
+@using RosreestDocks.Contexts
+@using System;
+@inject DataBaseContext db
+@{
+    ViewData["Title"] = "Home Page";
+    var newlist = db.Request.Include(a => a.Status).Where(x => x.DockType.Id == 1).OrderBy(o => o.DocName).ToList(); // Н/А
+    var letterlist = db.Request.Include(a => a.Status).Where(x => x.DockType.Id == 2).OrderBy(o => o.DocName).ToList(); //письмо
+    var zaproslist = db.Request.Include(a => a.Status).Where(x=>x.DockType.Id == 3).OrderBy(o=>o.DocName).ToList(); //запрос ЦА 
+    var rasporlist = db.Request.Include(a => a.Status).Where(x=>x.DockType.Id == 4).OrderBy(o=>o.DocName).ToList(); //распоряжения
+    var soprovodlist = db.Request.Include(a => a.Status).Where(x=>x.DockType.Id == 5).OrderBy(o=>o.DocName).ToList(); //распоряжения
+}
+
+
+
+<div class="container-flex">
+    <div class="row">
+        <div class="col-4">
+            <h3 class="h3_index"><i class="fas fa-exclamation-triangle"></i>Без ответа</h3>
+            <details>
+                <summary>Подробнее</summary> 
+                <table class="table table-sm table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col" style="width:20%;">#</th>        
+                            <th scope="col" style="width:20%;">Статус</th>   
+                            <th scope="col" style="width:25%;">ВР</th>   
+                            <th scope="col" style="width:35%;">Отправленный</th>
+                        </tr>
+                    </thead>
+                <tbody>
+                           @{foreach(var a in newlist) {
+                           <tr>
+                               <td> <a href="/data/editappealconsider/@a.Id">@a.DocName</a> </td>
+                               <td>@a.Status.Name</td>
+                               <td>@a.WorkNumber</td>
+                               <td>@a.SendNumber</td>
+                           </tr>
+                           } }              
+                </tbody>
+                </table>
+            </details>
+        </div>
+        <div class="col-4">
+            <h3 class="h3_index"><i class="fas fa-envelope"></i>Письма</h3>
+            <details>
+                <summary>Подробнее</summary> 
+                <table class="table table-sm table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col" style="width:20%;">#</th>        
+                            <th scope="col" style="width:20%;">Статус</th>   
+                            <th scope="col" style="width:25%;">ВР</th>   
+                            <th scope="col" style="width:35%;">Отправленный</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                               @{foreach(var a in letterlist) {
+                               <tr>
+                                   <td> <a href="/data/editappealconsider/@a.Id">@a.DocName</a> </td>
+                                   <td>@a.Status.Name</td>
+                                   <td>@a.WorkNumber</td>
+                                   <td>@a.SendNumber</td>
+                               </tr>
+                               } }              
+                    </tbody>
+                </table>
+            </details>
+        </div>
+        <div class="col-4">
+            <h3 class="h3_index"><i class="fas fa-sync"></i>Запросы ЦА</h3>
+            <details>
+                <summary>Подробнее</summary> 
+                <table class="table table-sm table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col" style="width:20%;">#</th>        
+                            <th scope="col" style="width:20%;">Статус</th>   
+                            <th scope="col" style="width:25%;">ВР</th>   
+                            <th scope="col" style="width:35%;">Отправленный</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                               @{foreach(var a in zaproslist) {
+                               <tr>
+                                   <td> <a href="/data/editappealconsider/@a.Id">@a.DocName</a> </td>
+                                   <td>@a.Status.Name</td>
+                                   <td>@a.WorkNumber</td>
+                                   <td>@a.SendNumber</td>
+                               </tr>
+                               } }              
+                    </tbody>
+                </table>
+            </details>
+        </div>
+    </div>
+
+    <div class="row" style="margin-top:50px;">
+        <div class="col-4">
+            <h3 class="h3_index"><i class="fas fa-scroll"></i>Распоряжения</h3>
+            <details>
+                <summary>Подробнее</summary> 
+                <table class="table table-sm table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col" style="width:20%;">#</th>        
+                            <th scope="col" style="width:20%;">Статус</th>   
+                            <th scope="col" style="width:25%;">ВР</th>   
+                            <th scope="col" style="width:35%;">Отправленный</th>
+                        </tr>
+                    </thead>
+                <tbody>
+                           @{foreach(var a in rasporlist) {
+                           <tr>
+                               <td> <a href="/data/editappealconsider/@a.Id">@a.DocName</a> </td>
+                               <td>@a.Status.Name</td>
+                               <td>@a.WorkNumber</td>
+                               <td>@a.SendNumber</td>
+                           </tr>
+                           } }              
+                </tbody>
+                </table>
+            </details>
+        </div>
+        <div class="col-4">
+            <h3 class="h3_index"><i class="fas fa-info-circle"></i>Сопроводительные</h3>
+            <details>
+                <summary>Подробнее</summary> 
+                <table class="table table-sm table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col" style="width:20%;">#</th>        
+                            <th scope="col" style="width:20%;">Статус</th>   
+                            <th scope="col" style="width:25%;">ВР</th>   
+                            <th scope="col" style="width:35%;">Отправленный</th>
+                        </tr>
+                    </thead>
+                <tbody>
+                           @{foreach(var a in soprovodlist) {
+                           <tr>
+                               <td> <a href="/data/editappealconsider/@a.Id">@a.DocName</a> </td>
+                               <td>@a.Status.Name</td>
+                               <td>@a.WorkNumber</td>
+                               <td>@a.SendNumber</td>
+                           </tr>
+                           } }              
+                </tbody>
+                </table>
+            </details>
+        </div>
+    </div>
+</div>

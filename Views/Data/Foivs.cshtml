@@ -1,0 +1,79 @@
+﻿@model List<FoivModel>
+@{
+    ViewData["Title"] = "ФОИВ`ы";
+}
+@{
+    string Name = "Foiv";
+    string ActionNameForUpdate = "ShowUpdate" + Name +"Modal";
+    string ActionNameForAdd = "ShowCreate" + Name +"Modal";
+    string modal = "update" +Name+ "Modal";
+    string content = "update" + Name + "Content";
+    string createmodal = "create" +Name+ "Modal";
+    string createcontent = "create" + Name + "Content";
+    string removeaction = "Remove" + Name;
+}
+
+   <h3 class="text-center category">ФОИВ`ы</h3>
+
+   <button class="btn btn-outline-primary btn-sm create" data-name="@Name" asp-controller="Data" asp-action="@ActionNameForAdd">Добавить</button>
+<table id="foivtable" class="table table-sm table-hover">
+    <thead>
+        <tr>
+            <th scope="col" style="width:5%;">#</th>
+            <th scope="col" style="width:75%;">Имя</th>
+            <th scope="col" style="width:20%;"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var foiv in Model)
+        {
+            <tr>
+                <td>@foiv.Id </td>
+                <td>@foiv.Name </td>
+                <td class="align-middle">
+                    <button class="btn btn-outline-primary btn-sm update" asp-controller="Data" data-name="@Name" asp-action="@ActionNameForUpdate" asp-route-id="@foiv.Id" >Правка</button>
+                    <button type="button" class="btn btn-outline-danger btn-sm"
+                            data-toggle="modal" data-target="#comfirmDelete" data-action="@removeaction" data-name="ФОИВ"
+                            data-item="@foiv.Id">Удалить </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Modal Add Role-->
+<div id="@createmodal" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div id="@createcontent" class="modal-dialog modal-lg"></div>
+</div>
+
+<!-- Modal Update Role-->
+<div id="@modal" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div id="@content" class="modal-dialog modal-lg"></div>
+</div>
+
+
+
+<!-- Model Comfirm Delete  -->
+<div class="bd-example">
+    <div class="modal fade" id="comfirmDelete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="exampleModalLabel"></h4>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <form method="post">
+                        <input type="hidden" id="itemId" />
+                        <input type="hidden" id="itemClass" />
+                        <button id="modalDeleteButton"
+                                type="submit"
+                                class="btn btn-danger">
+                            Удалить
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

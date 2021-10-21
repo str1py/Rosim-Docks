@@ -1,0 +1,246 @@
+﻿@using RosreestDocks.Interfaces
+@using RosreestDocks.Models
+@using RosreestDocks.Contexts
+@using RosreestDocks.Helpers
+@model ZaprosCA
+@inject DataBaseContext db
+
+@{
+    ViewData["Title"] = "Запрос поручения";
+}
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <p>Поля отмеченные <strong>*</strong> обязательны к заполнению</p>
+</div>
+<div>
+    <form asp-action="CreateZaprosCA" asp-controller="Home" method="post" runat="server">
+       <div class="form-group"> 
+            <h3>Общие</h3>
+            <div>
+                <label>Снятие с права</label>
+                <select class="form-select select" asp-for="ManageRightsFrom.Id"  asp-items="@Model.ManageRightsList"></select>                                                      
+                <span asp-validation-for="ManageRightsFrom.Id"></span>
+
+                <label>Передача на право</label>
+                <select class="form-select select" asp-for="ManageRightsTo.Id"   asp-items="@Model.ManageRightsList"></select>                                                      
+                <span asp-validation-for="ManageRightsTo.Id"></span>
+            </div>
+             <div>
+                <label>Закрепление</label>
+                <select  class="form-select select" asp-for="TypeOfProperty.Id"   asp-items="@Model.TypeOfPropertyList"></select>                                                      
+                <span asp-validation-for="TypeOfProperty.Id"></span>         
+            </div>
+             <div>
+                <label>Количество объектов</label>
+                <select  class="form-select select" asp-for="HowMuch"   asp-items="@Model.HowMuchObjects"></select>                                                      
+                <span asp-validation-for="TypeOfProperty.Id"></span>         
+            </div>
+            <label for="inp" class="inp" style="max-width: 500px;">
+                <input class="fields"  asp-for="PropertyDiscription" placeholder="&nbsp;" required/>
+                <span class="label">Описние имущества*</span>
+                <span class="focus-bg"></span>
+            </label>  
+            <label for="inp" class="inp" style="max-width: 500px;">
+                <input class="fields"  asp-for="AdditionalInfo" placeholder="&nbsp;" required/>
+                <span class="label">Расположенных по адресу...</span>
+                <span class="focus-bg"></span>
+
+            </label>  
+            
+       </div>
+
+@*       ПЕРЕДАЮЩАЯ СТОРОНА*@
+       <div class="form-group">
+            <h3>Обращающаяся сторона</h3>
+            <div>             
+                <div class="container">
+                    <div class="row">
+                        <div class="col-2" style="padding-left:10px;">
+                             <input type="hidden" asp-for="TransferAgency.Id" id="transferagid" />
+                             <select id="transferacronym" class="form-select select" asp-for="TransferAgency.Acronym.Id" asp-items="@Model.TransferAgencyAcromymList"></select>  
+                        </div>
+                        <div class="col-10">
+                                <input asp-for="TransferAgency.Name" class="form-control" list="transferlist" 
+                                id="transfernameinput" placeholder="Название организации" autocomplete="on" onChange="get_data_transfer()">
+                                <datalist id="transferlist" style="height:5.1em;overflow:hidden">
+                                    @{foreach(var transfer in @Model.TransferAgencyList) { <option value="@transfer.Text"></option>}}
+                                </datalist>
+                            </div>
+                        </div>                                                  
+                    </div>
+        
+
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox"  asp-for="TransferAgencyCustomName" id="gridTransferCustom" >
+                  <label class="form-check-label" for="gridTransferCustom">
+                    Свое название
+                  </label>
+                </div>
+
+                <div id="TransferCustomNames" style="display:none">
+                    <label for="inp" class="inp"  style="max-width: 700px;">
+                        <input id="transferimpad"  class="fields" asp-for="TransferAgency.NameImPad" placeholder="&nbsp;"/>
+                        <span class="label">Название организации в Им.пад*</span>
+                        <span class="focus-bg"></span>
+                    </label>
+
+                    <label for="inp" class="inp"  style="max-width: 700px;">
+                        <input id="transfertvorpad"  class="fields" asp-for="TransferAgency.NameTvorPad" placeholder="&nbsp;"/>
+                        <span class="label">Название организации в Твор.пад*</span>
+                        <span class="focus-bg"></span>
+                    </label>
+                </div>
+
+                <label for="fields" class="inp"  style="max-width: 400px;">
+                    <input id="transfernameaddinfo" class="fields" asp-for="TransferAgency.AddInfo" placeholder="&nbsp;" />
+                    <span class="label">Министрерства здравоохранения...</span>
+                    <span class="focus-bg"></span>
+                </label>   
+            </div>
+
+           <div>               
+                <label for="inp" class="inp" style="max-width: 500px;">
+                        <input id="transferadress" class="fields"  type="adress" asp-for="TransferAgency.Adress" placeholder="&nbsp;" required/>
+                        <span class="label">Адрес без города и индекса*</span>
+                        <span class="focus-bg"></span>
+                        <span asp-validation-for="TransferAgency.Adress" class="text-danger"></span>
+                </label>             
+                
+                <label for="inp" class="inp">
+                        <input id="transferzip" class="fields" asp-for="TransferAgency.CityAndZip" placeholder="&nbsp;" required/>
+                        <span class="label">г. Москва, 103445*</span>
+                        <span class="focus-bg"></span>
+                        <span asp-validation-for="TransferAgency.CityAndZip" class="text-danger"></span>
+                </label>           
+           </div>
+
+           <div>
+                <label for="inp" class="inp">
+                        <input class="fields" asp-for="TransferAgency.AppealDate" placeholder="&nbsp;" required/>
+                        <span class="label">01 марта 2021*</span>
+                        <span class="focus-bg"></span>
+                        <span asp-validation-for="TransferAgency.AppealDate" class="text-danger"></span>
+                </label>
+                
+
+                <label for="inp" class="inp">
+                        <input class="fields" asp-for="TransferAgency.AppealNumber" placeholder="&nbsp;" required/>
+                        <span class="label">124-002/5*</span>
+                        <span class="focus-bg"></span>
+                        <span asp-validation-for="TransferAgency.AppealNumber" class="text-danger"></span>
+                </label>        
+           </div>
+       </div>
+ @*      КОНЕЦ ПЕРЕДАЮЩЕЙ СТОРОНЫ*@
+
+
+
+
+        <div class="form-group">
+            <h3>Вторая сторона</h3>
+            <div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-2" style="padding-left:10px;">
+                             <input type="hidden" asp-for="RecipientAgency.Id" id="recipientagid" />
+                             <select id="recipientacronym" style="displat:inline !important;"   class="form-select select" asp-for="RecipientAgency.Acronym.Id" asp-items="@Model.RecipientAgencyAcromymList"></select>  
+                        </div>
+                        <div class="col-10">
+                                <input asp-for="RecipientAgency.Name" class="form-control" list="recipientlist" 
+                                id="recipientnameinput" placeholder="Название организации" autocomplete="on" onChange="get_data_recipient()">
+                                <datalist id="recipientlist" style="height:5.1em;overflow:hidden">
+                                    @{foreach(var recipient in @Model.RecipientAgencyList){ <option value="@recipient.Text"></option>} }
+                                </datalist>
+                         </div>                                                
+                    </div>
+                </div>
+
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox"  asp-for="RecipientAgencyCustomName" id="gridRecipientCustom" >
+                  <label class="form-check-label" for="gridRecipientCustom">
+                    Свое название
+                  </label>
+                </div>
+
+
+                <div id="RecipientCustomNames" style="display:none">
+                    <label   for="inp" class="inp"  style="max-width: 700px;">
+                        <input id="recipientimpad" class="fields" asp-for="RecipientAgency.NameImPad" placeholder="&nbsp;"/>
+                        <span class="label">Название организации в Им.пад*</span>
+                        <span class="focus-bg"></span>
+                    </label>
+
+                    <label for="inp" class="inp"  style="max-width: 700px;">
+                        <input id="recipienttvorpad" class="fields" asp-for="RecipientAgency.NameTvorPad" placeholder="&nbsp;"/>
+                        <span class="label">Название организации в Твор.пад*</span>
+                        <span class="focus-bg"></span>
+                    </label>
+                </div> 
+                
+                <label for="inp" class="inp"  style="max-width: 400px;">
+                    <input id="recipientaddinfo" class="fields" asp-for="RecipientAgency.AddInfo" placeholder="&nbsp;"/>
+                    <span class="label">Министрерства здравоохранения...</span>
+                    <span class="focus-bg"></span>
+                </label>
+
+            </div>
+        </div>
+
+
+@*       ОБРАЩЕНИЕ*@
+        <div class="form-group">
+            <label>Сейчас на балансе у </label>
+            <select class="form-select select" asp-for="WhoApplied" asp-items="@Model.SideList"></select>         
+        </div>
+
+         <input type="submit"  class="btn btn-primary button-main" value="Создать"/>
+    </form>
+</div>
+
+<script src="~/js/jquery.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/js/jquery.dropdown.min.js"></script>
+<script src="~/js/site.js"></script>
+<script>
+    function get_data_transfer(){
+
+        var val = document.getElementById("transfernameinput").value;
+        var json = @Html.Raw(Json.Serialize(@Model.TransferAgencyNormalList));
+        var sel = json.filter(element => element.name == val);
+        console.log(sel);
+
+        $('#transferacronym option[value="' + sel[0].acronym.id + '"]').prop('selected', true);
+        document.getElementById("transferagid").value = sel[0].id;
+        document.getElementById("transferadress").value = sel[0].adress;
+        document.getElementById("transferzip").value = sel[0].cityAndZip;
+        document.getElementById("transfernameaddinfo").value = sel[0].addInfo;    
+
+        if($('#gridTransferCustom').is(':checked') == true){
+            document.getElementById("transferimpad").value = sel[0].nameImPad;
+            document.getElementById("transfertvorpad").value = sel[0].nameTvorPad;    
+        }
+    }
+
+    function get_data_recipient(){
+        var val = document.getElementById("recipientnameinput").value;
+        var json = @Html.Raw(Json.Serialize(@Model.RecipientAgencyNormalList));
+        var sel = json.filter(element => element.name == val);
+
+       $('#recipientacronym option[value="' + sel[0].acronym.id + '"]').prop('selected', true);
+
+        document.getElementById("recipientagid").value = sel[0].id;
+        document.getElementById("recipientinn").value = sel[0].agencyINN;
+        document.getElementById("recipientaddinfo").value = sel[0].addInfo;    
+
+        if($('#gridRecipientCustom').is(':checked') == true){
+            document.getElementById("recipientimpad").value = sel[0].nameImPad;
+            document.getElementById("recipienttvorpad").value = sel[0].nameTvorPad;    
+        }
+    }
+
+
+
+</script>
+

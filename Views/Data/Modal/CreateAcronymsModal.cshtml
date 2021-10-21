@@ -1,0 +1,65 @@
+﻿@model AgencyAcronymModel
+
+<div class="modal-content admin-modal ">
+    <div class="modal-body">
+        <div class="modal-header">
+            <h4>Добавить акроним</h4>
+            <button class="close" data-dismiss="modal" area-hidden="true">X</button>
+        </div>
+            <div class="modal-body">
+                <div class="container">
+                    <form asp-antiforgery="true" asp-action="CreateAcronyms" asp-controller="Data" method="post" enctype="multipart/form-data">
+                        <div class="validation" asp-validation-summary="ModelOnly"></div>
+                        <div class="form-group fields">
+                            <label for="inp" class="inp">
+                                    <input class="fields" asp-for="Name" placeholder="&nbsp;" required/>
+                                    <span class="label">Сокращенное название</span>
+                                    <span class="focus-bg"></span>
+                                    <span asp-validation-for="Name" class="text-danger"></span>
+                            </label>
+                        </div>
+                        <div class="form-group fields">
+                            <label for="inp" class="inp">
+                                    <input class="fields" asp-for="AcronymImPad" placeholder="&nbsp;" required/>
+                                    <span class="label">Именительный падеж</span>
+                                    <span class="focus-bg"></span>
+                                    <span asp-validation-for="AcronymImPad" class="text-danger"></span>
+                            </label>
+                        </div>
+                        <div class="form-group fields">
+                            <label for="inp" class="inp">
+                                    <input class="fields" asp-for="AcronymRodPad" placeholder="&nbsp;" required/>
+                                    <span class="label">Родительный падеж</span>
+                                    <span class="focus-bg"></span>
+                                    <span asp-validation-for="AcronymRodPad" class="text-danger"></span>
+                            </label>
+                        </div>
+                        <div class="form-group fields">
+                            <label for="inp" class="inp">
+                                    <input class="fields" asp-for="AcronymTvorPad" placeholder="&nbsp;" required/>
+                                    <span class="label">Творительный падеж</span>
+                                    <span class="focus-bg"></span>
+                                    <span asp-validation-for="AcronymTvorPad" class="text-danger"></span>
+                            </label>
+                        </div>
+                        <div class="form-group fields">
+                            <label for="inp" class="inp">
+                                    <input class="fields" asp-for="AcronymDatPad" placeholder="&nbsp;" required/>
+                                    <span class="label">Дательный падеж</span>
+                                    <span class="focus-bg"></span>
+                                    <span asp-validation-for="AcronymDatPad" class="text-danger"></span>
+                            </label>
+                        </div>
+                        <div style="margin-top:20px;">
+                             <button type="submit" id="submit-material" name="submit-material" class="btn btn-primary button-main">Добавить</button>
+                             <button type="button" class="btn btn-secondary button-main"  data-dismiss="modal">Закрыть</button>        
+                        </div>
+                    </form>
+                </div>
+            </div>
+    </div>
+</div>
+
+ 
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>

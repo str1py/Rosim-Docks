@@ -1,0 +1,165 @@
+﻿@model AgencyModel
+
+<div class="modal-content admin-modal ">
+    <div class="modal-body">
+        <div class="modal-header">
+            <h4>Добавить организацию</h4>
+            <button class="close" data-dismiss="modal" area-hidden="true">X</button>
+        </div>
+            <div class="modal-body">
+                <div class="container">
+                    <form asp-antiforgery="true" asp-action="CreateOrganization" asp-controller="Data" method="post" enctype="multipart/form-data">
+                        <div class="validation" asp-validation-summary="ModelOnly"></div>
+                         <div class="form-group">
+                                <label class="label-modal" asp-for="AcronymSelected"></label>
+                                <select style="margin-left:0;" class="select" asp-for="AcronymSelected" class="form-select"  asp-items="@Model.AcronymList"></select>                                                      
+                                <span asp-validation-for="AcronymSelected"></span>
+                        </div>
+                        <div class="form-group fields">
+                            <label for="inp" class="inp"  style="max-width: 700px;">
+                                <input   class="fields" asp-for="Name" placeholder="&nbsp;"/>
+                                <span class="label">Название</span>
+                                <span class="focus-bg"></span>
+                                <span asp-validation-for="Name"></span>
+                            </label>
+                        </div>
+                        <div class="form-group fields">
+                            <label for="inp" class="inp"  style="max-width: 700px;">
+                                <input   class="fields" asp-for="ShortName" placeholder="&nbsp;"/>
+                                <span class="label">Короткое название</span>
+                                <span class="focus-bg"></span>
+                                <span asp-validation-for="ShortName"></span>
+                            </label>
+                        </div>
+                        <div class="form-group fields">
+                            <label for="inp" class="inp"  style="max-width: 700px;">
+                                <input   class="fields" asp-for="AddInfo" placeholder="&nbsp;"/>
+                                <span class="label">Дополнительно</span>
+                                <span class="focus-bg"></span>
+                                <span asp-validation-for="AddInfo"></span>
+                            </label>
+                        </div>
+                        <div class="form-group fields">
+                            <label for="inp" class="inp"  style="max-width: 700px;">
+                                <input   class="fields" asp-for="Adress" placeholder="&nbsp;"/>
+                                <span class="label">Адрес без города и индекса</span>
+                                <span class="focus-bg"></span>
+                                <span asp-validation-for="Adress"></span>
+                            </label>
+                        </div>
+                        <div class="form-group fields">
+                            <label for="inp" class="inp"  style="max-width: 700px;">
+                                <input   class="fields" asp-for="CityAndZip" placeholder="&nbsp;"/>
+                                <span class="label">Город и индекс</span>
+                                <span class="focus-bg"></span>
+                                <span asp-validation-for="CityAndZip"></span>
+                            </label>
+                        </div>
+                        <div class="form-group fields">
+                            <label for="inp" class="inp"  style="max-width: 700px;">
+                                <input   class="fields" asp-for="AgencyINN" placeholder="&nbsp;"/>
+                                <span class="label">ИНН</span>
+                                <span class="focus-bg"></span>
+                                <span asp-validation-for="AgencyINN"></span>
+                            </label>
+                        </div>
+                        <div class="form-group fields">
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox"  asp-for="Regulation" >
+                              <label class="form-check-label" for="gridRecipientCustom">
+                                Устав
+                              </label>
+                            </div>
+                            <label for="inp" class="inp"  style="max-width: 700px;">
+                                <input   class="fields" asp-for="RegulationName" placeholder="&nbsp;"/>
+                                <span class="label">Название</span>
+                                <span class="focus-bg"></span>
+                            </label>
+                        </div>
+                        <div class="form-group fields">
+                                <label>Руководитель</label>
+                                <input type="hidden" asp-for="Director.Id" />
+                                <div class="form-group">
+                                    <select style="margin-left:0;" class="select" asp-for="Director.PositionSelected" class="form-select"  asp-items="@Model.Director.PositionList"></select>  
+                                <label for="inp" class="inp"  style="max-width: 700px;">
+                                    <input   class="fields" asp-for="Director.Name" placeholder="&nbsp;"/>
+                                    <span class="label">Имя</span>
+                                    <span class="focus-bg"></span>
+                                </label>
+                                <label for="inp" class="inp"  style="max-width: 700px;">
+                                    <input   class="fields" asp-for="Director.AddInfo" placeholder="&nbsp;"/>
+                                    <span class="label">Комментарий</span>
+                                    <span class="focus-bg"></span>
+                                </label>
+                                </div>
+                            </div>
+                            <div class="form-group fields">
+                                <label>Замещающий</label>
+                                <input type="hidden" asp-for="SecondDirector.Id" />
+                                <div class="form-group">
+                                    <select style="margin-left:0;" class="select" asp-for="SecondDirector.PositionSelected" class="form-select"  asp-items="@Model.SecondDirector.PositionList"></select>  
+                                    <label for="inp" class="inp"  style="max-width: 700px;">
+                                        <input   class="fields" asp-for="SecondDirector.Name" placeholder="&nbsp;"/>
+                                        <span class="label">Имя</span>
+                                        <span class="focus-bg"></span>
+                                    </label>
+                                    <label for="inp" class="inp"  style="max-width: 700px;">
+                                        <input   class="fields" asp-for="SecondDirector.AddInfo" placeholder="&nbsp;"/>
+                                        <span class="label">Комментарий</span>
+                                        <span class="focus-bg"></span>
+                                    </label>
+                                </div>
+                                <div class="form-group fields">
+                                    <div class="form-group">
+                                        <label for="inp" class="inp"  style="max-width: 700px;">
+                                            <input   class="fields" asp-for="AgencyStatus" placeholder="&nbsp;"/>
+                                            <span class="label">Статус организации</span>
+                                            <span class="focus-bg"></span>
+                                        </label>
+                                    </div>
+                                 </div>
+                            </div>
+           
+
+                        <label>Если требуется</label>
+                        <div class="form-group fields">
+                            <label for="inp" class="inp"  style="max-width: 700px;">
+                                <input   class="fields" asp-for="NameImPad" placeholder="&nbsp;"/>
+                                <span class="label">Именительный падеж</span>
+                                <span class="focus-bg"></span>
+                            </label>
+                        </div>
+                        <div class="form-group fields">
+                            <label for="inp" class="inp"  style="max-width: 700px;">
+                                <input   class="fields" asp-for="NameRodPad" placeholder="&nbsp;"/>
+                                <span class="label">Родительный падеж</span>
+                                <span class="focus-bg"></span>
+                            </label>
+                        </div>
+                        <div class="form-group fields">
+                            <label for="inp" class="inp"  style="max-width: 700px;">
+                                <input   class="fields" asp-for="NameTvorPad" placeholder="&nbsp;"/>
+                                <span class="label">Творительный падеж</span>
+                                <span class="focus-bg"></span>
+                            </label>
+                        </div>
+                        <div class="form-group fields">
+                            <label for="inp" class="inp"  style="max-width: 700px;">
+                                <input   class="fields" asp-for="NameDatPad" placeholder="&nbsp;"/>
+                                <span class="label">Дательный падеж</span>
+                                <span class="focus-bg"></span>
+                            </label>
+                        </div>
+                        <div style="margin-top:20px;">
+                             <button type="submit" id="submit-material" name="submit-material" class="btn btn-primary button-main">Добавить</button>
+                             <button type="button" class="btn btn-secondary button-main"  data-dismiss="modal">Закрыть</button>        
+                        </div>
+                    </form>
+                </div>
+            </div>
+    </div>
+</div>
+
+ 
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>

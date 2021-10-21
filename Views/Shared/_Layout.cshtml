@@ -1,0 +1,145 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Панель администратора</title>
+    <link rel="stylesheet" href="~/css/style.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/jquery.dropdown.css">
+    <link rel="stylesheet" href="~/css/jquery.dataTables.css">
+    <script src="https://kit.fontawesome.com/d2c0d13beb.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-light bg-light">
+      <a class="navbar-brand" href="/">
+        <img src="/images/logo_FAUGI.svg"  class="d-inline-block align-top" alt="">
+        
+      </a>
+    </nav>
+
+    <div class="wrapper d-flex align-items-stretch">
+        <nav id="sidebar">
+            <div class="custom-menu">
+                <button type="button" id="sidebarCollapse" class="btn btn-primary" />
+            </div>
+
+            <div class="col-6 col-md-6">
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">@*<img src="~/images/rosimush.png" style="width:200px" alt="rosim">*@</a>
+            </div>
+
+
+            <p style="color:#4781da;margin-left:15px;" class="menu-sep"><b>Распоряжение ВЯ-08\2882</b></p>           
+            <ul class="list-unstyled components mb-5">
+                <li>
+                    <a href="/Home/AppealConsider"> 
+                    <i class="fas fa-circle mr-2" style="font-size: 6px;"></i>
+                        Рассмотерть обращение                                      
+                    </a>
+                </li>
+                <li>
+                    <a href="/Home/RasporVya"> 
+                    <i class="fas fa-circle mr-2" style="font-size: 6px;"></i>
+                        Распоряжение ВЯ                                       
+                    </a>
+                </li>
+                <li>
+                    <a href="/Home/ZaprosCentral"> 
+                    <i class="fas fa-circle mr-2" style="font-size: 6px;"></i>
+                    Запрос поручения в ЦА                                       
+                    </a>
+                </li>
+@*                <li>
+                    <a href="/Data/VyaDocuments"> 
+                    <i class="fas fa-circle mr-2"></i>
+                    Шаблоны                                     
+                    </a>
+                </li>*@
+                <li>
+                    <a href="/Data/Appeals"> 
+                    <i class="fas fa-circle mr-2" style="font-size: 6px;"></i>
+                     Обращения                                  
+                    </a>
+                </li>
+            </ul>
+            <p style="color: #4781da;margin-left:15px;" class="menu-sep"><b>Документы</b></p>   
+            <ul class="list-unstyled components mb-5">
+                <li>
+                    <a href="/Data/DocCategories"> 
+                    <i class="fas fa-circle mr-2" style="font-size: 6px;"></i>
+                        Категории                                      
+                    </a>
+                </li>
+                <li>
+                    <a href="/Data/Documents"> 
+                    <i class="fas fa-circle mr-2" style="font-size: 6px;"></i>
+                        Шаблоны                                      
+                    </a>
+                </li>
+            </ul>
+            <p style="color: #4781da;margin-left:15px;" class="menu-sep"><b>Данные</b></p> 
+            <ul class="list-unstyled components mb-5">
+                <li>
+                    <a href="/Data/Acronyms"> 
+                    <i class="fas fa-circle mr-2" style="font-size: 6px;"></i>
+                        Акронимы                                      
+                    </a>
+                </li>
+                <li>
+                    <a href="/Data/Organizations"> 
+                    <i class="fas fa-circle mr-2" style="font-size: 6px;"></i>
+                        Организации                                      
+                    </a>
+                </li>
+                <li>
+                    <a href="/Data/Foivs"> 
+                    <i class="fas fa-circle mr-2" style="font-size: 6px;"></i>
+                        ФОИВ`ы                                      
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Page Content  -->
+        <div id="content" class="p-4 p-md-5 pt-5">
+            <h2 class="mb-4"></h2>
+            @RenderBody()
+        </div>
+    </div>
+    
+    @RenderSection("Scripts", required: false) 
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/js/popper.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/main.js"></script>
+    <script src="~/js/data.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
+
+    
+<script>
+
+    $(document).ready(function()  {
+        $('#orgtable').DataTable();
+    });
+
+    $(document).ready(function()  {
+     $('#foivtable').DataTable();
+    });
+
+   $(document).ready(function()  {
+        $('#appealtable').DataTable();
+    });
+    
+    $(document).ready(function()  {
+        $('#doccattable').DataTable();
+    });
+        $(document).ready(function()  {
+        $('.docs').DataTable();
+    });
+</script>
+
+</body>
+</html>

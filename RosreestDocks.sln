@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31025.218
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RosreestDocks", "RosreestDocks.csproj", "{57501095-EA31-4ACD-A246-ACE1487884F3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{57501095-EA31-4ACD-A246-ACE1487884F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57501095-EA31-4ACD-A246-ACE1487884F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57501095-EA31-4ACD-A246-ACE1487884F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57501095-EA31-4ACD-A246-ACE1487884F3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4687E026-267F-4A58-895A-29E94D86E987}
+	EndGlobalSection
+EndGlobal
