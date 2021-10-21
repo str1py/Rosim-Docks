@@ -15,6 +15,7 @@ namespace RosreestDocks.Models
         public string DocName { get; set; }
         public DateTime DocDate { get; set; }
         public int WorkNumber { get; set; }
+        public string SoprovodNumber { get; set; }
         public string SendNumber { get; set; }
         public DockStatusModel Status { get; set; }
         public DockTypeModel DockType { get; set; }

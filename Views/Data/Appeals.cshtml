@@ -27,18 +27,23 @@
         string days ="";
 
         if(a.Days == 0)
-            days = "0 дней";
+            days = "менее 1 дня";
         else if(a.Days == 1)
             days = "1 день";
         else if(a.Days > 1 && a.Days < 5)
             days = $"{a.Days} дня";
         else
-            days = $"{a.Days} дней";
+            days = $"{Math.Abs(a.Days)} дней";
+
+        var ost = "";
+        if(a.Days < 0)
+            ost = $"просрочка {days}";
+        else ost = $"осталось {days}";
 
 
         List<string> list = new();
         list.Add(color);
-        list.Add(days);
+        list.Add(ost);
 
         return list;
     }
@@ -68,14 +73,17 @@
                 <td>
                     @{
                     var a = @GetColor(appeal.ExpireDate);
-                    if(appeal.Status.Id == 3)
-                        a[0] = "#228b22";   
-                        a[1] = "Закрыт";  
+                        if(appeal.Status.Id == 5)
+                        {
+                            a[0] = "#228b22";
+                            a[1] = "Закрыт";
+                        }
+
                     }
 
                     <div style="background-color:@a[0]; padding:5px; border-radius:5px;">
                          <b>@appeal.ExpireDate.ToShortDateString()</b>
-                         <p style="margin-bottom: 0;">(Осталось @a[1])</p>
+                         <p style="margin-bottom: 0;">(@a[1])</p>
                     </div>     
                  </td>
                 <td>@{
