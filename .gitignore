@@ -22,6 +22,8 @@ x64/
 appsettings.Development.json
 appsettings.json
 
+.vs/
+
 *_i.c
 *_p.c
 *_i.h
