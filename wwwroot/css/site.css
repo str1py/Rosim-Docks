@@ -10,18 +10,48 @@ body {
     font-family: 'Comfortaa', cursive;
 }
 
-h3{
-    font-size: 1.2em;
-}
-h5{
-    font-size:1.1em;
-}
+h3{ font-size: 1.2em; }
+h5{   font-size:1.1em;}
 
 a.navbar-brand {
   white-space: normal;
   text-align: center;
   word-break: break-all;
 }
+
+.container {
+    padding: 50px;
+}
+
+.card {
+    width: 300px;
+    height: 420px;
+    background-color: #1E2B32;
+    border-radius: 10px 10px;
+}
+
+.header {
+    border-radius: 10px 10px 0px 0px;
+    padding: 5px;
+    background-color: #2A3942;
+}
+
+h3 {
+    color: #FFFFFF;
+    font-family: 'Roboto', sans-serif;
+    margin-left: 1rem;
+}
+
+.iconM {
+    font-size: 18px;
+    margin-left: 170px;
+    color: #2f89fc;
+}
+
+.icon {
+    margin-right: 8px;
+}
+
 
 
 .container {
@@ -38,6 +68,73 @@ a {
     border-color: #4781da;
 }
 
+.main-blue {
+    color: #4781da;
+}
+.bg-primary {
+    color: #fff;
+    background-color: #4781da !important;
+    border-color: #4781da;
+}
+/* Menu styles
+-------------------------------------------------- */
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+        nav ul li {
+            /* Sub Menu */;
+        }
+
+            nav ul li a {
+                display: block;
+                padding: 10px 15px;
+                text-decoration: none;
+                -webkit-transition: 0.2s linear;
+                -moz-transition: 0.2s linear;
+                -o-transition: 0.2s linear;
+                transition: 0.2s linear;
+            }
+
+                nav ul li a:hover {
+                    background: #2980b9;
+                }
+
+                nav ul li a .fa {
+                    width: 16px;
+                    text-align: center;
+                    margin-right: 5px;
+                }
+
+                nav ul li a .badge {
+                    display: inline-block;
+                    background: #fff;
+                    /* IE Fallback */
+                    padding: 3px 7px;
+                    color: #fff;
+                    font-size: 12px;
+                    font-weight: 800;
+                }
+
+            nav ul li ul li a {
+                border-left: 4px solid transparent;
+                padding: 10px 20px;
+            }
+
+                nav ul li ul li a:hover {
+                    background: #333;
+                    border-left: 4px solid #3498db;
+                }
+/* Float Right/Left */
+.right {
+    float: right;
+}
+
+.left {
+    float: left;
+}
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
     color: #fff;
     background-color: #4781da;
@@ -237,4 +334,58 @@ table.dataTable thead th, table.dataTable thead td {
 
 .fas{
     margin-right:5px;
+}
+
+
+
+/*Notes style*/
+:root {
+    --red: hsl(0, 78%, 62%);
+    --blue: hsl(212, 86%, 64%);
+    --orange: hsl(34, 97%, 64%);
+}
+
+
+.orange {
+    border-top: 6px solid var(--orange);
+    box-shadow: 0px 20px 30px -20px var(--orange);
+}
+.red {
+    border-top: 6px solid var(--red);
+    box-shadow: 0px 20px 30px -20px var(--red);
+}
+.blue {
+    border-top: 6px solid var(--blue);
+    box-shadow: 0px 20px 30px -20px var(--blue);
+}
+
+.box {
+    border-radius: 10px;
+    padding: 10px;
+    width:90%;
+}
+.box p{
+    font-size:12px;
+}
+
+.seccbut {
+    padding: 1px 6px 0px 6px !important;
+    font-size: 13px;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    justify-content: flex-end;
+}
+
+.box-top {
+    display: flex;
+    justify-content: space-between;
+    vertical-align: central;
+}
+
+.item {
+    height: 100%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
 }

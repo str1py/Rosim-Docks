@@ -23,6 +23,8 @@ namespace RosreestDocks.Contexts
         public DbSet<DockTypeModel> DocType { get; set; }
         public DbSet<AppealModel> Appeals { get; set; }
         public DbSet<RequestModel> Request { get; set; }
+        public DbSet<ImportanceState> Importance { get; set; }
+        public DbSet<NoteModel> Notes { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var builder = new ConfigurationBuilder()

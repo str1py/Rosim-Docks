@@ -44,6 +44,50 @@ namespace RosreestDocks.Controllers
                 .Include(acr => acr.TypeOfProperty).Include(acr => acr.ManageRightsFrom).Include(acr => acr.ManageRightsTo).ToList();
             return View(appeal);
         }
+        public IActionResult AppealsLetters()
+        {
+            var appeal = db.Request.Where(x=>x.DockType.Id == 2).Where(x=>x.Status.Id != 5).Include(inc => inc.Status).Include(acr => acr.DockType)
+                .Include(acr => acr.RecipientAgency).Include(acr => acr.RecipientAgency.Acronym).Include(acr => acr.RecipientAgency.Director).Include(acr => acr.RecipientAgency.SecondDirector)
+                .Include(acr => acr.TransferAgency).Include(acr => acr.TransferAgency.Acronym).Include(acr => acr.TransferAgency.Director).Include(acr => acr.TransferAgency.SecondDirector)
+                .Include(acr => acr.RecipientAgency.Director.Position).Include(acr => acr.RecipientAgency.SecondDirector.Position)
+                .Include(acr => acr.TransferAgency.Director.Position).Include(acr => acr.TransferAgency.SecondDirector.Position)
+                .Include(acr => acr.FirstFoiv).Include(acr => acr.SecondFoiv)
+                .Include(acr => acr.TypeOfProperty).Include(acr => acr.ManageRightsFrom).Include(acr => acr.ManageRightsTo).ToList();
+            return View(appeal);
+        }
+        public IActionResult AppealsCentral()
+        {
+            var appeal = db.Request.Where(x => x.DockType.Id == 3).Where(x => x.Status.Id != 5).Include(inc => inc.Status).Include(acr => acr.DockType)
+                .Include(acr => acr.RecipientAgency).Include(acr => acr.RecipientAgency.Acronym).Include(acr => acr.RecipientAgency.Director).Include(acr => acr.RecipientAgency.SecondDirector)
+                .Include(acr => acr.TransferAgency).Include(acr => acr.TransferAgency.Acronym).Include(acr => acr.TransferAgency.Director).Include(acr => acr.TransferAgency.SecondDirector)
+                .Include(acr => acr.RecipientAgency.Director.Position).Include(acr => acr.RecipientAgency.SecondDirector.Position)
+                .Include(acr => acr.TransferAgency.Director.Position).Include(acr => acr.TransferAgency.SecondDirector.Position)
+                .Include(acr => acr.FirstFoiv).Include(acr => acr.SecondFoiv)
+                .Include(acr => acr.TypeOfProperty).Include(acr => acr.ManageRightsFrom).Include(acr => acr.ManageRightsTo).ToList();
+            return View(appeal);
+        }
+        public IActionResult AppealsRaspor()
+        {
+            var appeal = db.Request.Where(x => x.DockType.Id == 4 || x.DockType.Id == 5).Where(x => x.Status.Id != 5).Include(inc => inc.Status).Include(acr => acr.DockType)
+                .Include(acr => acr.RecipientAgency).Include(acr => acr.RecipientAgency.Acronym).Include(acr => acr.RecipientAgency.Director).Include(acr => acr.RecipientAgency.SecondDirector)
+                .Include(acr => acr.TransferAgency).Include(acr => acr.TransferAgency.Acronym).Include(acr => acr.TransferAgency.Director).Include(acr => acr.TransferAgency.SecondDirector)
+                .Include(acr => acr.RecipientAgency.Director.Position).Include(acr => acr.RecipientAgency.SecondDirector.Position)
+                .Include(acr => acr.TransferAgency.Director.Position).Include(acr => acr.TransferAgency.SecondDirector.Position)
+                .Include(acr => acr.FirstFoiv).Include(acr => acr.SecondFoiv)
+                .Include(acr => acr.TypeOfProperty).Include(acr => acr.ManageRightsFrom).Include(acr => acr.ManageRightsTo).ToList();
+            return View(appeal);
+        }
+        public IActionResult AppealsClosed()
+        {
+            var appeal = db.Request.Where(x => x.Status.Id == 5).Include(inc => inc.Status).Include(acr => acr.DockType)
+                .Include(acr => acr.RecipientAgency).Include(acr => acr.RecipientAgency.Acronym).Include(acr => acr.RecipientAgency.Director).Include(acr => acr.RecipientAgency.SecondDirector)
+                .Include(acr => acr.TransferAgency).Include(acr => acr.TransferAgency.Acronym).Include(acr => acr.TransferAgency.Director).Include(acr => acr.TransferAgency.SecondDirector)
+                .Include(acr => acr.RecipientAgency.Director.Position).Include(acr => acr.RecipientAgency.SecondDirector.Position)
+                .Include(acr => acr.TransferAgency.Director.Position).Include(acr => acr.TransferAgency.SecondDirector.Position)
+                .Include(acr => acr.FirstFoiv).Include(acr => acr.SecondFoiv)
+                .Include(acr => acr.TypeOfProperty).Include(acr => acr.ManageRightsFrom).Include(acr => acr.ManageRightsTo).ToList();
+            return View(appeal);
+        }
         public IActionResult EditAppealConsider(int id)
         {
             RequestModel consider = db.Request.Include(inc => inc.Status).Include(acr => acr.DockType)

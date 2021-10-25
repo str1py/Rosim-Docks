@@ -33,7 +33,7 @@
 
 
             <p style="color:#4781da;margin-left:15px;" class="menu-sep"><b>Распоряжение ВЯ-08\2882</b></p>           
-            <ul class="list-unstyled components mb-5">
+            <ul class="list-unstyled components mb-5 ">
                 <li>
                     <a href="/Home/AppealConsider"> 
                     <i class="fas fa-circle mr-2" style="font-size: 6px;"></i>
@@ -58,12 +58,30 @@
                     Шаблоны                                     
                     </a>
                 </li>*@
-                <li>
-                    <a href="/Data/Appeals"> 
-                    <i class="fas fa-circle mr-2" style="font-size: 6px;"></i>
-                     Обращения                                  
-                    </a>
-                </li>
+
+
+                <li class="sub-menu">
+                      <a ><i class="fas fa-pencil-alt"></i> Обращения<div class="fa fa-caret-down right"></div></a>
+                      <ul>
+                        <li>                    
+                            <a href="/Data/Appeals"> <i class="fas fa-circle mr-2" style="font-size: 6px;"></i>Все обращения</a>
+                        </li>
+                        <li>                    
+                            <a href="/Data/AppealsLetters"> <i class="fas fa-circle mr-2" style="font-size: 6px;"></i>Письма</a>
+                        </li>
+                        <li>                    
+                            <a href="/Data/AppealsCentral"> <i class="fas fa-circle mr-2" style="font-size: 6px;"></i>Запросы ЦА</a>
+                        </li>
+                        <li>                    
+                            <a href="/Data/AppealsRaspor"> <i class="fas fa-circle mr-2" style="font-size: 6px;"></i>Распоряжения</a>
+                        </li>
+                        <li>                    
+                            <a href="/Data/AppealsClosed"> <i class="fas fa-circle mr-2" style="font-size: 6px;"></i>Закрытые</a>
+                        </li>
+                      </ul>
+                 </li>
+
+
             </ul>
             <p style="color: #4781da;margin-left:15px;" class="menu-sep"><b>Документы</b></p>   
             <ul class="list-unstyled components mb-5">
@@ -138,6 +156,12 @@
     });
         $(document).ready(function()  {
         $('.docs').DataTable();
+    });
+
+    $('.sub-menu ul').hide();
+    $(".sub-menu a").click(function () {
+      $(this).parent(".sub-menu").children("ul").slideToggle("100");
+      $(this).find(".right").toggleClass("fa-caret-up fa-caret-down");
     });
 </script>
 

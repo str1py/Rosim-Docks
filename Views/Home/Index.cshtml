@@ -4,10 +4,12 @@
 @inject DataBaseContext db
 @{
     ViewData["Title"] = "Home Page";
-    var newlist = db.Request.Include(a => a.Status).Where(x => x.DockType.Id == 1).OrderBy(o => o.DocName).ToList(); // Н/А
-    var letterlist = db.Request.Include(a => a.Status).Where(x => x.DockType.Id == 2).OrderBy(o => o.DocName).ToList(); //письмо
-    var zaproslist = db.Request.Include(a => a.Status).Where(x=>x.DockType.Id == 3).OrderBy(o=>o.DocName).ToList(); //запрос ЦА 
-    var rasporlist = db.Request.Include(a => a.Status).Include(a=>a.RecipientAgency).Include(a=>a.TransferAgency).Where(x=>x.DockType.Id == 4).OrderBy(o=>o.DocName).OrderBy(o=>o.Status).ToList(); //распоряжения
+    var newlist = db.Request.Include(a => a.Status).Where(x => x.DockType.Id == 1).Where(x => x.Status.Id != 5).OrderBy(o => o.DocName).ToList(); // Н/А
+    var letterlist = db.Request.Include(a => a.Status).Where(x => x.DockType.Id == 2).Where(x => x.Status.Id != 5).OrderBy(o => o.DocName).ToList(); //письмо
+    var zaproslist = db.Request.Include(a => a.Status).Where(x=>x.DockType.Id == 3).Where(x => x.Status.Id != 5).OrderBy(o=>o.DocName).ToList(); //запрос ЦА 
+    var rasporlist = db.Request.Include(a => a.Status).Include(a=>a.RecipientAgency).Include(a=>a.TransferAgency)
+                    .Where(x=>x.DockType.Id == 4 || x.DockType.Id == 5).Where(x => x.Status.Id != 5)
+                    .OrderBy(o=>o.DocName).OrderBy(o=>o.Status).ToList(); //распоряжения
 
     string GetName(AgencyModel agency)
     {
@@ -18,11 +20,59 @@
 }
 
 
+<div class="container-flex" style="margin-bottom:50px;">
+    <div class="row">
+        <div class="col-12">
+            <div style="display:flex;">
+                <h3 class="h3_index item"><i class="fas fa-sticky-note"></i>Заметки</h3>
+                <i style="margin-left:10px;" class="fas fa-plus-circle main-blue"></i>
+            </div>
+                
+                 <details>
+                    <summary>Подробнее</summary> 
+                    <div class="container-flex">
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="box red">
+                                    <div class="box-top">
+                                       <h5 class="item">Calculator</h5> 
+                                       <button  type="button" class="btn btn-success seccbut item"><i class="far fa-check-circle"></i></button>
+                                    </div>
+                                    <p>Scans our talent network to create the optimal team for your project</p>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="box blue">
+                                    <div class="box-top">
+                                       <h5 class="item">Calculator</h5> 
+                                       <button  type="button" class="btn btn-success seccbut item"><i class="far fa-check-circle"></i></button>
+                                    </div>
+                                    <p>Uses data from past projects to provide better delivery estimates</p>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="box orange">
+                                   <div class="box-top">
+                                       <h5 class="item">Calculator</h5> 
+                                       <button  type="button" class="btn btn-success seccbut item"><i class="far fa-check-circle"></i></button>
+                                    </div>
+                                    <p>Regularly evaluates our talent to ensure quality</p>
+                                </div>
+                           </div>
+                        </div>
+                    </div>
 
+
+
+
+                </details>
+        </div>
+    </div>
+</div>
 <div class="container-flex">
     <div class="row">
         <div class="col-4">
-            <h3 class="h3_index"><i class="fas fa-exclamation-triangle"></i>Без ответа</h3>
+            <h3 class="h3_index"><i class="fas fa-exclamation-triangle"></i>Без ответа  <span class="badge rounded-pill badge-notification bg-primary text-white">@newlist.Count()</span></h3>
             <details>
                 <summary>Подробнее</summary> 
                 <table class="table table-sm table-hover">
@@ -48,7 +98,7 @@
             </details>
         </div>
         <div class="col-4">
-            <h3 class="h3_index"><i class="fas fa-envelope"></i>Письма</h3>
+            <h3 class="h3_index"><i class="fas fa-envelope"></i>Письма  <span class="badge rounded-pill badge-notification bg-primary text-white">@letterlist.Count()</span> </h3>
             <details>
                 <summary>Подробнее</summary> 
                 <table class="table table-sm table-hover">
@@ -74,7 +124,7 @@
             </details>
         </div>
         <div class="col-4">
-            <h3 class="h3_index"><i class="fas fa-sync"></i>Запросы ЦА</h3>
+            <h3 class="h3_index"><i class="fas fa-sync"></i>Запросы ЦА  <span class="badge rounded-pill badge-notification bg-primary text-white">@zaproslist.Count()</span></h3>
             <details>
                 <summary>Подробнее</summary> 
                 <table class="table table-sm table-hover">
@@ -103,7 +153,7 @@
 
     <div class="row" style="margin-top:50px;">
         <div class="col-12">
-            <h3 class="h3_index"><i class="fas fa-scroll"></i>Распоряжения</h3>
+            <h3 class="h3_index"><i class="fas fa-scroll"></i>Распоряжения  <span  class="badge rounded-pill badge-notification bg-primary text-white">@rasporlist.Count()</span></h3>
             <details>
                 <summary>Подробнее</summary> 
                 <table class="table table-sm table-hover">
