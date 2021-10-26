@@ -177,7 +177,6 @@ namespace RosreestDocks.Controllers
         }
         #endregion
 
-
         #region Acronyms
         public IActionResult Acronyms()
         {
@@ -569,5 +568,26 @@ namespace RosreestDocks.Controllers
                 }
             }
         }
+
+        #region Notes
+        public async Task<IActionResult> CreateNote(NoteModel note)
+        {
+            note.Importance = db.Importance.Where(x => x.Id == note.Importance.Id).SingleOrDefault();
+
+            db.Notes.Add(note);
+            await db.SaveChangesAsync();
+
+            return Redirect(Request.Headers["Referer"].ToString());
+        }
+        public async Task<IActionResult> RemoveNote(int noteid)
+        {
+
+            var b =await db.Notes.Where(x => x.Id == noteid).SingleAsync();
+            db.Notes.Remove(b);
+            await db.SaveChangesAsync();
+
+            return Redirect(Request.Headers["Referer"].ToString());
+        }
+        #endregion
     }
 }

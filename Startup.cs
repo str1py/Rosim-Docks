@@ -131,6 +131,10 @@ namespace RosreestDocks
                     name: "CreateZapros",
                     pattern: "{controller=Data}/{action=CreateZaprosCentral}/");
 
+                endpoints.MapControllerRoute(
+                    name: "RemoveNote",
+                    pattern: "{controller=Data}/{action=RemoveNote}/{id?}");
+
             });
         }
     }

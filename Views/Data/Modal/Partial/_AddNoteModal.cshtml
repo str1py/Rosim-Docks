@@ -1,0 +1,39 @@
+﻿@model NoteModel
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Добавить заметку</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+       <form asp-controller="Data" method="post">
+
+           <label for="inp" class="inp" style="margin-bottom: 20px;">
+                <input class="inp"  type="text" asp-for="Name"  placeholder="&nbsp;"   />
+                <span class="label">Название</span>
+                <span class="focus-bg"></span>
+           </label>  
+           <label for="inp" class="inp" style="margin-bottom: 20px;">
+                <input class="inp"  type="text" asp-for="Text"  placeholder="&nbsp;"   />
+                <span class="label">Описание</span>
+                <span class="focus-bg"></span>
+          </label>
+          <div style="display:inline;">
+                <label class="selectlabel">Степень важности</label>
+                <select class="form-select select" asp-for="Importance.Id"  asp-items="@Model.ImportanceList"></select>                                                      
+         </div>
+          <div class="modal-footer">
+            <input type="submit"  class="btn btn-primary button-main"  asp-controller="Data" asp-action="CreateNote" value="Добавить"/>
+          </div>
+
+      </form>
+
+      </div>
+    </div>
+  </div>
+</div>
