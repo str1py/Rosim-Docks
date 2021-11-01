@@ -1,0 +1,44 @@
+﻿@model IEnumerable<NoteModel>
+
+
+<div class="container-flex" style="margin-bottom:50px;">
+    <div class="row">
+        <div class="col-12">
+            <div style="display:flex;">
+                <h3 class="h3_index item"><i class="fas fa-sticky-note"></i>Заметки</h3>
+                <button type="button" style="background-color:transparent; border:0px;" data-toggle="modal" data-target="#exampleModal">
+                    <i style="margin-left:10px;" class="fas fa-plus-circle main-blue"></i>
+                </button>
+            </div>            
+                 <details>
+                    <summary>Подробнее</summary> 
+                    <div class="container-flex" style="margin-top:10px;">
+                        <div class="row">
+                    @{
+                    foreach(var note in @Model)
+                        {
+                        var color = "";
+                        if (note.Importance.Id == 1) color = "blue";
+                        else if (note.Importance.Id == 2) color = "orange";
+                        else color = "red";
+
+                            <div class="col-4">
+                                <div class="box @color" >
+                                    <div class="box-top">
+                                       <h5 class="item">@note.Name</h5> 
+                                       <button  type="button" class="btn btn-success seccbut item" data-toggle="modal" data-target="#completeModal" 
+                                                data-name="@note.Name" data-id="@note.Id"><i class="far fa-check-circle"></i></button>
+
+                                    </div>
+                                    <p>@note.Text</p>
+                                </div>
+                            </div>
+
+                        }
+                    }
+                        </div>
+                    </div>
+                </details>
+        </div>
+    </div>
+</div>

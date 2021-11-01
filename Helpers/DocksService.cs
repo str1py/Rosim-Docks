@@ -133,9 +133,9 @@ namespace RosreestDocks.Helpers
 
             Directory.CreateDirectory(path + request.DocName);
 
-            raspordoc.Save(path + "1 Распоряжение Вя" + ".docx");
-            annexdoc.Save(path + "2 Приложение.docx");
-            soprovoddoc.Save(path + "3 Сопровод.docx");
+            raspordoc.Save(path + $"{request.DocName} - Распоряжение Вя" + ".docx");
+            annexdoc.Save(path + $"{request.DocName} - Приложение.docx");
+            soprovoddoc.Save(path + $"{request.DocName} - Сопровод.docx");
 
             try { ZipFile.CreateFromDirectory(path, path + request.DocName + ".zip"); } catch { }
 

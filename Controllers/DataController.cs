@@ -99,7 +99,7 @@ namespace RosreestDocks.Controllers
                 .Include(acr => acr.FirstFoivAppeal).Include(acr => acr.SecondFoivAppeal).Include(acr => acr.RecipientAppeal).Include(acr => acr.TransferAppeal).Include(acr => acr.RosimAppeal)
                 .Include(acr => acr.TypeOfProperty).Include(acr => acr.ManageRightsFrom).Include(acr => acr.ManageRightsTo).ToList().Where(x=>x.Id == id).SingleOrDefault();
 
-
+            
             var list = db.Acronyms.ToSelectListItem(null);
             consider.TransferAgencyAcromymList = list;
             consider.RecipientAgencyAcromymList = list;
@@ -141,7 +141,10 @@ namespace RosreestDocks.Controllers
         {
             var a = rasporVyaModel;
 
-            a.CreationDate = DateTime.Now;
+            if (a.CreationDate == DateTime.MinValue)
+                a.CreationDate = DateTime.Now;
+      
+
             a.Articles = db.Articles.Where(x => x.Id == rasporVyaModel.Articles.Id).SingleOrDefault();
             a.FirstFoiv = db.Foiv.Where(x => x.Id == rasporVyaModel.FirstFoiv.Id).SingleOrDefault();
             a.SecondFoiv = db.Foiv.Where(x => x.Id == rasporVyaModel.SecondFoiv.Id).SingleOrDefault();

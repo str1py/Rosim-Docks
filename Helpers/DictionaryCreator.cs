@@ -692,7 +692,6 @@ namespace RosreestDocks.Helpers
 
             ChangeDic.Add("Objects", "объект/объекты");
             ChangeDic.Add("SecObj", "данного объекта/данных объектов");
-            ChangeDic.Add("AdditionalInfo", a.AddInfo);
             ChangeDic.Add("PropertyDiscription", $" - {a.PropertyDiscription},");
 
             return ChangeDic;

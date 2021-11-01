@@ -41,12 +41,6 @@ namespace RosreestDocks.Controllers
         {
             return View();
         }
-        public ActionResult GetAddNoteView()
-        {
-            NoteModel notemodel = new();
-            notemodel.ImportanceList = db.Importance.ToSelectListItem(null);
-            return PartialView("/Views/Data/Modal/Partial/_AddNoteModal", notemodel);
-        }
 
 
 

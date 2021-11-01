@@ -22,48 +22,9 @@
     }
 }
 
+<!-- ALL NOTES -->
+@await Html.PartialAsync("/Views/Data/Modal/Partial/_NotesModal.cshtml",notes)
 
-<div class="container-flex" style="margin-bottom:50px;">
-    <div class="row">
-        <div class="col-12">
-            <div style="display:flex;">
-                <h3 class="h3_index item"><i class="fas fa-sticky-note"></i>Заметки</h3>
-                <button type="button" style="background-color:transparent; border:0px;" data-toggle="modal" data-target="#exampleModal">
-                    <i style="margin-left:10px;" class="fas fa-plus-circle main-blue"></i>
-                </button>
-            </div>            
-                 <details>
-                    <summary>Подробнее</summary> 
-                    <div class="container-flex" style="margin-top:10px;">
-                        <div class="row">
-                    @{
-                    foreach(var note in notes)
-                        {
-                        var color = "";
-                        if (note.Importance.Id == 1) color = "blue";
-                        else if (note.Importance.Id == 2) color = "orange";
-                        else color = "red";
-
-                            <div class="col-4">
-                                <div class="box @color">
-                                    <div class="box-top">
-                                       <h5 class="item">@note.Name</h5> 
-                                       <button  type="button" class="btn btn-success seccbut item" data-toggle="modal" data-target="#completeModal" 
-                                                data-name="@note.Name" data-id="@note.Id"><i class="far fa-check-circle"></i></button>
-
-                                    </div>
-                                    <p>@note.Text</p>
-                                </div>
-                            </div>
-
-                        }
-                    }
-                        </div>
-                    </div>
-                </details>
-        </div>
-    </div>
-</div>
 
 <div class="container-flex">
     <div class="row">
@@ -187,7 +148,7 @@
 <script src="~/js/jquery.min.js"></script>
 
 
-<!-- Modal -->
+<!-- COMPLETE NOTE MODAL -->
 <div class="modal fade" id="completeModal" tabindex="-1" role="dialog" aria-labelledby="completeModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -203,6 +164,8 @@
 </div>
 
 
+
+<!-- ADD NOTE -->
 @using RosreestDocks.Helpers
 @{
     NoteModel notemodel = new();
