@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using RosreestDocks.Interfaces;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -35,6 +36,9 @@ namespace RosreestDocks.Models
         public DirectorModel SecondDirector { get; set; }
 
         public string AgencyStatus { get; set; }
+
+        public User LastEditor { get; set; }
+        public DateTime EditTime { get; set; }
 
         [NotMapped]
         public string AppealNumber { get; set; }

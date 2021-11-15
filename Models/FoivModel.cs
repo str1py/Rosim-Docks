@@ -14,6 +14,9 @@ namespace RosreestDocks.Models
         public string FoivRodPad { get; set; }
         public string FoivTvorPad { get; set; }
         public string FoivDatPad { get; set; }
+
+        public User LastEditor { get; set; }
+        public DateTime EditTime { get; set; }
         [NotMapped]
         public string Date { get; set; }
         [NotMapped]

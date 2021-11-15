@@ -26,7 +26,7 @@ namespace RosreestDocks.Models
 
         public string PropertyDiscription { get; set; }
 
-
+        public User CreateUser { get; set; }
 
         public AgencyModel TransferAgency { get; set; }
         public AppealModel TransferAppeal { get; set; }

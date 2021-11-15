@@ -1,13 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using RosreestDocks.Models;
 using RosreestDocks.Models.Common;
-using System.ComponentModel.DataAnnotations.Schema;
+
 using System.IO;
 
 namespace RosreestDocks.Contexts
 {
-    public class DataBaseContext : DbContext
+    public class DataBaseContext : IdentityDbContext
     {
         public DbSet<ArticlesModel> Articles { get; set; }
         public DbSet<AgencyAcronymModel> Acronyms { get; set; }
@@ -25,6 +26,9 @@ namespace RosreestDocks.Contexts
         public DbSet<RequestModel> Request { get; set; }
         public DbSet<ImportanceState> Importance { get; set; }
         public DbSet<NoteModel> Notes { get; set; }
+
+
+        public DbSet<User> AppUser { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var builder = new ConfigurationBuilder()

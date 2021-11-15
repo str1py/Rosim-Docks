@@ -1,4 +1,17 @@
-﻿
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+
+@{
+        async Task<string> GetInitials (User user) {
+        char fname = user.FirstName.FirstOrDefault();
+        char mname = user.MiddleName.FirstOrDefault();
+
+        return (user.LastName +" "+ fname+ ". " + mname +".") ;
+
+    }
+}
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,9 +29,22 @@
 <body>
     <nav class="navbar navbar-light bg-light">
       <a class="navbar-brand" href="/">
-        <img src="/images/logo_FAUGI.svg"  class="d-inline-block align-top" alt="">
-        
+        <img src="/images/logo_FAUGI.svg"  class="d-inline-block align-top" alt="">       
       </a>
+      <div class="user">
+        <div class="nav-item dropdown show">
+				<a href="/#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-item nav-link dropdown-toggle user-action"> 
+                    <i class="fas fa-user" style="width:18px"></i>
+                    @await GetInitials(await UserManager.GetUserAsync(User))
+                    <b class="caret"></b>
+                 </a>
+				<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+					<a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage" class="dropdown-item"><i class="fa fa-sliders"></i> Профиль</a>
+					<div class="divider dropdown-divider"></div>
+					<a asp-area="Identity" asp-page="/Account/Logout" class="dropdown-item"><i class="material-icons">&#xE8AC;</i> Выход</a>
+				</div>
+	    </div>
+      </div>
     </nav>
 
     <div class="wrapper d-flex align-items-stretch">
@@ -35,7 +61,7 @@
             <p style="color:#4781da;margin-left:15px;" class="menu-sep"><b>Распоряжение ВЯ-08\2882</b></p>           
             <ul class="list-unstyled components mb-5 ">
                 <li>
-                    <a href="/Home/AppealConsider"> 
+                    <a href="/Data/AppealConsider"> 
                     <i class="fas fa-circle mr-2" style="font-size: 6px;"></i>
                         Рассмотерть обращение                                      
                     </a>
@@ -77,6 +103,10 @@
                         </li>
                         <li>                    
                             <a href="/Data/AppealsClosed"> <i class="fas fa-circle mr-2" style="font-size: 6px;"></i>Закрытые</a>
+                        </li>
+                        <hr>
+                        <li>                    
+                            <a href="/Data/AllAppeals"> <i class="fas fa-circle mr-2" style="font-size: 6px;"></i>Все обращения</a>
                         </li>
                       </ul>
                  </li>

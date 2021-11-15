@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RosreestDocks.Contexts;
 
 namespace RosreestDocks.Migrations
 {
     [DbContext(typeof(DataBaseContext))]
-    partial class DataBaseContextModelSnapshot : ModelSnapshot
+    [Migration("20211109193046_Identity")]
+    partial class Identity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -78,10 +80,6 @@ namespace RosreestDocks.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("varchar(256)");
@@ -132,8 +130,6 @@ namespace RosreestDocks.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -233,18 +229,10 @@ namespace RosreestDocks.Migrations
                     b.Property<string>("AcronymTvorPad")
                         .HasColumnType("longtext");
 
-                    b.Property<DateTime>("EditTime")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("LastEditorId")
-                        .HasColumnType("varchar(255)");
-
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("LastEditorId");
 
                     b.ToTable("Acronyms");
                 });
@@ -275,12 +263,6 @@ namespace RosreestDocks.Migrations
 
                     b.Property<int?>("DirectorId")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("EditTime")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("LastEditorId")
-                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
@@ -314,8 +296,6 @@ namespace RosreestDocks.Migrations
                     b.HasIndex("AcronymId");
 
                     b.HasIndex("DirectorId");
-
-                    b.HasIndex("LastEditorId");
 
                     b.HasIndex("SecondDirectorId");
 
@@ -451,9 +431,6 @@ namespace RosreestDocks.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("EditTime")
-                        .HasColumnType("datetime(6)");
-
                     b.Property<string>("FoivDatPad")
                         .HasColumnType("longtext");
 
@@ -463,15 +440,10 @@ namespace RosreestDocks.Migrations
                     b.Property<string>("FoivTvorPad")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("LastEditorId")
-                        .HasColumnType("varchar(255)");
-
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("LastEditorId");
 
                     b.ToTable("Foiv");
                 });
@@ -558,9 +530,6 @@ namespace RosreestDocks.Migrations
                     b.Property<bool>("BuildingsString")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<string>("CreateUserId")
-                        .HasColumnType("varchar(255)");
-
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime(6)");
 
@@ -640,8 +609,6 @@ namespace RosreestDocks.Migrations
 
                     b.HasIndex("ArticlesId");
 
-                    b.HasIndex("CreateUserId");
-
                     b.HasIndex("DockTypeId");
 
                     b.HasIndex("FirstFoivAppealId");
@@ -688,25 +655,6 @@ namespace RosreestDocks.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TypeOfPropertyModels");
-                });
-
-            modelBuilder.Entity("RosreestDocks.Models.User", b =>
-                {
-                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
-
-                    b.Property<string>("FirstName")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("LastName")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime>("MemberSince")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("MiddleName")
-                        .HasColumnType("longtext");
-
-                    b.HasDiscriminator().HasValue("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -760,15 +708,6 @@ namespace RosreestDocks.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("RosreestDocks.Models.AgencyAcronymModel", b =>
-                {
-                    b.HasOne("RosreestDocks.Models.User", "LastEditor")
-                        .WithMany()
-                        .HasForeignKey("LastEditorId");
-
-                    b.Navigation("LastEditor");
-                });
-
             modelBuilder.Entity("RosreestDocks.Models.AgencyModel", b =>
                 {
                     b.HasOne("RosreestDocks.Models.AgencyAcronymModel", "Acronym")
@@ -779,10 +718,6 @@ namespace RosreestDocks.Migrations
                         .WithMany()
                         .HasForeignKey("DirectorId");
 
-                    b.HasOne("RosreestDocks.Models.User", "LastEditor")
-                        .WithMany()
-                        .HasForeignKey("LastEditorId");
-
                     b.HasOne("RosreestDocks.Models.DirectorModel", "SecondDirector")
                         .WithMany()
                         .HasForeignKey("SecondDirectorId");
@@ -790,8 +725,6 @@ namespace RosreestDocks.Migrations
                     b.Navigation("Acronym");
 
                     b.Navigation("Director");
-
-                    b.Navigation("LastEditor");
 
                     b.Navigation("SecondDirector");
                 });
@@ -814,15 +747,6 @@ namespace RosreestDocks.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("RosreestDocks.Models.FoivModel", b =>
-                {
-                    b.HasOne("RosreestDocks.Models.User", "LastEditor")
-                        .WithMany()
-                        .HasForeignKey("LastEditorId");
-
-                    b.Navigation("LastEditor");
-                });
-
             modelBuilder.Entity("RosreestDocks.Models.NoteModel", b =>
                 {
                     b.HasOne("RosreestDocks.Models.ImportanceState", "Importance")
@@ -837,10 +761,6 @@ namespace RosreestDocks.Migrations
                     b.HasOne("RosreestDocks.Models.Common.ArticlesModel", "Articles")
                         .WithMany()
                         .HasForeignKey("ArticlesId");
-
-                    b.HasOne("RosreestDocks.Models.User", "CreateUser")
-                        .WithMany()
-                        .HasForeignKey("CreateUserId");
 
                     b.HasOne("RosreestDocks.Models.DockTypeModel", "DockType")
                         .WithMany()
@@ -899,8 +819,6 @@ namespace RosreestDocks.Migrations
                         .HasForeignKey("TypeOfPropertyId");
 
                     b.Navigation("Articles");
-
-                    b.Navigation("CreateUser");
 
                     b.Navigation("DockType");
 

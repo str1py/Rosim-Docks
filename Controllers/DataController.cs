@@ -11,31 +11,39 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Dadata;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace RosreestDocks.Controllers
 {
+    [Authorize]
     public class DataController : Controller
     {
         private readonly ILogger<DataController> _logger;
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly DataBaseContext db;
         private readonly DocksService _docks;
+        private readonly UserManager<User> _userManager;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         MainVars MainVars;
-        public DataController(ILogger<DataController> logger, DataBaseContext context, IWebHostEnvironment hostingEnvironment, InfoUpdater iu, DocksService docks)
+        public DataController(ILogger<DataController> logger, DataBaseContext context, IWebHostEnvironment hostingEnvironment, InfoUpdater iu, 
+            DocksService docks, UserManager<User> userManager, IHttpContextAccessor httpContextAccessor)
         {
+            _userManager = userManager;
+            _httpContextAccessor = httpContextAccessor;
             _logger = logger;
             db = context;
             _hostingEnvironment = hostingEnvironment;
             MainVars = new(db);
             _docks = docks;
-            //_iu = iu;
-            //iu.GetData();
+
+           // Get user id:
         }
 
         #region Appeals 
-        public IActionResult Appeals()
+        public IActionResult AllAppeals()
         {
-            var appeal = db.Request.Include(inc => inc.Status).Include(acr => acr.DockType)
+            var appeal = db.Request.Include(inc => inc.Status).Include(inc => inc.CreateUser).Include(acr => acr.DockType)
                 .Include(acr => acr.RecipientAgency).Include(acr => acr.RecipientAgency.Acronym).Include(acr => acr.RecipientAgency.Director).Include(acr => acr.RecipientAgency.SecondDirector)
                 .Include(acr => acr.TransferAgency).Include(acr => acr.TransferAgency.Acronym).Include(acr => acr.TransferAgency.Director).Include(acr => acr.TransferAgency.SecondDirector)
                 .Include(acr => acr.RecipientAgency.Director.Position).Include(acr => acr.RecipientAgency.SecondDirector.Position)
@@ -44,19 +52,34 @@ namespace RosreestDocks.Controllers
                 .Include(acr => acr.TypeOfProperty).Include(acr => acr.ManageRightsFrom).Include(acr => acr.ManageRightsTo).ToList();
             return View(appeal);
         }
-        public IActionResult AppealsLetters()
+
+        public async Task<IActionResult> Appeals()
         {
+            var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
+            var appeal = db.Request.Include(inc=>inc.CreateUser).Include(inc => inc.Status).Include(acr => acr.DockType)
+                .Include(acr => acr.RecipientAgency).Include(acr => acr.RecipientAgency.Acronym).Include(acr => acr.RecipientAgency.Director).Include(acr => acr.RecipientAgency.SecondDirector)
+                .Include(acr => acr.TransferAgency).Include(acr => acr.TransferAgency.Acronym).Include(acr => acr.TransferAgency.Director).Include(acr => acr.TransferAgency.SecondDirector)
+                .Include(acr => acr.RecipientAgency.Director.Position).Include(acr => acr.RecipientAgency.SecondDirector.Position)
+                .Include(acr => acr.TransferAgency.Director.Position).Include(acr => acr.TransferAgency.SecondDirector.Position)
+                .Include(acr => acr.FirstFoiv).Include(acr => acr.SecondFoiv)
+                .Include(acr => acr.TypeOfProperty).Include(acr => acr.ManageRightsFrom).Include(acr => acr.ManageRightsTo).Where(x => x.CreateUser.Id == user.Id).ToList();
+            return View(appeal);
+        }
+        public async Task<IActionResult> AppealsLetters()
+        {
+            var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
             var appeal = db.Request.Where(x=>x.DockType.Id == 2).Where(x=>x.Status.Id != 5).Include(inc => inc.Status).Include(acr => acr.DockType)
                 .Include(acr => acr.RecipientAgency).Include(acr => acr.RecipientAgency.Acronym).Include(acr => acr.RecipientAgency.Director).Include(acr => acr.RecipientAgency.SecondDirector)
                 .Include(acr => acr.TransferAgency).Include(acr => acr.TransferAgency.Acronym).Include(acr => acr.TransferAgency.Director).Include(acr => acr.TransferAgency.SecondDirector)
                 .Include(acr => acr.RecipientAgency.Director.Position).Include(acr => acr.RecipientAgency.SecondDirector.Position)
                 .Include(acr => acr.TransferAgency.Director.Position).Include(acr => acr.TransferAgency.SecondDirector.Position)
                 .Include(acr => acr.FirstFoiv).Include(acr => acr.SecondFoiv)
-                .Include(acr => acr.TypeOfProperty).Include(acr => acr.ManageRightsFrom).Include(acr => acr.ManageRightsTo).ToList();
+                .Include(acr => acr.TypeOfProperty).Include(acr => acr.ManageRightsFrom).Include(acr => acr.ManageRightsTo).Where(x => x.CreateUser.Id == user.Id).ToList();
             return View(appeal);
         }
-        public IActionResult AppealsCentral()
+        public async Task<IActionResult> AppealsCentral()
         {
+            var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
             var appeal = db.Request.Where(x => x.DockType.Id == 3).Where(x => x.Status.Id != 5).Include(inc => inc.Status).Include(acr => acr.DockType)
                 .Include(acr => acr.RecipientAgency).Include(acr => acr.RecipientAgency.Acronym).Include(acr => acr.RecipientAgency.Director).Include(acr => acr.RecipientAgency.SecondDirector)
                 .Include(acr => acr.TransferAgency).Include(acr => acr.TransferAgency.Acronym).Include(acr => acr.TransferAgency.Director).Include(acr => acr.TransferAgency.SecondDirector)
@@ -66,8 +89,9 @@ namespace RosreestDocks.Controllers
                 .Include(acr => acr.TypeOfProperty).Include(acr => acr.ManageRightsFrom).Include(acr => acr.ManageRightsTo).ToList();
             return View(appeal);
         }
-        public IActionResult AppealsRaspor()
+        public async Task<IActionResult> AppealsRaspor()
         {
+            var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
             var appeal = db.Request.Where(x => x.DockType.Id == 4 || x.DockType.Id == 5).Where(x => x.Status.Id != 5).Include(inc => inc.Status).Include(acr => acr.DockType)
                 .Include(acr => acr.RecipientAgency).Include(acr => acr.RecipientAgency.Acronym).Include(acr => acr.RecipientAgency.Director).Include(acr => acr.RecipientAgency.SecondDirector)
                 .Include(acr => acr.TransferAgency).Include(acr => acr.TransferAgency.Acronym).Include(acr => acr.TransferAgency.Director).Include(acr => acr.TransferAgency.SecondDirector)
@@ -77,8 +101,9 @@ namespace RosreestDocks.Controllers
                 .Include(acr => acr.TypeOfProperty).Include(acr => acr.ManageRightsFrom).Include(acr => acr.ManageRightsTo).ToList();
             return View(appeal);
         }
-        public IActionResult AppealsClosed()
+        public async Task<IActionResult> AppealsClosed()
         {
+            var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
             var appeal = db.Request.Where(x => x.Status.Id == 5).Include(inc => inc.Status).Include(acr => acr.DockType)
                 .Include(acr => acr.RecipientAgency).Include(acr => acr.RecipientAgency.Acronym).Include(acr => acr.RecipientAgency.Director).Include(acr => acr.RecipientAgency.SecondDirector)
                 .Include(acr => acr.TransferAgency).Include(acr => acr.TransferAgency.Acronym).Include(acr => acr.TransferAgency.Director).Include(acr => acr.TransferAgency.SecondDirector)
@@ -88,6 +113,7 @@ namespace RosreestDocks.Controllers
                 .Include(acr => acr.TypeOfProperty).Include(acr => acr.ManageRightsFrom).Include(acr => acr.ManageRightsTo).ToList();
             return View(appeal);
         }
+
         public IActionResult EditAppealConsider(int id)
         {
             RequestModel consider = db.Request.Include(inc => inc.Status).Include(acr => acr.DockType)
@@ -127,23 +153,61 @@ namespace RosreestDocks.Controllers
 
             return View(consider);
         }
-        public IActionResult CreateAppealConsider(RequestModel request)
+
+        public IActionResult ViewAppealConsider(int id)
         {
-            var consider = _docks.CreateAppealDocks(request);
-            return DownloadFile(consider[0], consider[1]);
+            RequestModel consider = db.Request.Include(inc=> inc.CreateUser).Include(inc => inc.Status).Include(acr => acr.DockType)
+                .Include(acr => acr.RecipientAgency).Include(acr => acr.RecipientAgency.Acronym).Include(acr => acr.RecipientAgency.Director).Include(acr => acr.RecipientAgency.SecondDirector)
+                .Include(acr => acr.TransferAgency).Include(acr => acr.TransferAgency.Acronym).Include(acr => acr.TransferAgency.Director).Include(acr => acr.TransferAgency.SecondDirector)
+                .Include(acr => acr.RecipientAgency.Director.Position).Include(acr => acr.RecipientAgency.SecondDirector.Position)
+                .Include(acr => acr.TransferAgency.Director.Position).Include(acr => acr.TransferAgency.SecondDirector.Position)
+                .Include(acr => acr.FirstFoiv).Include(acr => acr.SecondFoiv)
+                .Include(acr => acr.FirstFoivAppeal).Include(acr => acr.SecondFoivAppeal).Include(acr => acr.RecipientAppeal).Include(acr => acr.TransferAppeal).Include(acr => acr.RosimAppeal)
+                .Include(acr => acr.TypeOfProperty).Include(acr => acr.ManageRightsFrom).Include(acr => acr.ManageRightsTo).ToList().Where(x => x.Id == id).SingleOrDefault();
+
+
+            var list = db.Acronyms.ToSelectListItem(null);
+            consider.TransferAgencyAcromymList = list;
+            consider.RecipientAgencyAcromymList = list;
+            consider.DockStatusList = db.DocStatus.ToSelectListItem(null);
+            consider.ArticlesList = db.Articles.ToSelectListItem(null);
+            consider.ManageRightsList = db.ManageRights.ToSelectListItem(null);
+            consider.TypeOfPropertyList = db.TypeOfPropertyModels.ToSelectListItem(null);
+            consider.AnnexList = MainVars.anexlist.ToSelectListItem(null);
+            consider.SideList = MainVars.sideList.ToSelectListItem(null);
+            var foivs = db.Foiv.ToSelectListItem(null);
+            consider.FirstFoivList = foivs;
+            consider.SecondFoivList = foivs;
+            var agencies = db.Agency.
+                  Include(ag => ag.Director).Include(ag => ag.Director.Position).
+                  Include(ag => ag.SecondDirector).Include(ag => ag.SecondDirector.Position);
+            consider.TransferAgencyList = agencies.ToSelectListItem(null);
+            consider.RecipientAgencyList = agencies.ToSelectListItem(null);
+            consider.RecipientAgencyNormalList = agencies.ToList();
+            consider.TransferAgencyNormalList = agencies.ToList();
+            consider.FoivNormalList = db.Foiv.ToList();
+            consider.DockTypeList = db.DocType.ToSelectListItem(null);
+
+            consider.RecipientAgency.AcronymSelected = consider.RecipientAgency.Acronym.Id;
+            consider.TransferAgency.AcronymSelected = consider.TransferAgency.Acronym.Id;
+
+            return View(consider);
         }
-        public IActionResult CreateAppealRunner(RequestModel request)
+        public IActionResult AppealConsider()
         {
-            var consider = _docks.CreateAppealRunner(request);
-            return DownloadFile(consider[0], consider[1]);
+            var consider = MainVars.CreateFullRquestModel();
+            consider.DockStatusList = db.DocStatus.ToSelectListItem(null);
+            consider.DockTypeList = db.DocType.ToSelectListItem(null);
+            return View(consider);
+
         }
-        public IActionResult AppealConsiderSave(RequestModel rasporVyaModel)
+        public async Task<IActionResult> AppealConsiderSave(RequestModel rasporVyaModel)
         {
+            var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
             var a = rasporVyaModel;
 
             if (a.CreationDate == DateTime.MinValue)
                 a.CreationDate = DateTime.Now;
-      
 
             a.Articles = db.Articles.Where(x => x.Id == rasporVyaModel.Articles.Id).SingleOrDefault();
             a.FirstFoiv = db.Foiv.Where(x => x.Id == rasporVyaModel.FirstFoiv.Id).SingleOrDefault();
@@ -155,6 +219,7 @@ namespace RosreestDocks.Controllers
             a.Status = db.DocStatus.Where(x => x.Id == rasporVyaModel.Status.Id).SingleOrDefault();
             a.DockType = db.DocType.Where(x => x.Id == rasporVyaModel.DockType.Id).SingleOrDefault();
             a.TypeOfProperty = db.TypeOfPropertyModels.Where(x => x.Id == rasporVyaModel.TypeOfProperty.Id).SingleOrDefault();
+            a.CreateUser = db.AppUser.Where(x => x.Id == user.Id).SingleOrDefault();
             //a.TransferAgency.Acronym = db.Acronyms.Where(x => x.Id == rasporVyaModel.TransferAgency.AcronymSelected).SingleOrDefault();
             //a.RecipientAgency.Acronym = db.Acronyms.Where(x => x.Id == rasporVyaModel.RecipientAgency.AcronymSelected).SingleOrDefault();
             if (rasporVyaModel.Id == 0)
@@ -166,13 +231,24 @@ namespace RosreestDocks.Controllers
             return Redirect(Request.Headers["Referer"].ToString());
         }
 
+
+
+        public IActionResult CreateAppealConsider(RequestModel request)
+        {
+            var consider = _docks.CreateAppealDocks(request);
+            return DownloadFile(consider[0], consider[1]);
+        }
+        public IActionResult CreateAppealRunner(RequestModel request)
+        {
+            var consider = _docks.CreateAppealRunner(request);
+            return DownloadFile(consider[0], consider[1]);
+        }
+
         public IActionResult CreateZaprosCentral(RequestModel request)
         {
             var consider = _docks.CreateZaprosCA(request);
             return DownloadFile(consider[0], consider[1]);
         }
-
-
         public IActionResult CreateDeny(RequestModel request)
         {
             var consider = _docks.CreateDeny(request);
@@ -188,13 +264,15 @@ namespace RosreestDocks.Controllers
 
         public async Task<IActionResult> EditAcronyms(AgencyAcronymModel acronym)
         {
+            acronym.EditTime = DateTime.Now;
+            acronym.LastEditor = await _userManager.GetUserAsync(User);
             db.Update(acronym);
             await db.SaveChangesAsync();
             return Redirect(Request.Headers["Referer"].ToString());
         }
         public async Task<ActionResult> ShowUpdateAcronymsModal(string id)
         {
-            var item = await db.Acronyms.Where(x => x.Id == Int32.Parse(id)).FirstOrDefaultAsync();
+            var item = await db.Acronyms.Include(x=> x.LastEditor).Where(x => x.Id == Int32.Parse(id)).FirstOrDefaultAsync();
 
             if (item != null)
             {
@@ -238,6 +316,8 @@ namespace RosreestDocks.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateFoiv(FoivModel foiv)
         {
+            foiv.EditTime = DateTime.Now;
+            foiv.LastEditor = await _userManager.GetUserAsync(User);
             await db.Foiv.AddAsync(foiv);
             await db.SaveChangesAsync();
 
@@ -258,6 +338,8 @@ namespace RosreestDocks.Controllers
         public async Task<IActionResult> EditFoiv(FoivModel foiv)
         {
             var res = await  db.Foiv.Where(x => x.Id == foiv.Id).FirstOrDefaultAsync();
+            res.EditTime = DateTime.Now;
+            res.LastEditor = await _userManager.GetUserAsync(User);
             res = foiv;
             await db.SaveChangesAsync();
 
@@ -265,7 +347,7 @@ namespace RosreestDocks.Controllers
         }
         public async Task<ActionResult> ShowUpdateFoivModal(string id)
         {
-            var item = await db.Foiv.Where(x => x.Id == Int32.Parse(id)).FirstOrDefaultAsync();
+            var item = await db.Foiv.Include(x => x.LastEditor).Where(x => x.Id == Int32.Parse(id)).FirstOrDefaultAsync();
             if (item != null)
                 return PartialView("Modal/UpdateFoivModal", item);
             else return null;
@@ -291,7 +373,7 @@ namespace RosreestDocks.Controllers
 
             agency.Director = GetDirector(agency);
             agency.SecondDirector = GetSecondDirector(agency);
-           
+
             db.Agency.Add(agency);
             await db.SaveChangesAsync();
 
@@ -315,7 +397,8 @@ namespace RosreestDocks.Controllers
 
             agency.Director.Position= await db.Positions.Where(x=>x.Id == agency.Director.Position.Id).SingleOrDefaultAsync();
             agency.SecondDirector.Position = await db.Positions.Where(x => x.Id == agency.SecondDirector.Position.Id).SingleOrDefaultAsync();
-
+            agency.EditTime = DateTime.Now;
+            agency.LastEditor = await _userManager.GetUserAsync(User);
             db.Update(agency);
             await db.SaveChangesAsync();
             return Redirect(Request.Headers["Referer"].ToString());
@@ -329,6 +412,7 @@ namespace RosreestDocks.Controllers
                 .Include(acr => acr.SecondDirector)
                 .Include(acr => acr.Director.Position)
                 .Include(acr => acr.SecondDirector.Position)
+                .Include(x => x.LastEditor)
                 .AsNoTracking().SingleOrDefaultAsync();
 
             if (item.Director == null)

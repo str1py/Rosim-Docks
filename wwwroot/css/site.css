@@ -77,7 +77,7 @@ a {
 .bg-primary {
     color: #fff;
     background-color: #4781da !important;
-    border-color: #4781da;
+    border-color: #4781da !important;
 }
 /* Menu styles
 -------------------------------------------------- */
@@ -394,5 +394,19 @@ table.dataTable thead th, table.dataTable thead td {
     align-items: center;
 }
 
+.parent {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 100vh;
 
+}
 
+.authform {
+    background-color:white;
+    box-shadow: rgb(14 30 37 / 12%) 0px 2px 4px 0px, rgb(14 30 37 / 32%) 0px 2px 16px 0px;
+    border-radius:5px;
+    padding:30px;
+    width:30%;
+}

@@ -1,0 +1,64 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Вход";
+}
+        <div class="parent">
+            <form class="authform" method="post">
+                <img src="/images/logo_FAUGI.svg"  class="d-inline-block align-top" alt="">
+                <h4 class="text-center" style="margin-top:30px;">Авторизация</h4>
+ 
+                <div asp-validation-summary="All" class="text-danger"></div>
+
+                <div class="fields" style="margin-top:30px;">               
+                    <label for="inp" class="inp" >
+                            <input id="transferadress" class="fields"  asp-for="Input.UserName" placeholder="&nbsp;" required/>
+                            <span class="label">Имя пользователя</span>
+                            <span class="focus-bg"></span>
+                    </label>   
+                </div>
+                    
+                <div class="fields" style="margin-top:10px;">
+                    <label for="inp" class="inp">
+                            <input id="transferadress" class="fields" type="password" asp-for="Input.Password" placeholder="&nbsp;" required/>
+                            <span class="label">Пароль</span>
+                            <span class="focus-bg"></span>
+                    </label>   
+                </div>
+          
+@*
+                <div>
+                    <span class="checkbox">
+                        <label asp-for="Input.RememberMe">
+                            <input asp-for="Input.RememberMe" />
+                            @Html.DisplayNameFor(m => m.Input.RememberMe)
+                        </label>
+                    </span>
+                    <span style="float:right">
+                        <a id="forgot-password" asp-page="./ForgotPassword">Забыли пароль?</a>
+                    </span>
+                </div>*@
+
+                <div class="text-center" style="margin-top:30px;">
+                    <button type="submit" class="btn btn-primary bg-primary">Войти</button>
+                </div>
+
+                <hr />
+                <div class="mx-auto">
+                     <div class="text-center">
+                         <span>Еще не зарегистрированы?</span>
+                         <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Зарегистрируйтесь сейчас!</a>
+                     </div>
+                </div>
+            </form>
+
+
+
+
+
+        </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

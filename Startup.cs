@@ -1,10 +1,14 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RosreestDocks.Contexts;
 using RosreestDocks.Helpers;
+using RosreestDocks.Models;
 
 namespace RosreestDocks
 {
@@ -21,10 +25,30 @@ namespace RosreestDocks
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            services.AddDefaultIdentity<User>(config =>
+            {
+                config.SignIn.RequireConfirmedEmail = false;
+                config.User.RequireUniqueEmail = true;
+                config.SignIn.RequireConfirmedAccount = false;
+            }).AddRoles<IdentityRole>().AddEntityFrameworkStores<DataBaseContext>();
+
             services.AddDbContext<DataBaseContext>();
             services.AddScoped<InfoUpdater>();
             services.AddScoped<DocksService>();
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+
+            services.AddControllersWithViews();
             services.AddMvc();
+            services.AddRazorPages();
+
+            //services.AddMemoryCache();
+            //services.AddSession();
+
+
+
             services.AddRouting(options => options.LowercaseUrls = true);
         }
 
@@ -47,6 +71,7 @@ namespace RosreestDocks
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -135,6 +160,7 @@ namespace RosreestDocks
                     name: "RemoveNote",
                     pattern: "{controller=Data}/{action=RemoveNote}/{id?}");
 
+                endpoints.MapRazorPages();
             });
         }
     }

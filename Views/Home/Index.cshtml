@@ -1,14 +1,20 @@
 ﻿@using Microsoft.EntityFrameworkCore;
 @using RosreestDocks.Contexts
 @using System;
+@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
 @inject DataBaseContext db
 @{
-    ViewData["Title"] = "Home Page";
-    var newlist = db.Request.Include(a => a.Status).Where(x => x.DockType.Id == 1).Where(x => x.Status.Id != 5).OrderBy(o => o.DocName).ToList(); // Н/А
-    var letterlist = db.Request.Include(a => a.Status).Where(x => x.DockType.Id == 2).Where(x => x.Status.Id != 5).OrderBy(o => o.DocName).ToList(); //письмо
-    var zaproslist = db.Request.Include(a => a.Status).Where(x=>x.DockType.Id == 3).Where(x => x.Status.Id != 5).OrderBy(o=>o.DocName).ToList(); //запрос ЦА 
+    ViewData["Title"] = "Гланая страница";
+    var userid = UserManager.GetUserId(User);
+ 
+    var newlist = db.Request.Include(a => a.Status).Where(x => x.DockType.Id == 1).Where(x => x.Status.Id != 5).Where(x=>x.CreateUser.Id == userid).OrderBy(o => o.DocName).ToList(); // Н/А
+    var letterlist = db.Request.Include(a => a.Status).Where(x => x.DockType.Id == 2).Where(x => x.Status.Id != 5).Where(x=>x.CreateUser.Id  == userid).OrderBy(o => o.DocName).ToList(); //письмо
+    var zaproslist = db.Request.Include(a => a.Status).Where(x=>x.DockType.Id == 3).Where(x => x.Status.Id != 5).Where(x=>x.CreateUser.Id  == userid).OrderBy(o=>o.DocName).ToList(); //запрос ЦА 
     var rasporlist = db.Request.Include(a => a.Status).Include(a=>a.RecipientAgency).Include(a=>a.TransferAgency)
-                    .Where(x=>x.DockType.Id == 4 || x.DockType.Id == 5).Where(x => x.Status.Id != 5)
+                    .Where(x=>x.DockType.Id == 4 || x.DockType.Id == 5).Where(x => x.Status.Id != 5).Where(x=>x.CreateUser.Id == userid)
                     .OrderBy(o=>o.DocName).OrderBy(o=>o.Status).ToList(); //распоряжения
 
     var notes = db.Notes.Include(x=>x.Importance).ToList();

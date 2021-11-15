@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RosreestDocks.Contexts;
 
 namespace RosreestDocks.Migrations
 {
     [DbContext(typeof(DataBaseContext))]
-    partial class DataBaseContextModelSnapshot : ModelSnapshot
+    [Migration("20211115193447_Editors")]
+    partial class Editors
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -702,9 +704,6 @@ namespace RosreestDocks.Migrations
 
                     b.Property<DateTime>("MemberSince")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<string>("MiddleName")
-                        .HasColumnType("longtext");
 
                     b.HasDiscriminator().HasValue("User");
                 });

@@ -1,5 +1,10 @@
 ﻿@model List<RequestModel>
 
+@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+
 @{
     ViewData["Title"] = "Все обращения";
 }
@@ -10,6 +15,7 @@
 
 
 @{
+
     string Name = "Appeals";
     string removeaction = "Remove" + Name;
 }
@@ -48,6 +54,14 @@
 
         return list;
     }
+
+    string GetInitials (User user) {
+        char fname = user.FirstName.FirstOrDefault();
+        char mname = user.MiddleName.FirstOrDefault();
+
+        return (user.LastName +" "+ fname+ ". " + mname +".") ;
+
+    }
 }
 
    <hr class="line-h1" >
@@ -55,12 +69,13 @@
     <table id="appealtable" class="table table-hover">
     <thead>
         <tr>
-            <th scope="col" style="width:10%;">#</th>          
-            <th scope="col" style="width:10%;">Вр и отправленный</th>   
-            <th scope="col" style="width:10%;">Статус</th>  
+            <th scope="col" style="width:8%;">#</th>          
+            <th scope="col" style="width:8%;">Вр и отправленный</th>   
+            <th scope="col" style="width:9%;">Статус</th>  
             <th scope="col" style="width:15%;">Срок</th>
-            <th scope="col" style="width:30%;">Организации</th>
+            <th scope="col" style="width:35%;">Организации</th>
             <th scope="col" style="width:5%;">Создано</th>
+            <th scope="col" style="width:10%;">Исполнитель</th>
             <th scope="col" style="width:20%;"></th>
         </tr>
     </thead>
@@ -101,8 +116,15 @@
                     }
                     1. @recname <br> 2. @trname </td>
                 <td>@appeal.CreationDate.ToShortDateString()</td>
+                <td>@GetInitials(appeal.CreateUser)</td>
                 <td>
-                    @Html.ActionLink("Правка", "EditAppealConsider", "Data", new { id=@appeal.Id})
+                    @{
+                       if(appeal.CreateUser.Id == UserManager.GetUserId(User))
+                        @Html.ActionLink("Правка", "EditAppealConsider", "Data", new { id=@appeal.Id})
+                       else
+                        @Html.ActionLink("Просмотр", "ViewAppealConsider", "Data", new { id=@appeal.Id})
+                    }
+                    
                     <button type="button" class="btn btn-outline-danger btn-sm" style="font-size:10px;"
                             data-toggle="modal" data-target="#comfirmDelete" data-action="@removeaction" data-name="организация"
                             data-item="@appeal.Id">Удалить </button>

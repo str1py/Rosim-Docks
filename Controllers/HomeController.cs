@@ -14,10 +14,11 @@ using System.Text.Json;
 using System.Text.Unicode;
 using System.Text.Encodings.Web;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.AspNetCore.Authorization;
 
 namespace RosreestDocks.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -43,16 +44,6 @@ namespace RosreestDocks.Controllers
         }
 
 
-
-        #region AppealConsider
-        public IActionResult AppealConsider()
-        {
-            var consider = MainVars.CreateFullRquestModel();
-            consider.DockStatusList = db.DocStatus.ToSelectListItem(null);
-            consider.DockTypeList = db.DocType.ToSelectListItem(null);
-            return View(consider);
-        }
-        #endregion
 
         #region RASPORVYA
         public IActionResult RasporVya()
