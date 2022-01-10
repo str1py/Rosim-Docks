@@ -4,8 +4,7 @@ using RosreestDocks.Models.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace RosreestDocks.Models
 {
@@ -25,6 +24,7 @@ namespace RosreestDocks.Models
         public IEnumerable<SelectListItem> DockTypeList { get; set; }
 
         public string PropertyDiscription { get; set; }
+        public int PropertyCount { get; set; }
 
         public User CreateUser { get; set; }
 

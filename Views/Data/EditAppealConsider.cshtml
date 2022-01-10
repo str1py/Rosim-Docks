@@ -12,13 +12,31 @@
 
 <div>
     <form asp-controller="Data" method="post">
-           <div style="display:flex;  justify-content: center;   align-items: center;">
-               <h3  style="margin-right:10px;" >Обращение №  @Model.DocName  от  @Model.DocDate.ToShortDateString()</h3>
-               <h3  style="margin-right:10px;" >Срок: @Model.ExpireDate.ToShortDateString()</h3>
+        <div style="display:flex;  justify-content: center;   align-items: center;">
+            <h3  style="margin-right:10px;" >Редактировать обращение</h3>
+        </div>
+        <div class="form-group">    
+           <div style="display:flex;">
+               <label style="margin-left:10px;" for="inp" class="inp">
+                    <input type="text" class="fields" asp-for="@Model.DocName" placeholder="&nbsp;" />
+                    <span class="label">Номер обращения</span>
+                    <span class="focus-bg"></span>
+               </label>
+      
+               <label style="margin-left:10px;" for="inp" class="inp">
+                    <input type="date" class="fields" asp-for="@Model.DocDate" placeholder="&nbsp;" />
+                    <span class="label">Дата обращения</span>
+                    <span class="focus-bg"></span>
+               </label>
+               <label style="margin-left:10px;" for="inp" class="inp">
+                    <input type="date" class="fields" asp-for="@Model.ExpireDate" placeholder="&nbsp;" />
+                    <span class="label">Срок</span>
+                    <span class="focus-bg"></span>
+               </label>
            </div>
+       </div>
        <div class="form-group">      
            <input type="hidden" asp-for="@Model.Id" />
-           <input type="hidden" asp-for="@Model.DocName" />
            <input type="hidden" asp-for="@Model.DocDate" />
            <input type="hidden" asp-for="@Model.ExpireDate" />
            <input type="hidden" asp-for="@Model.CreationDate" />
@@ -116,7 +134,15 @@
                              <span asp-validation-for="TypeOfProperty.Id"></span>
                         </div>       
                     </div>
-                    <div class="col-7" style="align-self: flex-end;">
+                    <div class="col-2">
+                       <label for="inp" class="inp" >
+                            <input class="inp" type="text" asp-for="PropertyCount" placeholder="&nbsp;"  required />
+                            <span class="label">Кол-во*</span>
+                            <span class="focus-bg"></span>
+                            <span asp-validation-for="PropertyCount" class="text-danger"></span>
+                       </label>      
+                    </div>
+                    <div class="col-5" style="align-self: flex-end;">
                         <div>
                             <label for="inp" class="inp" style="margin-left:5px;">
                                 <input class="fields"  type="text" asp-for="PropertyDiscription" placeholder="&nbsp;" />

@@ -2,12 +2,14 @@
 @using RosreestDocks.Contexts
 @using System;
 @using Microsoft.AspNetCore.Identity
+@using RosreestDocks.Helpers
 
-@inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
 @inject DataBaseContext db
+
 @{
-    ViewData["Title"] = "Гланая страница";
+    ViewData["Title"] = "Росимущество - Гланая страница";
+    ViewHelper viewHelper = new();
     var userid = UserManager.GetUserId(User);
  
     var newlist = db.Request.Include(a => a.Status).Where(x => x.DockType.Id == 1).Where(x => x.Status.Id != 5).Where(x=>x.CreateUser.Id == userid).OrderBy(o => o.DocName).ToList(); // Н/А
@@ -17,17 +19,10 @@
                     .Where(x=>x.DockType.Id == 4 || x.DockType.Id == 5).Where(x => x.Status.Id != 5).Where(x=>x.CreateUser.Id == userid)
                     .OrderBy(o=>o.DocName).OrderBy(o=>o.Status).ToList(); //распоряжения
 
-    var notes = db.Notes.Include(x=>x.Importance).ToList();
-
-
-    string GetName(AgencyModel agency)
-    {
-        if(String.IsNullOrEmpty(agency.ShortName))
-            return agency.Name;
-        else return agency.ShortName;
-    }
+    var notes = db.Notes.Include(x=>x.Importance).Where(x=>x.Creator.Id == userid).ToList();
 }
-
+<!-- CHARTS -->
+@*@await Html.PartialAsync("/Views/Data/Modal/Partial/_ChartsModal.cshtml",notes)*@
 <!-- ALL NOTES -->
 @await Html.PartialAsync("/Views/Data/Modal/Partial/_NotesModal.cshtml",notes)
 
@@ -135,7 +130,7 @@
                             foreach(var a in rasporlist) {
                             <tr>
                                <td> <a href="/data/editappealconsider/@a.Id">@a.DocName</a> </td>
-                               <td style="font-size:9px;">@GetName(a.TransferAgency) <br> ------- <br>  @GetName(a.RecipientAgency)</td>
+                               <td style="font-size:9px;">@viewHelper.GetAgencyName(a.TransferAgency) <br> ------- <br>  @viewHelper.GetAgencyName(a.RecipientAgency)</td>
                                <td>@a.Status.Name</td>
                                <td>@a.WorkNumber</td>
                                <td>@a.SendNumber</td>
@@ -172,7 +167,7 @@
 
 
 <!-- ADD NOTE -->
-@using RosreestDocks.Helpers
+
 @{
     NoteModel notemodel = new();
     notemodel.ImportanceList = db.Importance.ToSelectListItem(null);

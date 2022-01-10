@@ -12,11 +12,9 @@ namespace RosreestDocks.Helpers
     public class DictionaryCreator
     {
         private readonly DataBaseContext db;
-        MainVars MainVars;
         public DictionaryCreator(DataBaseContext context)
         {
             db = context;
-            MainVars = new(db);
         }
 
         private Dictionary<string,string> CreateAgencies(ICommonModel a, ICommonModel raspor)
@@ -531,20 +529,21 @@ namespace RosreestDocks.Helpers
             if (a.IsRosim == true)
             {
                 ChangeDic.Add("RosImRaspor", "во исполнении поручений Федерального агентства по управлению государственным имуществом от 06 июня 2017 г. № ДП-08/22081 и от " + a.RosimDate + " г. № " + a.RosimNumber);
-                ChangeDic.Add("RosImSoprovod", "Во исполнение поручения Федерального агентства по управлению государственным имуществом от" + a.RosimDate + " г. № "+ a.RosimNumber);
+                ChangeDic.Add("RosImSoprovod", "Во исполнение поручения Федерального агентства по управлению государственным имуществом (далее - Росимущество) от" + a.RosimDate + " г. № "+ a.RosimNumber +
+                    " Территориальное управление Росимущества в городе Москве (далее – Территориальное управление)");
                 ChangeDic.Add("SopPrilRosIm", "1 экз. Распоряжения в электронном виде в третий адрес");
                 ChangeDic.Add("RosImName", "Росимущество");
             }
             else
             {
                 ChangeDic.Add("RosImRaspor", "во исполнении поручения Федерального агентства по управлению государственным имуществом от 06 июня 2017 г. № ДП-08/22081");
-                ChangeDic.Add("RosImSoprovod", "");
+                ChangeDic.Add("RosImSoprovod", "Территориальное управление Федерального агентства по управлению государственным имуществом в городе Москве (далее – Территориальное управление)");
                 ChangeDic.Add("SopPrilRosIm", "1 экз. Распоряжения в электронном виде в третий адрес.");             
                 ChangeDic.Add("RosImName", "");
             }
 
             if (a.BuildingsString)
-                ChangeDic.Add("BuildingsString", "-обеспечить оформление земельно-правовых отношений.");
+                ChangeDic.Add("BuildingsString", "- обеспечить оформление земельно-правовых отношений.");
             else ChangeDic.Add("BuildingsString", "");
             return ChangeDic;
         }
@@ -585,7 +584,7 @@ namespace RosreestDocks.Helpers
                     ChangeDic.Add("RosImRaspor", "во исполнение поручений Федерального агентства по управлению государственным имуществом от 06 июня 2017 г. № ДП-08/22081 и от " + a.RosimAppeal.Date + " г. № " + a.RosimAppeal.Number);
                 else ChangeDic.Add("RosImRaspor", "во исполнение поручения Федерального агентства по управлению государственным имуществом от " + a.RosimAppeal.Date + " г. № " + a.RosimAppeal.Number);
                 
-                ChangeDic.Add("RosImSoprovod", "Во исполнение поручения Федерального агентства по управлению государственным имуществом от" + a.RosimAppeal.Date + " г. № " + a.RosimAppeal.Number);
+                ChangeDic.Add("RosImSoprovod", "Во исполнение поручения Федерального агентства по управлению государственным имуществом от " + a.RosimAppeal.Date + " г. № " + a.RosimAppeal.Number);
                 ChangeDic.Add("SopPrilRosIm", "1 экз. Распоряжения в электронном виде в третий адрес.");
                 ChangeDic.Add("RosImName", "Росимущество");
             }
@@ -596,7 +595,7 @@ namespace RosreestDocks.Helpers
                 else ChangeDic.Add("RosImRaspor", "");
 
                 ChangeDic.Add("RosImSoprovod", "");
-                ChangeDic.Add("SopPrilRosIm", "1 экз. Распоряжения в электронном виде в третий адрес.");
+                ChangeDic.Add("SopPrilRosIm", "");
                 ChangeDic.Add("RosImName", "");
             }
 
@@ -672,11 +671,20 @@ namespace RosreestDocks.Helpers
             a.TransferAgency = db.Agency.Where(x => x.Id == raspor.TransferAgency.Id).Include(x => x.Acronym).FirstOrDefault();
             var ChangeDic = CreateAgencies(a, raspor);
 
-            
-            ChangeDic.Add("Objects", "объекта/объектов");
-            ChangeDic.Add("Pins", "закрепленного/закрепленных");
+
+            if (a.PropertyCount == 1)
+            {
+                ChangeDic.Add("Objects", "объект");
+                ChangeDic.Add("SecObj", "данного объекта");
+            }
+            else
+            {
+                ChangeDic.Add("Objects", "объекты");
+                ChangeDic.Add("SecObj", "данных объектов");
+            }
+
             ChangeDic.Add("AdditionalInfo", a.AddInfo);
-            ChangeDic.Add("PropertyDiscription",$" - {a.PropertyDiscription},");
+            ChangeDic.Add("PropertyDiscription",a.PropertyDiscription);
 
             return ChangeDic;
         }
@@ -690,9 +698,24 @@ namespace RosreestDocks.Helpers
             a.TransferAgency = db.Agency.Where(x => x.Id == raspor.TransferAgency.Id).Include(x => x.Acronym).FirstOrDefault();
             var ChangeDic = CreateAgencies(a, raspor);
 
-            ChangeDic.Add("Objects", "объект/объекты");
-            ChangeDic.Add("SecObj", "данного объекта/данных объектов");
-            ChangeDic.Add("PropertyDiscription", $" - {a.PropertyDiscription},");
+            if(a.PropertyCount == 1)
+            {
+                ChangeDic.Add("Objects", "объект");
+                ChangeDic.Add("SecObj", "данного объекта");
+            }
+            else
+            {
+                ChangeDic.Add("Objects", "объекты");
+                ChangeDic.Add("SecObj", "данных объектов");
+            }
+
+            ChangeDic.Add("PropertyDiscription", $"{a.PropertyDiscription}");
+
+            if (raspor.IsRosim)
+                ChangeDic.Add("RosImDeny", "Во исполнение поручения Федерального агентства по управлению государственным имуществом (далее - Росимущество) от" + a.RosimAppeal.Date + " г. № " + a.RosimAppeal.Number +
+        " Территориальное управление Росимущества в городе Москве (далее – Территориальное управление)");
+            else ChangeDic.Add("RosImDeny", "Территориальное управление Росимущества в городе Москве(далее – Территориальное управление)");
+
 
             return ChangeDic;
         }

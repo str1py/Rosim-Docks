@@ -10,6 +10,7 @@
 
 @{
     string Name = "Organization";
+    string Controller = "Data";
     string ActionNameForUpdate = "ShowUpdate" + Name +"Modal";
     string ActionNameForAdd = "ShowCreate" + Name +"Modal";
     string modal = "update" +Name+ "Modal";
@@ -43,10 +44,13 @@
                 <td>@agency.Name </td>
                 <td>@agency.AddInfo </td>
                 <td class="align-middle">
-                    <button class="btn btn-outline-primary btn-sm update" asp-controller="Data" data-name="@Name" asp-action="@ActionNameForUpdate" asp-route-id="@agency.Id" >Правка</button>
+                    <button class="btn btn-outline-primary btn-sm update" 
+                        asp-controller="Data" data-name="@Name" 
+                        asp-action="@ActionNameForUpdate" 
+                        asp-route-id="@agency.Id" ><i class="fas fas-table fa-edit"></i></button>
                     <button type="button" class="btn btn-outline-danger btn-sm"
-                            data-toggle="modal" data-target="#comfirmDelete" data-action="@removeaction" data-name="организация"
-                            data-item="@agency.Id">Удалить </button>
+                            data-toggle="modal" data-target="#comfirmDelete" data-action="@removeaction" data-name="организация" data-controller="@Controller"
+                            data-item="@agency.Id"><i class="fas fas-table fa-trash-alt"></i></button>
                 </td>
             </tr>
         }

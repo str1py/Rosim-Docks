@@ -145,16 +145,10 @@ namespace RosreestDocks.Controllers
             return DownloadFile(list[0], list[1]);
         }
 
-
-
         public IActionResult DownloadFile(string link, string name)
         {
-            var net = new System.Net.WebClient();
-            var data = net.DownloadData(link);
-            var content = new MemoryStream(data);
-            var contentType = "APPLICATION/octet-stream";
-            var fileName = name;
-            return File(content, contentType, fileName);
+            var data = MainVars.DownloadFile(link, name);
+            return File(data.Item1, data.Item2, data.Item3);
         }
 
         public IActionResult Error()

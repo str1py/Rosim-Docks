@@ -513,6 +513,9 @@ namespace RosreestDocks.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<string>("CreatorId")
+                        .HasColumnType("varchar(255)");
+
                     b.Property<int?>("ImportanceId")
                         .HasColumnType("int");
 
@@ -523,6 +526,8 @@ namespace RosreestDocks.Migrations
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CreatorId");
 
                     b.HasIndex("ImportanceId");
 
@@ -589,6 +594,9 @@ namespace RosreestDocks.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("ManageRightsToId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PropertyCount")
                         .HasColumnType("int");
 
                     b.Property<string>("PropertyDiscription")
@@ -825,9 +833,15 @@ namespace RosreestDocks.Migrations
 
             modelBuilder.Entity("RosreestDocks.Models.NoteModel", b =>
                 {
+                    b.HasOne("RosreestDocks.Models.User", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatorId");
+
                     b.HasOne("RosreestDocks.Models.ImportanceState", "Importance")
                         .WithMany()
                         .HasForeignKey("ImportanceId");
+
+                    b.Navigation("Creator");
 
                     b.Navigation("Importance");
                 });

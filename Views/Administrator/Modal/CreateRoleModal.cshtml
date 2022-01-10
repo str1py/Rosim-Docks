@@ -1,0 +1,30 @@
+﻿@model Microsoft.AspNetCore.Identity.IdentityRole
+
+<div class="modal-content admin-modal ">
+    <div class="modal-body">
+        <div class="modal-header">
+            <h4>Добавить роль</h4>
+            <button class="close" data-dismiss="modal" area-hidden="true">X</button>
+        </div>
+            <div class="modal-body">
+                <div class="container">
+                    <form asp-antiforgery="true" asp-action="CreateRole" asp-controller="Administrator" method="post" enctype="multipart/form-data">
+                        <div class="validation" asp-validation-summary="ModelOnly"></div>
+                        <div class="form-group fields">
+                            <label class="label-modal" style="margin-top:0px;" asp-for="Name"></label>
+                            <input class="fields inputfields" type="text" asp-for="Name" /><br />
+                            <span asp-validation-for="Name"></span>
+                        </div>
+                        <div style="margin-top:20px;">
+                             <button type="submit" id="submit-material" name="submit-material" class="btn btn-primary button-main">Добавить</button>
+                             <button type="button" class="btn btn-secondary button-main"  data-dismiss="modal">Закрыть</button>        
+                        </div>
+                    </form>
+                </div>
+            </div>
+    </div>
+</div>
+
+ 
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>

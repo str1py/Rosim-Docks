@@ -1,10 +1,7 @@
-﻿/*@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;1,100;1,300;1,400;1,500&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Comfortaa:wght@300;400;500;600;700&display=swap');*/
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+﻿@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
 html {
     font-size: 14px;
-    /*   font-family: 'Roboto', sans-serif !important;*/
     font-family: 'Roboto', cursive;
     min-height: 100%;
 }
@@ -67,8 +64,8 @@ a {
 
 .btn-primary {
     color: #fff;
-    background-color: #4781da;
-    border-color: #4781da;
+    background-color: #4781da !important;
+    border-color: #4781da !important;
 }
 
 .main-blue {
@@ -339,7 +336,10 @@ table.dataTable thead th, table.dataTable thead td {
     margin-right:5px;
 }
 
-
+.fas-table {
+    margin-right: 0 !important;
+    font-size:15px;
+}
 
 /*Notes style*/
 :root {

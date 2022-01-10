@@ -16,7 +16,7 @@
  </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Aspose.Words" Version="21.7.0" />
+    <PackageReference Include="Aspose.Words" Version="21.12.0" />
     <PackageReference Include="Dadata" Version="21.6.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.12" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.12" />
@@ -36,6 +36,12 @@
   <ItemGroup>
     <Folder Include="wwwroot\Docks\" />
     <Folder Include="wwwroot\Documents\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Views\Administrator\Modal\CreateRoleModal.cshtml" />
+    <None Include="Views\Administrator\Modal\UpdateRoleModal.cshtml" />
+    <None Include="Views\Administrator\Modal\UpdateUserModal.cshtml" />
   </ItemGroup>
 
 </Project>

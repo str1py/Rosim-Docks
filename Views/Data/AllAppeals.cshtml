@@ -1,67 +1,25 @@
 ﻿@model List<RequestModel>
 
 @using Microsoft.AspNetCore.Identity
+@using RosreestDocks.Helpers
 
-@inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
 
 @{
     ViewData["Title"] = "Все обращения";
+    string Name = "Appeals";
+    string Controller = "Data";
+    string removeaction = "Remove" + Name;
+    ViewHelper viewHelper = new();
 }
 
 <div class="text-center">
     <h1 class="display-7">Все обращения</h1>
 </div>
 
-
 @{
 
-    string Name = "Appeals";
-    string removeaction = "Remove" + Name;
-}
 
-@{
-    List<string> GetColor(DateTime date)
-    {
-        var a = date - DateTime.Now;
-        string color = "";
-        if (a.Days <= 3)
-            color="#ff2400";
-        else if (a.Days <= 6 && a.Days > 3)
-            color="#fde910";
-        else color="#228b22";
-
-        string days ="";
-
-        if(a.Days == 0)
-            days = "менее 1 дня";
-        else if(a.Days == 1)
-            days = "1 день";
-        else if(a.Days > 1 && a.Days < 5)
-            days = $"{a.Days} дня";
-        else
-            days = $"{Math.Abs(a.Days)} дней";
-
-        var ost = "";
-        if(a.Days < 0)
-            ost = $"просрочка {days}";
-        else ost = $"осталось {days}";
-
-
-        List<string> list = new();
-        list.Add(color);
-        list.Add(ost);
-
-        return list;
-    }
-
-    string GetInitials (User user) {
-        char fname = user.FirstName.FirstOrDefault();
-        char mname = user.MiddleName.FirstOrDefault();
-
-        return (user.LastName +" "+ fname+ ". " + mname +".") ;
-
-    }
 }
 
    <hr class="line-h1" >
@@ -88,7 +46,7 @@
                 <td>@appeal.Status.Name <br> @appeal.DockType.Name </td>
                 <td>
                     @{
-                    var a = @GetColor(appeal.ExpireDate);
+                    var a = @viewHelper.GetColor(appeal.ExpireDate);
                         if(appeal.Status.Id == 5)
                         {
                             a[0] = "#228b22";
@@ -116,7 +74,7 @@
                     }
                     1. @recname <br> 2. @trname </td>
                 <td>@appeal.CreationDate.ToShortDateString()</td>
-                <td>@GetInitials(appeal.CreateUser)</td>
+                <td>@viewHelper.GetInitials(appeal.CreateUser)</td>
                 <td>
                     @{
                        if(appeal.CreateUser.Id == UserManager.GetUserId(User))
@@ -126,8 +84,8 @@
                     }
                     
                     <button type="button" class="btn btn-outline-danger btn-sm" style="font-size:10px;"
-                            data-toggle="modal" data-target="#comfirmDelete" data-action="@removeaction" data-name="организация"
-                            data-item="@appeal.Id">Удалить </button>
+                            data-toggle="modal" data-target="#comfirmDelete" data-action="@removeaction" data-name="организация" data-controller="@Controller"
+                            data-item="@appeal.Id"> <i class="fas fas-table fa-trash-alt"></i></button>
                 </td>
             </tr>
         }

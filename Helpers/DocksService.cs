@@ -1,16 +1,11 @@
 ﻿using Aspose.Words;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using RosreestDocks.Contexts;
 using RosreestDocks.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
-using System.Net;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace RosreestDocks.Helpers
 {
@@ -73,7 +68,7 @@ namespace RosreestDocks.Helpers
                 raspordoc.Range.Replace(a.Key, a.Value?.Trim() ?? "");
             
 
-            string zaporsname = "Запрос в ЦА " + new Random().Next(0, 100);
+            string zaporsname = $"{request.DocName} - Запрос в ЦА ";
             var path = _hostingEnvironment.WebRootPath + "\\Docks\\" + zaporsname + "\\";
 
 

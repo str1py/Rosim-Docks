@@ -1,5 +1,4 @@
-﻿
-using RosreestDocks.Interfaces;
+﻿using RosreestDocks.Interfaces;
 
 namespace RosreestDocks.Models
 {

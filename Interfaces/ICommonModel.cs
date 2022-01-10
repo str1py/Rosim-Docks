@@ -1,10 +1,6 @@
 ﻿using RosreestDocks.Models;
 using RosreestDocks.Models.Common;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace RosreestDocks.Interfaces
 {

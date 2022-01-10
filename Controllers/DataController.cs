@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace RosreestDocks.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin, Employee")]
     public class DataController : Controller
     {
         private readonly ILogger<DataController> _logger;
@@ -26,7 +26,8 @@ namespace RosreestDocks.Controllers
         private readonly UserManager<User> _userManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
         MainVars MainVars;
-        public DataController(ILogger<DataController> logger, DataBaseContext context, IWebHostEnvironment hostingEnvironment, InfoUpdater iu, 
+        private readonly string DockPath;
+        public DataController(ILogger<DataController> logger, DataBaseContext context, IWebHostEnvironment hostingEnvironment, 
             DocksService docks, UserManager<User> userManager, IHttpContextAccessor httpContextAccessor)
         {
             _userManager = userManager;
@@ -36,8 +37,7 @@ namespace RosreestDocks.Controllers
             _hostingEnvironment = hostingEnvironment;
             MainVars = new(db);
             _docks = docks;
-
-           // Get user id:
+            DockPath = _hostingEnvironment.WebRootPath + "\\Documents\\";
         }
 
         #region Appeals 
@@ -370,7 +370,8 @@ namespace RosreestDocks.Controllers
         public async Task<IActionResult> CreateOrganization(AgencyModel agency)
         {
             agency.Acronym = db.Acronyms.Where(x => x.Id == agency.AcronymSelected).SingleOrDefault();
-
+            agency.LastEditor = await _userManager.GetUserAsync(User);
+            agency.EditTime = DateTime.Now;
             agency.Director = GetDirector(agency);
             agency.SecondDirector = GetSecondDirector(agency);
 
@@ -552,8 +553,8 @@ namespace RosreestDocks.Controllers
             doc.Category = await db.DocCategories.Where(x => x.Id == doc.CategorySelected).SingleOrDefaultAsync();
             if (file != null)
             {
-                await UploadFile(file, MainVars.DocsPath);
-                doc.Url = MainVars.DocsPath + file.FileName;
+                await UploadFile(file, DockPath);
+                doc.Url = DockPath + file.FileName;
             }
             await db.Documents.AddAsync(doc);
             await db.SaveChangesAsync();
@@ -568,13 +569,18 @@ namespace RosreestDocks.Controllers
             if (file != null)
             {
                 DeleteDocumentsAsync(doc);
-                await UploadFile(file, MainVars.DocsPath);
-                doc.Url = MainVars.DocsPath + file.FileName;
+                await UploadFile(file, DockPath);
+                doc.Url = DockPath + file.FileName;
             }
             db.Documents.Update(doc);
             await db.SaveChangesAsync();
 
             return Redirect(Request.Headers["Referer"].ToString());
+        }
+        public async Task<IActionResult> DownloadDocument(int id)
+        {
+            var doc = await db.Documents.Where(x => x.Id == id).SingleOrDefaultAsync();
+            return DownloadFile(doc.Url);
         }
 
         public async Task<IActionResult> RemoveDocument(string id)
@@ -608,15 +614,14 @@ namespace RosreestDocks.Controllers
         {
             if (ufile != null)
             {
-                string current = Directory.GetCurrentDirectory();
                 var fileName = Path.GetFileName(ufile.FileName);
-                string[] files = Directory.GetFiles(current + path);
+                string[] files = Directory.GetFiles(path);
 
-                if (!files.Contains(current + path + fileName))
+                if (!files.Contains(path + fileName))
                 {
                     if (ufile != null && ufile.Length > 0)
                     {
-                        var filePath = current + path + fileName;
+                        var filePath = path + fileName;
                         using (var fileSrteam = new FileStream(filePath, FileMode.Create))
                         {
                             await ufile.CopyToAsync(fileSrteam);
@@ -630,24 +635,24 @@ namespace RosreestDocks.Controllers
 
             return false;
         }
+        public IActionResult DownloadFile(string link)
+        {
+            var data = MainVars.DownloadFile(link);
+            return File(data.Item1, data.Item2, data.Item3);
+        }
         public IActionResult DownloadFile(string link, string name)
         {
-            //string current = Directory.GetCurrentDirectory();
-            var net = new System.Net.WebClient();
-            var data = net.DownloadData(link);
-            var content = new MemoryStream(data);
-            var contentType = "APPLICATION/octet-stream";
-            var fileName = name;
-            return File(content, contentType, fileName);
+            var data = MainVars.DownloadFile(link, name);
+            return File(data.Item1, data.Item2, data.Item3);
         }
         public void DeleteDocumentsAsync(DocumentModel prod)
         { 
             //DELETE FOLDER AND FILES
             string curernt = Directory.GetCurrentDirectory();
-            if (Directory.Exists(curernt + MainVars.DocsPath))
+            if (Directory.Exists(curernt + DockPath))
             {
             
-                DirectoryInfo dirInfo = new DirectoryInfo(curernt + MainVars.DocsPath);
+                DirectoryInfo dirInfo = new DirectoryInfo(curernt + DockPath);
                 foreach (FileInfo f in dirInfo.GetFiles())
                 {
                     if (f.Name == Path.GetFileName(prod.Url))
@@ -660,7 +665,7 @@ namespace RosreestDocks.Controllers
         public async Task<IActionResult> CreateNote(NoteModel note)
         {
             note.Importance = db.Importance.Where(x => x.Id == note.Importance.Id).SingleOrDefault();
-
+            note.Creator = await _userManager.GetUserAsync(User);
             db.Notes.Add(note);
             await db.SaveChangesAsync();
 

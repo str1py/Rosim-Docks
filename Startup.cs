@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using RosreestDocks.Contexts;
 using RosreestDocks.Helpers;
 using RosreestDocks.Models;
+using System;
 
 namespace RosreestDocks
 {
@@ -34,7 +35,6 @@ namespace RosreestDocks
             }).AddRoles<IdentityRole>().AddEntityFrameworkStores<DataBaseContext>();
 
             services.AddDbContext<DataBaseContext>();
-            services.AddScoped<InfoUpdater>();
             services.AddScoped<DocksService>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -47,7 +47,12 @@ namespace RosreestDocks
             //services.AddMemoryCache();
             //services.AddSession();
 
-
+            services.AddSession(options =>
+            {
+                //options.IdleTimeout = TimeSpan.FromSeconds(10);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
 
             services.AddRouting(options => options.LowercaseUrls = true);
         }
@@ -70,6 +75,7 @@ namespace RosreestDocks
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseSession();
 
             app.UseAuthentication();
             app.UseAuthorization();

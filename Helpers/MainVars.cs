@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RosreestDocks.Contexts;
 using RosreestDocks.Models;
-
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -16,7 +16,7 @@ namespace RosreestDocks.Helpers
         public List<SelectModel> sideListZapros = new();
         public List<SelectModel> objCount = new();
         private readonly DataBaseContext db;
-        public static readonly string DocsPath = "\\wwwroot\\Documents\\";
+
         public MainVars(DataBaseContext context)
         {
             db = context;
@@ -81,6 +81,25 @@ namespace RosreestDocks.Helpers
             consider.TransferAgencyNormalList = agencies.ToList();
             consider.FoivNormalList = db.Foiv.ToList();
             return consider;
+        }
+
+        public Tuple<MemoryStream,string,string> DownloadFile(string link, string name)
+        {
+            var net = new System.Net.WebClient();
+            var data = net.DownloadData(link);
+            var content = new MemoryStream(data);
+            var contentType = "APPLICATION/octet-stream";
+            var fileName = name;
+            return Tuple.Create(content, contentType, fileName);
+        }
+        public Tuple<MemoryStream, string, string> DownloadFile(string link)
+        {
+            var net = new System.Net.WebClient();
+            var data = net.DownloadData(link);
+            var content = new MemoryStream(data);
+            var contentType = "APPLICATION/octet-stream";
+            var fileName = Path.GetFileName(link);
+            return Tuple.Create(content, contentType, fileName);
         }
 
 

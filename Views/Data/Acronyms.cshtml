@@ -38,10 +38,12 @@
                 <td>@acronym.Name </td>
                 <td>@acronym.AcronymImPad </td>
                 <td class="align-middle">
-                    <button class="btn btn-outline-primary btn-sm update" asp-controller="Data" data-name="@Name" asp-action="@ActionNameForUpdate" asp-route-id="@acronym.Id" >Правка</button>
+                    <button class="btn btn-outline-primary btn-sm update" asp-controller="Data" data-name="@Name" asp-action="@ActionNameForUpdate" asp-route-id="@acronym.Id" >
+                    <i class="fas fas-table fa-edit"></i></button>
                     <button type="button" class="btn btn-outline-danger btn-sm"
                             data-toggle="modal" data-target="#comfirmDelete" data-action="@removeaction" data-name="акроним"
-                            data-item="@acronym.Id">Удалить </button>
+                            data-item="@acronym.Id"><i class="fas fas-table fa-trash-alt"></i></button>
+
                 </td>
             </tr>
         }

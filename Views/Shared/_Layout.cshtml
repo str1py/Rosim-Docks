@@ -1,15 +1,10 @@
 ﻿@using Microsoft.AspNetCore.Identity
-@inject SignInManager<User> SignInManager
+@using RosreestDocks.Helpers
+
 @inject UserManager<User> UserManager
 
 @{
-        async Task<string> GetInitials (User user) {
-        char fname = user.FirstName.FirstOrDefault();
-        char mname = user.MiddleName.FirstOrDefault();
-
-        return (user.LastName +" "+ fname+ ". " + mname +".") ;
-
-    }
+    ViewHelper viewHelper = new();
 }
 
 <!DOCTYPE html>
@@ -17,7 +12,6 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Панель администратора</title>
     <link rel="stylesheet" href="~/css/style.css" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
@@ -35,7 +29,7 @@
         <div class="nav-item dropdown show">
 				<a href="/#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-item nav-link dropdown-toggle user-action"> 
                     <i class="fas fa-user" style="width:18px"></i>
-                    @await GetInitials(await UserManager.GetUserAsync(User))
+                    @viewHelper.GetInitials(await UserManager.GetUserAsync(User))
                     <b class="caret"></b>
                  </a>
 				<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
@@ -78,13 +72,6 @@
                     Запрос поручения в ЦА                                       
                     </a>
                 </li>
-@*                <li>
-                    <a href="/Data/VyaDocuments"> 
-                    <i class="fas fa-circle mr-2"></i>
-                    Шаблоны                                     
-                    </a>
-                </li>*@
-
 
                 <li class="sub-menu">
                       <a ><i class="fas fa-pencil-alt"></i> Обращения<div class="fa fa-caret-down right"></div></a>
@@ -110,9 +97,8 @@
                         </li>
                       </ul>
                  </li>
-
-
             </ul>
+
             <p style="color: #4781da;margin-left:15px;" class="menu-sep"><b>Документы</b></p>   
             <ul class="list-unstyled components mb-5">
                 <li>
@@ -149,6 +135,28 @@
                     </a>
                 </li>
             </ul>
+
+            @if(User.IsInRole("Admin"))
+            {
+                <p style="color: #4781da;margin-left:15px;" class="menu-sep"><b>Администрирование</b></p> 
+                <ul class="list-unstyled components mb-5">
+                    <li>
+                    <a href="/Administrator/Users"> 
+                    <i class="fas fa-circle mr-2" style="font-size: 6px;"></i>
+                        Пользователи                                      
+                    </a>
+                </li>
+                <li>
+                    <a href="/Administrator/Roles"> 
+                    <i class="fas fa-circle mr-2" style="font-size: 6px;"></i>
+                        Роли                                      
+                    </a>
+                </li>
+            </ul>
+            }
+
+
+
         </nav>
 
         <!-- Page Content  -->

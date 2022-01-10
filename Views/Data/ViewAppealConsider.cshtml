@@ -2,19 +2,14 @@
 @using RosreestDocks.Models
 @using RosreestDocks.Contexts
 @using RosreestDocks.Helpers
+
 @model RequestModel
 
 @inject DataBaseContext db
 
 @{
     ViewData["Title"] = "Обращение № " + @Model.DocName + " от " + @Model.DocDate.ToShortDateString();
-    string GetInitials (User user) 
-    {
-        char fname = user.FirstName.FirstOrDefault();
-        char mname = user.MiddleName.FirstOrDefault();
-
-        return (user.LastName +" "+ fname+ ". " + mname +".");
-    }
+    ViewHelper viewHelper = new();
 }
 
 <div>
@@ -23,7 +18,7 @@
                <h3  style="margin-right:10px;" >Обращение №  @Model.DocName  от  @Model.DocDate.ToShortDateString()</h3>
                <h3  style="margin-right:10px;" >Срок: @Model.ExpireDate.ToShortDateString()</h3>
            </div>
-            <label style="font-size:9px;">Исполнитель: @GetInitials(@Model.CreateUser)</label>
+            <label style="font-size:9px;">Исполнитель: @viewHelper.GetInitials(@Model.CreateUser)</label>
        <div class="form-group">      
            <input type="hidden" asp-for="@Model.Id" />
            <input type="hidden" asp-for="@Model.DocName" />

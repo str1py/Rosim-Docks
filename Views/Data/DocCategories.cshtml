@@ -10,6 +10,7 @@
 
 @{
     string Name = "DocCategory";
+    string Controller = "Data";
     string ActionNameForUpdate = "ShowUpdate" + Name +"Modal";
     string ActionNameForAdd = "ShowCreate" + Name +"Modal";
     string modal = "update" +Name+ "Modal";
@@ -37,10 +38,15 @@
                 <td>@doccat.Id </td>
                 <td>@doccat.Name </td>
                 <td class="align-middle">
-                    <button class="btn btn-outline-primary btn-sm update" asp-controller="Data" data-name="@Name" asp-action="@ActionNameForUpdate" asp-route-id="@doccat.Id" >Правка</button>
+                    <button class="btn btn-outline-primary btn-sm update" 
+                        asp-controller="Data" 
+                        data-name="@Name" 
+                        asp-action="@ActionNameForUpdate" 
+                        asp-route-id="@doccat.Id"><i class="fas fas-table fa-edit"></i></button>
+
                     <button type="button" class="btn btn-outline-danger btn-sm"
-                            data-toggle="modal" data-target="#comfirmDelete" data-action="@removeaction" data-name="шаблон"
-                            data-item="@doccat.Id">Удалить </button>
+                            data-toggle="modal" data-target="#comfirmDelete" data-action="@removeaction" data-name="шаблон" data-controller="@Controller"
+                            data-item="@doccat.Id"><i class="fas fas-table fa-trash-alt"></i></button>
                 </td>
             </tr>
         }

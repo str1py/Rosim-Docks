@@ -10,6 +10,7 @@
 
 @{
     string Name = "Appeals";
+    string Controller = "Data";
     string removeaction = "Remove" + Name;
 }
 
@@ -86,7 +87,8 @@
                          <p style="margin-bottom: 0;">(@a[1])</p>
                     </div>     
                  </td>
-                <td>@{
+                <td>
+                    @{
                         var recname = "";
                         if (String.IsNullOrEmpty(appeal.RecipientAgency.ShortName))
                             recname = appeal.RecipientAgency.Name;
@@ -101,10 +103,12 @@
                     1. @recname <br> 2. @trname </td>
                 <td>@appeal.CreationDate.ToShortDateString()</td>
                 <td class="align-middle">
-                    @Html.ActionLink("Правка", "EditAppealConsider", "Data", new { id=@appeal.Id})
+                    <button class="btn btn-outline-primary btn-sm update" onclick="window.location.href='@Url.Action("EditAppealConsider", "Data", new {id=@appeal.Id})';">
+                        <i class="fas fas-table fa-edit"></i>
+                    </button>
                     <button type="button" class="btn btn-outline-danger btn-sm" style="font-size:10px;"
-                            data-toggle="modal" data-target="#comfirmDelete" data-action="@removeaction" data-name="организация"
-                            data-item="@appeal.Id">Удалить </button>
+                            data-toggle="modal" data-target="#comfirmDelete" data-action="@removeaction" data-name="организация" data-controller="@Controller"
+                            data-item="@appeal.Id"><i class="fas fas-table fa-trash-alt"></i></button>
                 </td>
             </tr>
         }

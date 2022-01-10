@@ -53,11 +53,12 @@ $("#comfirmDelete").on('show.bs.modal', function (event) {
     var id = button.data('item')
     var name = button.data('name') // Extract info from data-* attributes
     var action = button.data('action');
+    var controller = button.data('controller');
     var modal = $(this)
 
     modal.find('.modal-title').text('Вы действительно хотите удалить ' + name + ' #' + id)
     modal.find('.modal-body input').val(name)
 
 
-    modal.find('#modalDeleteButton').attr('formaction', '/Data/' + action + '/' + id);
+    modal.find('#modalDeleteButton').attr('formaction', '/' + controller +'/' + action + '/' + id);
 })

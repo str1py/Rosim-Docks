@@ -4,6 +4,7 @@
 }
 @{
     string Name = "Foiv";
+    string Controller = "Data";
     string ActionNameForUpdate = "ShowUpdate" + Name +"Modal";
     string ActionNameForAdd = "ShowCreate" + Name +"Modal";
     string modal = "update" +Name+ "Modal";
@@ -31,10 +32,15 @@
                 <td>@foiv.Id </td>
                 <td>@foiv.Name </td>
                 <td class="align-middle">
-                    <button class="btn btn-outline-primary btn-sm update" asp-controller="Data" data-name="@Name" asp-action="@ActionNameForUpdate" asp-route-id="@foiv.Id" >Правка</button>
+                    <button class="btn btn-outline-primary btn-sm update" 
+                        asp-controller="Data" 
+                        data-name="@Name" 
+                        asp-action="@ActionNameForUpdate" 
+                        asp-route-id="@foiv.Id"><i class="fas fas-table fa-edit"></i></button>
+
                     <button type="button" class="btn btn-outline-danger btn-sm"
-                            data-toggle="modal" data-target="#comfirmDelete" data-action="@removeaction" data-name="ФОИВ"
-                            data-item="@foiv.Id">Удалить </button>
+                            data-toggle="modal" data-target="#comfirmDelete" data-action="@removeaction" data-name="ФОИВ" data-controller="@Controller"
+                            data-item="@foiv.Id"><i class="fas fas-table fa-trash-alt"></i></button>
                 </td>
             </tr>
         }
