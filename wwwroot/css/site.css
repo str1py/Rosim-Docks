@@ -410,3 +410,8 @@ table.dataTable thead th, table.dataTable thead td {
     padding:30px;
     width:30%;
 }
+
+.addinfotd {
+    visibility:hidden;
+    font-size:1px;
+}

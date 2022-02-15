@@ -584,7 +584,8 @@ namespace RosreestDocks.Helpers
                     ChangeDic.Add("RosImRaspor", "во исполнение поручений Федерального агентства по управлению государственным имуществом от 06 июня 2017 г. № ДП-08/22081 и от " + a.RosimAppeal.Date + " г. № " + a.RosimAppeal.Number);
                 else ChangeDic.Add("RosImRaspor", "во исполнение поручения Федерального агентства по управлению государственным имуществом от " + a.RosimAppeal.Date + " г. № " + a.RosimAppeal.Number);
                 
-                ChangeDic.Add("RosImSoprovod", "Во исполнение поручения Федерального агентства по управлению государственным имуществом от " + a.RosimAppeal.Date + " г. № " + a.RosimAppeal.Number);
+                ChangeDic.Add("RosImSoprovod", "Во исполнение поручения Федерального агентства по управлению государственным имуществом (далее - Росимущество) от " 
+                    + a.RosimAppeal.Date + " г. № " + a.RosimAppeal.Number + " Территориальное управление Росимущества в городе Москве (далее - Территориальное управление) ");
                 ChangeDic.Add("SopPrilRosIm", "1 экз. Распоряжения в электронном виде в третий адрес.");
                 ChangeDic.Add("RosImName", "Росимущество");
             }
@@ -594,7 +595,7 @@ namespace RosreestDocks.Helpers
                     ChangeDic.Add("RosImRaspor", "во исполнении поручения Федерального агентства по управлению государственным имуществом от 06 июня 2017 г. № ДП-08/22081");
                 else ChangeDic.Add("RosImRaspor", "");
 
-                ChangeDic.Add("RosImSoprovod", "");
+                ChangeDic.Add("RosImSoprovod", "Территориальное управление Федерального агентства по управлению государственным имуществом в городе Москве (далее - Территориальное управление) ");
                 ChangeDic.Add("SopPrilRosIm", "");
                 ChangeDic.Add("RosImName", "");
             }
@@ -610,8 +611,8 @@ namespace RosreestDocks.Helpers
             a.ManageRightsFrom = db.ManageRights.Where(x => x.Id == raspor.ManageRightsFrom.Id).FirstOrDefault();
             a.ManageRightsTo = db.ManageRights.Where(x => x.Id == raspor.ManageRightsTo.Id).FirstOrDefault();
             a.TypeOfProperty = db.TypeOfPropertyModels.Where(x => x.Id == raspor.TypeOfProperty.Id).FirstOrDefault();
-            a.RecipientAgency = db.Agency.Where(x => x.Id == raspor.RecipientAgency.Id).Include(x => x.Acronym).FirstOrDefault();
-            a.TransferAgency = db.Agency.Where(x => x.Id == raspor.TransferAgency.Id).Include(x => x.Acronym).FirstOrDefault();
+            a.RecipientAgency = db.Agency.Where(x => x.Id == raspor.RecipientAgency.Id).Include(x => x.Acronym).Include(x=>x.Director).FirstOrDefault();
+            a.TransferAgency = db.Agency.Where(x => x.Id == raspor.TransferAgency.Id).Include(x => x.Acronym).Include(x => x.Director).FirstOrDefault();
             var ChangeDic = CreateAgencies(a, raspor);
 
             ChangeDic.Add("DockNumber", a.DocName);
@@ -647,15 +648,15 @@ namespace RosreestDocks.Helpers
             ChangeDic.Add("TransferRegular", a.TransferAgency.RegulationName);
             ChangeDic.Add("ResipientRegular", a.RecipientAgency.RegulationName);
 
-            //a.TransferAgency.Director = db.Director.Where(x => x.Id == raspor.TransferAgency.Director.Id).SingleOrDefault();
-            //a.RecipientAgency.Director = db.Director.Where(x => x.Id == raspor.RecipientAgency.Director.Id).SingleOrDefault();
 
+     
 
-            //if (a.TransferAgency.Director != null)
-            //    ChangeDic.Add("TransferDirector", a.TransferAgency.Director.Name + " - егрюл");
+            if (a.TransferAgency.Director != null)
+                ChangeDic.Add("TransferDirector", a.TransferAgency.Director.Name + $" - {a.TransferAgency.Director.AddInfo}");
 
-            //if (a.RecipientAgency.Director != null)
-            //    ChangeDic.Add("RecipientDirector", a.RecipientAgency.Director.Name + " - егрюл");
+            if (a.RecipientAgency.Director != null)
+                ChangeDic.Add("RecipientDirector", a.RecipientAgency.Director.Name + $" - {a.RecipientAgency.Director.AddInfo}");
+
 
             ChangeDic.Add("PropertyDiscription", a.PropertyDiscription);
 
@@ -712,9 +713,9 @@ namespace RosreestDocks.Helpers
             ChangeDic.Add("PropertyDiscription", $"{a.PropertyDiscription}");
 
             if (raspor.IsRosim)
-                ChangeDic.Add("RosImDeny", "Во исполнение поручения Федерального агентства по управлению государственным имуществом (далее - Росимущество) от" + a.RosimAppeal.Date + " г. № " + a.RosimAppeal.Number +
+                ChangeDic.Add("RosImDeny", "Во исполнение поручения Федерального агентства по управлению государственным имуществом (далее - Росимущество) от " + a.RosimAppeal.Date + " г. № " + a.RosimAppeal.Number +
         " Территориальное управление Росимущества в городе Москве (далее – Территориальное управление)");
-            else ChangeDic.Add("RosImDeny", "Территориальное управление Росимущества в городе Москве(далее – Территориальное управление)");
+            else ChangeDic.Add("RosImDeny", "Территориальное управление Федерального агентства по управлению государственным имуществом в городе Москве (далее – Территориальное управление)");
 
 
             return ChangeDic;

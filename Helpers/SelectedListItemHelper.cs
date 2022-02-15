@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using RosreestDocks.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -22,6 +24,7 @@ namespace RosreestDocks.Helpers
 
             return catList;
         }
+
 
         public static string FirstCharToUpper(this string input) =>
               input switch

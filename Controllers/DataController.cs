@@ -119,8 +119,6 @@ namespace RosreestDocks.Controllers
             RequestModel consider = db.Request.Include(inc => inc.Status).Include(acr => acr.DockType)
                 .Include(acr => acr.RecipientAgency).Include(acr => acr.RecipientAgency.Acronym).Include(acr => acr.RecipientAgency.Director).Include(acr => acr.RecipientAgency.SecondDirector)
                 .Include(acr => acr.TransferAgency).Include(acr => acr.TransferAgency.Acronym).Include(acr => acr.TransferAgency.Director).Include(acr => acr.TransferAgency.SecondDirector)
-                .Include(acr => acr.RecipientAgency.Director.Position).Include(acr => acr.RecipientAgency.SecondDirector.Position)
-                .Include(acr => acr.TransferAgency.Director.Position).Include(acr => acr.TransferAgency.SecondDirector.Position)
                 .Include(acr => acr.FirstFoiv).Include(acr => acr.SecondFoiv)
                 .Include(acr => acr.FirstFoivAppeal).Include(acr => acr.SecondFoivAppeal).Include(acr => acr.RecipientAppeal).Include(acr => acr.TransferAppeal).Include(acr => acr.RosimAppeal)
                 .Include(acr => acr.TypeOfProperty).Include(acr => acr.ManageRightsFrom).Include(acr => acr.ManageRightsTo).ToList().Where(x=>x.Id == id).SingleOrDefault();
@@ -220,8 +218,6 @@ namespace RosreestDocks.Controllers
             a.DockType = db.DocType.Where(x => x.Id == rasporVyaModel.DockType.Id).SingleOrDefault();
             a.TypeOfProperty = db.TypeOfPropertyModels.Where(x => x.Id == rasporVyaModel.TypeOfProperty.Id).SingleOrDefault();
             a.CreateUser = db.AppUser.Where(x => x.Id == user.Id).SingleOrDefault();
-            //a.TransferAgency.Acronym = db.Acronyms.Where(x => x.Id == rasporVyaModel.TransferAgency.AcronymSelected).SingleOrDefault();
-            //a.RecipientAgency.Acronym = db.Acronyms.Where(x => x.Id == rasporVyaModel.RecipientAgency.AcronymSelected).SingleOrDefault();
             if (rasporVyaModel.Id == 0)
                 db.Request.Update(a);
             else

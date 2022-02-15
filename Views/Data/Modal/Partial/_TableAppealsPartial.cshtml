@@ -1,25 +1,16 @@
 ﻿@model List<RequestModel>
-@using Microsoft.AspNetCore.Identity
 @using RosreestDocks.Helpers
 
-@inject UserManager<User> UserManager
-
 @{
-    ViewData["Title"] = "Все обращения";
     string Name = "Appeals";
     string Controller = "Data";
     string removeaction = "Remove" + Name;
     ViewHelper viewHelper = new();
 }
 
-<div class="text-center">
-    <h1 class="display-7">Все обращения</h1>
-</div>
+<hr class="line-h1" >
 
-
-   <hr class="line-h1" >
-
-    <table id="appealtable" class="table table-hover">
+<table id="appealtable" class="table table-sm table-hover">
     <thead>
         <tr>
             <th scope="col" style="width:10%;">#</th>          
@@ -28,7 +19,6 @@
             <th scope="col" style="width:10%;">Срок</th>
             <th scope="col" style="width:35%;">Организации</th>
             <th scope="col" style="width:10%;">Создано</th>
-            <th scope="col" style="width:10%;">Исполнитель</th>
             <th scope="col" style="width:15%;"></th>
             <th scope="col" style="width:0%;"></th>
         </tr>
@@ -70,25 +60,19 @@
                     }
                     1. @recname <br> 2. @trname </td>
                 <td>@appeal.CreationDate.ToShortDateString()</td>
-                <td>@viewHelper.GetInitials(appeal.CreateUser)</td>
-                <td>
-                    @{
-                       if(appeal.CreateUser.Id == UserManager.GetUserId(User))
-                        @Html.ActionLink("Правка", "EditAppealConsider", "Data", new { id=@appeal.Id})
-                       else
-                        @Html.ActionLink("Просмотр", "ViewAppealConsider", "Data", new { id=@appeal.Id})
-                    }
-                    
+                <td class="align-middle">
+                    <button class="btn btn-primary" onclick="window.location.href='@Url.Action("EditAppealConsider", "Data", new {id=@appeal.Id})';">
+                        <i class="fas fas-table fa-edit"></i>
+                    </button>
                     <button type="button" class="btn btn-outline-danger btn-sm" style="font-size:10px;"
                             data-toggle="modal" data-target="#comfirmDelete" data-action="@removeaction" data-name="организация" data-controller="@Controller"
-                            data-item="@appeal.Id"> <i class="fas fas-table fa-trash-alt"></i></button>
+                            data-item="@appeal.Id"><i class="fas fas-table fa-trash-alt"></i></button>
                 </td>
                 <td class="addinfotd">@appeal.AddInfo</td>
             </tr>
         }
     </tbody>
 </table>
-
 
 
 
