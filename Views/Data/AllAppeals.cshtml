@@ -5,12 +5,12 @@
 @inject UserManager<User> UserManager
 
 @{
-    ViewData["Title"] = "Все обращения";
     string Name = "Appeals";
     string Controller = "Data";
     string removeaction = "Remove" + Name;
     ViewHelper viewHelper = new();
 }
+<title>Все обращения</title>
 
 <div class="text-center">
     <h1 class="display-7">Все обращения</h1>
@@ -22,13 +22,14 @@
     <table id="appealtable" class="table table-hover">
     <thead>
         <tr>
-            <th scope="col" style="width:10%;">#</th>          
+            <th scope="col" style="width:5%;">#</th> 
+            <th scope="col" style="width:5%;">От</th>  
             <th scope="col" style="width:10%;">Вр и отправленный</th>   
             <th scope="col" style="width:10%;">Статус</th>  
             <th scope="col" style="width:10%;">Срок</th>
-            <th scope="col" style="width:35%;">Организации</th>
-            <th scope="col" style="width:10%;">Создано</th>
-            <th scope="col" style="width:10%;">Исполнитель</th>
+            <th scope="col" style="width:30%;">Организации</th>
+            <th scope="col" style="width:5%;">Создано</th>
+            <th scope="col" style="width:5%;">Bcgjkybntkm</th>
             <th scope="col" style="width:15%;"></th>
             <th scope="col" style="width:0%;"></th>
         </tr>
@@ -37,7 +38,11 @@
         @foreach (var appeal in Model)
         {
             <tr>
-                <td>№ @appeal.DocName <br> @appeal.DocDate.ToShortDateString()</td>
+                <td>№ @appeal.DocName</td>
+                <td>
+                    <span style="display:none">@Convert.ToDateTime(@appeal.DocDate.ToShortDateString()).ToString("yyyy/MM/dd")</span>
+                    @appeal.DocDate.ToShortDateString()
+                 </td>
                 <td>Вр-@appeal.WorkNumber <br>№ @appeal.SendNumber </td>
                 <td>@appeal.Status.Name <br> @appeal.DockType.Name </td>
                 <td>
@@ -45,15 +50,16 @@
                     var a = @viewHelper.GetColor(appeal.ExpireDate);
                         if(appeal.Status.Id == 5)
                         {
-                            a[0] = "#228b22";
-                            a[1] = "Закрыт";
+                            a[0] = "rgba(43, 169, 114, 0.2)";
+                            a[1] = "#2ba972";
+                            a[2] = "Закрыт";
                         }
 
                     }
 
-                    <div style="background-color:@a[0]; padding:5px; border-radius:5px;">
+                    <div style="background-color:@a[0]; color:@a[1]; padding:5px; border-radius:5px;">
                          <b>@appeal.ExpireDate.ToShortDateString()</b>
-                         <p style="margin-bottom: 0;">(@a[1])</p>
+                         <p style="margin-bottom: 0;">(@a[2])</p>
                     </div>     
                  </td>
                 <td>@{
@@ -69,19 +75,32 @@
                         else trname = appeal.TransferAgency.ShortName;
                     }
                     1. @recname <br> 2. @trname </td>
-                <td>@appeal.CreationDate.ToShortDateString()</td>
+                <td>
+                    <span style="display:none">@Convert.ToDateTime(appeal.CreationDate).ToString("yyyy/MM/dd")</span>
+                    @appeal.CreationDate.ToShortDateString()
+                </td>
                 <td>@viewHelper.GetInitials(appeal.CreateUser)</td>
                 <td>
                     @{
-                       if(appeal.CreateUser.Id == UserManager.GetUserId(User))
-                        @Html.ActionLink("Правка", "EditAppealConsider", "Data", new { id=@appeal.Id})
-                       else
-                        @Html.ActionLink("Просмотр", "ViewAppealConsider", "Data", new { id=@appeal.Id})
-                    }
+                        if(appeal.CreateUser.Id == UserManager.GetUserId(User))
+                        {
+                            <button class="btn btn-outline-primary btn-sm update" onclick="window.location.href='@Url.Action("EditAppealConsider", "Data", new {id=@appeal.Id})';">
+                                <i class="fas fas-table fa-edit"></i>
+                            </button>
                     
-                    <button type="button" class="btn btn-outline-danger btn-sm" style="font-size:10px;"
-                            data-toggle="modal" data-target="#comfirmDelete" data-action="@removeaction" data-name="организация" data-controller="@Controller"
-                            data-item="@appeal.Id"> <i class="fas fas-table fa-trash-alt"></i></button>
+                            <button type="button" class="btn btn-outline-danger btn-sm" style="font-size:10px;"
+                                 data-toggle="modal" data-target="#comfirmDelete" data-action="@removeaction" data-name="организация" data-controller="@Controller"
+                                 data-item="@appeal.Id"> <i class="fas fas-table fa-trash-alt"></i></button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-outline-primary btn-sm update" onclick="window.location.href='@Url.Action("ViewAppealConsider", "Data", new {id=@appeal.Id})';">
+                                <i class="fas fas-table fa-eye"></i>
+                            </button>
+                        }
+
+                    }
+
                 </td>
                 <td class="addinfotd">@appeal.AddInfo</td>
             </tr>

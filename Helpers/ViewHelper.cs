@@ -26,12 +26,23 @@ namespace RosreestDocks.Helpers
         public List<string> GetColor(DateTime date)
         {
             var a = date - DateTime.Now;
-            string color = "";
+            string bgcolor = "";
+            string txtcolor = "";
             if (a.Days <= 3)
-                color = "#ff2400";
+            {
+                bgcolor = "rgba(169, 43, 43, 0.2)"; //red
+                txtcolor = "#a9422b"; //red
+            }
             else if (a.Days <= 6 && a.Days > 3)
-                color = "#fde910";
-            else color = "#228b22";
+            {
+                bgcolor = "rgba(150, 169, 43, 0.2)"; //yellow
+                txtcolor = "#a98e2b"; //yellow
+            }
+            else
+            {
+                bgcolor = "rgba(43, 169, 114, 0.2)"; //green
+                txtcolor = "#2ba972"; //green
+            }
 
             string days = "";
 
@@ -51,10 +62,12 @@ namespace RosreestDocks.Helpers
 
 
             List<string> list = new();
-            list.Add(color);
+            list.Add(bgcolor);
+            list.Add(txtcolor);
             list.Add(ost);
 
             return list;
         }
+
     }
 }

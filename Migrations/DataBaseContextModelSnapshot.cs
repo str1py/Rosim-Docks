@@ -608,6 +608,9 @@ namespace RosreestDocks.Migrations
                     b.Property<int?>("RecipientAppealId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ReqTypeId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("RosimAppealId")
                         .HasColumnType("int");
 
@@ -634,6 +637,9 @@ namespace RosreestDocks.Migrations
 
                     b.Property<int?>("TypeOfPropertyId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdateDate")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("WhatAnnex")
                         .HasColumnType("int");
@@ -664,6 +670,8 @@ namespace RosreestDocks.Migrations
 
                     b.HasIndex("RecipientAppealId");
 
+                    b.HasIndex("ReqTypeId");
+
                     b.HasIndex("RosimAppealId");
 
                     b.HasIndex("SecondFoivAppealId");
@@ -679,6 +687,20 @@ namespace RosreestDocks.Migrations
                     b.HasIndex("TypeOfPropertyId");
 
                     b.ToTable("Request");
+                });
+
+            modelBuilder.Entity("RosreestDocks.Models.RequestType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RequestType");
                 });
 
             modelBuilder.Entity("RosreestDocks.Models.TypeOfPropertyModel", b =>
@@ -884,6 +906,10 @@ namespace RosreestDocks.Migrations
                         .WithMany()
                         .HasForeignKey("RecipientAppealId");
 
+                    b.HasOne("RosreestDocks.Models.RequestType", "ReqType")
+                        .WithMany()
+                        .HasForeignKey("ReqTypeId");
+
                     b.HasOne("RosreestDocks.Models.AppealModel", "RosimAppeal")
                         .WithMany()
                         .HasForeignKey("RosimAppealId");
@@ -929,6 +955,8 @@ namespace RosreestDocks.Migrations
                     b.Navigation("RecipientAgency");
 
                     b.Navigation("RecipientAppeal");
+
+                    b.Navigation("ReqType");
 
                     b.Navigation("RosimAppeal");
 

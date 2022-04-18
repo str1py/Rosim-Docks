@@ -2,11 +2,9 @@
 @using RosreestDocks.Contexts
 @inject DataBaseContext db
 
-@{
-    ViewData["Title"] = "Документы/шаблоны";
- ;
-}
 
+
+<title>Документы/шаблоны</title>
 <div class="text-center">
     <h1 class="display-4">Документы</h1>
 </div>
@@ -45,10 +43,10 @@
                         <td>@doc.Id</td>
                         <td>
                             @{
-                            var url = db.Documents.Where(x => x.Id == doc.Id).SingleOrDefault().Url;
+                            var name = db.Documents.Where(x => x.Id == doc.Id).SingleOrDefault().Name;
                             }
                             <button type="button" class="btn btn-outline-danger btn-sm"
-                                    data-toggle="modal" data-target="#showPdf" data-url="@url" onclick="showPdf(this)" >@doc.Name</button>
+                                    data-toggle="modal" data-target="#showPdf" data-name="@name" onclick="showPdf(this)" >@doc.Name</button>
                          </td>
                         <td>@doc.Discription</td>
                         <td>@doc.Category.Name</td>
@@ -57,7 +55,7 @@
                             <button class="btn btn-outline-primary btn-sm update" 
                                 asp-controller="Data"
                                 asp-action="@ActionNameForDownload"
-                                asp-route-id="@doc.Id"><i class="fas fas-table fa-download"></i></button>
+                                asp-route-id="@doc.Id" ><i class="fas fas-table fa-download"></i></button>
 
                             <button class="btn btn-outline-primary btn-sm update" 
                                 asp-controller="Data" data-name="@Name"

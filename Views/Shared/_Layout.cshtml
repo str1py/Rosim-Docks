@@ -1,10 +1,11 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using RosreestDocks.Helpers
-
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 @inject UserManager<User> UserManager
 
 @{
     ViewHelper viewHelper = new();
+    var theme = HttpContextAccessor.HttpContext.Request.Cookies["theme"];
 }
 
 <!DOCTYPE html>
@@ -14,30 +15,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="~/css/style.css" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
+
+    @{
+        if (theme == null)
+        {
+            <link id="stylesheet" href="~/css/site-light.css" rel="stylesheet" type="text/css" />
+        }
+        else
+        {
+            if (theme == "dark")
+            {
+                <link id="stylesheet" href="~/css/site-dark.css"  rel="stylesheet" type="text/css" />
+            }
+            if (theme == "light")
+            {
+                <link id="stylesheet" href="~/css/site-light.css" rel="stylesheet" type="text/css" />
+            }
+        }
+    }
+
     <link rel="stylesheet" href="~/css/jquery.dropdown.css">
     <link rel="stylesheet" href="~/css/jquery.dataTables.css">
     <script src="https://kit.fontawesome.com/d2c0d13beb.js" crossorigin="anonymous"></script>
+
 </head>
 
 <body>
-    <nav class="navbar navbar-light bg-light">
+    <nav class="navbar dashboardnavbar">
       <a class="navbar-brand" href="/">
-        <img src="/images/logo_FAUGI.svg"  class="d-inline-block align-top" alt="">       
+        <h3 class="text-center" style="color: #D83f87 !important;margin:0px;"> РОС </h3>
+        <h3 class="text-center" style="color: #4781da !important;"> ИМУЩЕСТВО </h3>
       </a>
-      <div class="user">
-        <div class="nav-item dropdown show">
-				<a href="/#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-item nav-link dropdown-toggle user-action"> 
-                    <i class="fas fa-user" style="width:18px"></i>
-                    @viewHelper.GetInitials(await UserManager.GetUserAsync(User))
-                    <b class="caret"></b>
-                 </a>
-				<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-					<a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage" class="dropdown-item"><i class="fa fa-sliders"></i> Профиль</a>
-					<div class="divider dropdown-divider"></div>
-					<a asp-area="Identity" asp-page="/Account/Logout" class="dropdown-item"><i class="material-icons">&#xE8AC;</i> Выход</a>
-				</div>
-	    </div>
+      <div class="lowrapper">
+
+          <div class="right_block user">
+            <div class="nav-item dropdown show">
+				    <a href="/#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-item nav-link dropdown-toggle user-action"> 
+                        <i class="fas fa-user" style="width:18px"></i>
+                        @viewHelper.GetInitials(await UserManager.GetUserAsync(User))
+                        <b class="caret"></b>
+                     </a>
+				    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+					    <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage" class="dropdown-item"><i class="fa fa-sliders"></i> Профиль</a>
+					    <div class="divider dropdown-divider"></div>
+                           <div class="themediv">
+                                <label class="themelabel">Темная</label>
+                                <label class="switch">
+                                  <input id="style_checkbox" type="checkbox">
+                                  <span class="slider round"></span>
+                                </label>
+                                <label class="themelabel">Светлая</label>
+                           </div>
+                        <div class="divider dropdown-divider"></div>
+					    <a asp-area="Identity" asp-page="/Account/Logout" class="dropdown-item"><i class="material-icons">&#xE8AC;</i> Выход</a>
+				    </div>
+	        </div>
+          </div>
       </div>
     </nav>
 
@@ -60,36 +93,24 @@
                         Рассмотерть обращение                                      
                     </a>
                 </li>
-                <li>
-                    <a href="/Home/RasporVya"> 
-                    <i class="fas fa-circle mr-2" style="font-size: 6px;"></i>
-                        Распоряжение ВЯ                                       
-                    </a>
-                </li>
-                <li>
-                    <a href="/Home/ZaprosCentral"> 
-                    <i class="fas fa-circle mr-2" style="font-size: 6px;"></i>
-                    Запрос поручения в ЦА                                       
-                    </a>
-                </li>
 
                 <li class="sub-menu">
                       <a ><i class="fas fa-pencil-alt"></i> Обращения<div class="fa fa-caret-down right"></div></a>
                       <ul>
                         <li>                    
-                            <a href="/Data/Appeals"> <i class="fas fa-circle mr-2" style="font-size: 6px;"></i>Все обращения</a>
+                            <a href="/Data/Appeals"> <i class="fas fa-circle mr-2" style="font-size: 6px;"></i>Мои обращения</a>
                         </li>
                         <li>                    
-                            <a href="/Data/AppealsLetters"> <i class="fas fa-circle mr-2" style="font-size: 6px;"></i>Письма</a>
+                            <a href="/Data/AppealsLetters"> <i class="fas fa-circle mr-2" style="font-size: 6px;"></i>Мои письма</a>
                         </li>
                         <li>                    
-                            <a href="/Data/AppealsCentral"> <i class="fas fa-circle mr-2" style="font-size: 6px;"></i>Запросы ЦА</a>
+                            <a href="/Data/AppealsCentral"> <i class="fas fa-circle mr-2" style="font-size: 6px;"></i>Мои запросы ЦА</a>
                         </li>
                         <li>                    
-                            <a href="/Data/AppealsRaspor"> <i class="fas fa-circle mr-2" style="font-size: 6px;"></i>Распоряжения</a>
+                            <a href="/Data/AppealsRaspor"> <i class="fas fa-circle mr-2" style="font-size: 6px;"></i>Мои распоряжения</a>
                         </li>
                         <li>                    
-                            <a href="/Data/AppealsClosed"> <i class="fas fa-circle mr-2" style="font-size: 6px;"></i>Закрытые</a>
+                            <a href="/Data/AppealsClosed"> <i class="fas fa-circle mr-2" style="font-size: 6px;"></i>Мои закрытые</a>
                         </li>
                         <hr>
                         <li>                    
@@ -110,7 +131,7 @@
                 <li>
                     <a href="/Data/Documents"> 
                     <i class="fas fa-circle mr-2" style="font-size: 6px;"></i>
-                        Шаблоны                                      
+                        Документы                                      
                     </a>
                 </li>
             </ul>
@@ -166,6 +187,15 @@
         </div>
     </div>
     
+
+    <footer>
+        <a href="/">
+            <h3 class="text-center" style="color: #D83f87 !important;margin:0px;"> РОС </h3>
+            <h3 class="text-center" style="color: #4781da !important;"> ИМУЩЕСТВО </h3>
+        </a>
+
+        <p class="text-center"  >Designed and developed by Anulyev</p>
+    </footer>
     @RenderSection("Scripts", required: false) 
     <script src="~/js/jquery.min.js"></script>
     <script src="~/js/popper.js"></script>
@@ -173,9 +203,41 @@
     <script src="~/js/main.js"></script>
     <script src="~/js/data.js"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
-
     
 <script>
+
+    function getCook(cookiename){
+        // Get name followed by anything except a semicolon
+        var cookiestring=RegExp(cookiename+"=[^;]+").exec(document.cookie);
+        // Return everything after the equal sign, or an empty string if the cookie name not found
+        return decodeURIComponent(!!cookiestring ? cookiestring.toString().replace(/^[^=]+./,"") : "");
+    }
+
+    function changeStylesheet() {
+        if(document.getElementById("stylesheet").href.includes("light"))
+        {
+            document.getElementById("stylesheet").href = "/css/site-dark.css";
+        }else{
+            document.getElementById("stylesheet").href = "/css/site-light.css";
+        }
+    }
+
+    $(document).ready(function() { 
+        var elem = document.getElementById("style_checkbox");
+        var themenow = getCook("theme");
+        console.log("Theme now: " + themenow);
+
+        if(themenow == "dark")
+        {
+           $("#style_checkbox").prop("checked", false);
+           console.log(elem.checked + " theme must be dark")
+        }else 
+        {
+             $("#style_checkbox").prop("checked", true);
+            console.log(elem.checked + " theme must be light")
+        }  
+    });
+
 
     $(document).ready(function()  {
         $('#orgtable').DataTable();
@@ -189,18 +251,27 @@
         $('#appealtable').DataTable();
     });
     
-    $(document).ready(function()  {
-        $('#doccattable').DataTable();
-    });
-        $(document).ready(function()  {
+   $(document).ready(function()  {
+       $('#doccattable').DataTable();
+   });
+
+   $(document).ready(function()  {
         $('.docs').DataTable();
+   });
+
+
+    $("#style_checkbox").change(function(){
+        var a = $(this).prop('checked');
+
+        $.ajax({
+                type: "post",
+                url: "/Home/ChangeTheme",
+                dataType: "text",
+                data: a
+        });
+        changeStylesheet();
     });
 
-    $('.sub-menu ul').hide();
-    $(".sub-menu a").click(function () {
-      $(this).parent(".sub-menu").children("ul").slideToggle("100");
-      $(this).find(".right").toggleClass("fa-caret-up fa-caret-down");
-    });
 </script>
 
 </body>

@@ -1,44 +1,116 @@
-﻿@model IEnumerable<NoteModel>
+﻿@using RosreestDocks.Contexts
+@using Microsoft.AspNetCore.Identity
+
+@inject DataBaseContext db
+@inject UserManager<User> UserManager
 
 
-<div class="container-flex" style="margin-bottom:50px;">
+@{
+     var userid = UserManager.GetUserId(User);
+    //FIRST
+    var letter = db.Request.Where(x => x.DockType.Id == 2).Where(x=>x.CreateUser.Id == userid).Count();
+    var zapros = db.Request.Where(x => x.DockType.Id == 3).Where(x=>x.CreateUser.Id == userid).Count();
+    var raspor = db.Request.Where(x => x.DockType.Id == 4).Where(x=>x.CreateUser.Id == userid).Count();
+
+    int[] mass = new int[] { letter, zapros, raspor};
+    string data = String.Join(",", mass);
+
+    //SECOND
+    int month = DateTime.Now.Month;
+    var list = new List<int>();
+
+    var b = db.Request.Where(x => x.CreationDate.Month == 1).Count();
+    for(int i = 1; i <= DateTime.Now.Month; i++)
+    {
+        var count = db.Request.Where(x => x.CreationDate.Month == i).Where(x=>x.CreationDate.Year == DateTime.Now.Year).Where(x=>x.CreateUser.Id == userid).Count() + 
+                    db.Request.Where(x => x.UpdateDate.Month == i).Where(x=>x.CreationDate.Year == DateTime.Now.Year).Where(x=>x.UpdateDate != DateTime.MinValue).Where(x=>x.CreateUser.Id == userid).Count();
+        list.Add(count);
+    }
+    string effdata = String.Join(",", list);
+    
+}
+  <h3 class="text-center">Графики</h3><div class="container-flex">
     <div class="row">
-        <div class="col-12">
-            <div style="display:flex;">
-                <h3 class="h3_index item"><i class="fas fa-sticky-note"></i>Заметки</h3>
-                <button type="button" style="background-color:transparent; border:0px;" data-toggle="modal" data-target="#exampleModal">
-                    <i style="margin-left:10px;" class="fas fa-plus-circle main-blue"></i>
-                </button>
-            </div>            
-                 <details>
-                    <summary>Подробнее</summary> 
-                    <div class="container-flex" style="margin-top:10px;">
-                        <div class="row">
-                    @{
-                    foreach(var note in @Model)
-                        {
-                        var color = "";
-                        if (note.Importance.Id == 1) color = "blue";
-                        else if (note.Importance.Id == 2) color = "orange";
-                        else color = "red";
-
-                            <div class="col-4">
-                                <div class="box @color" >
-                                    <div class="box-top">
-                                       <h5 class="item">@note.Name</h5> 
-                                       <button  type="button" class="btn btn-success seccbut item" data-toggle="modal" data-target="#completeModal" 
-                                                data-name="@note.Name" data-id="@note.Id"><i class="far fa-check-circle"></i></button>
-
-                                    </div>
-                                    <p>@note.Text</p>
-                                </div>
-                            </div>
-
-                        }
-                    }
-                        </div>
-                    </div>
-                </details>
+        <div class="col-6">
+             <canvas id="CountChart"></canvas>
+        </div>
+        <div class="col-6">
+             <canvas id="EffChart"></canvas>
         </div>
     </div>
 </div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+
+console.log(@effdata);
+//COUNTCHART
+const countchartdata = {
+    labels: [
+        'Письма (@mass[0])',
+        'Запросы ЦА (@mass[1])',
+        'Распоряжения (@mass[2])',
+    ],
+    datasets: [{
+        label: 'Статистика обращений',
+        data: [@data],
+        backgroundColor: [
+            'rgb(111, 0, 255)',
+            'rgb(71, 129, 218)',
+            'rgb(216, 63, 135)'
+        ],
+        hoverOffset: 4
+    }]
+};
+
+const countchartconfig = {
+    type: 'doughnut',
+    data: countchartdata,
+};
+const myChart = new Chart(
+    document.getElementById('CountChart'),
+    countchartconfig
+);
+
+
+//EFFCHART
+var getMonths = function (idx) {
+    var objDate = new Date();
+    objDate.setDate(1);
+    var months = [];
+    for (var i = 0; i < idx; i++)
+    {
+        objDate.setDate(1);
+        objDate.setMonth(i);
+        var locale = "ru-RU",
+            month = objDate.toLocaleString(locale, { month: "long" });
+        months.push(month);
+    }
+    return months;
+}
+
+var date = new Date();
+
+const effdata = {
+      labels: getMonths(date.getMonth() + 1),
+      datasets: [{
+        label: 'Граффик эффективности',
+        data: [@effdata],
+        fill: false,
+        borderColor: 'rgb(216, 63, 135)',
+        tension: 0.1
+      }]
+    };
+
+    const effconfig = {
+      type: 'line',
+      data: effdata,
+    };
+
+    const effChart = new Chart(
+        document.getElementById('EffChart'),
+        effconfig
+    );
+
+</script>

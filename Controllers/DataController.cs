@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Dadata;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using System.Web;
 
 namespace RosreestDocks.Controllers
 {
@@ -27,6 +28,7 @@ namespace RosreestDocks.Controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
         MainVars MainVars;
         private readonly string DockPath;
+        private readonly string DockPathAlt;
         public DataController(ILogger<DataController> logger, DataBaseContext context, IWebHostEnvironment hostingEnvironment, 
             DocksService docks, UserManager<User> userManager, IHttpContextAccessor httpContextAccessor)
         {
@@ -37,7 +39,8 @@ namespace RosreestDocks.Controllers
             _hostingEnvironment = hostingEnvironment;
             MainVars = new(db);
             _docks = docks;
-            DockPath = _hostingEnvironment.WebRootPath + "\\Documents\\";
+            DockPath = Path.Combine(_hostingEnvironment.WebRootPath, "Documents\\");
+            DockPathAlt = "\\Documents\\";
         }
 
         #region Appeals 
@@ -52,17 +55,18 @@ namespace RosreestDocks.Controllers
                 .Include(acr => acr.TypeOfProperty).Include(acr => acr.ManageRightsFrom).Include(acr => acr.ManageRightsTo).ToList();
             return View(appeal);
         }
-
         public async Task<IActionResult> Appeals()
         {
             var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
+
             var appeal = db.Request.Include(inc=>inc.CreateUser).Include(inc => inc.Status).Include(acr => acr.DockType)
                 .Include(acr => acr.RecipientAgency).Include(acr => acr.RecipientAgency.Acronym).Include(acr => acr.RecipientAgency.Director).Include(acr => acr.RecipientAgency.SecondDirector)
                 .Include(acr => acr.TransferAgency).Include(acr => acr.TransferAgency.Acronym).Include(acr => acr.TransferAgency.Director).Include(acr => acr.TransferAgency.SecondDirector)
                 .Include(acr => acr.RecipientAgency.Director.Position).Include(acr => acr.RecipientAgency.SecondDirector.Position)
                 .Include(acr => acr.TransferAgency.Director.Position).Include(acr => acr.TransferAgency.SecondDirector.Position)
                 .Include(acr => acr.FirstFoiv).Include(acr => acr.SecondFoiv)
-                .Include(acr => acr.TypeOfProperty).Include(acr => acr.ManageRightsFrom).Include(acr => acr.ManageRightsTo).Where(x => x.CreateUser.Id == user.Id).ToList();
+                .Include(acr => acr.TypeOfProperty).Include(acr => acr.ManageRightsFrom)
+                .Include(acr => acr.ManageRightsTo).Where(x => x.CreateUser.Id == user.Id).ToList();
             return View(appeal);
         }
         public async Task<IActionResult> AppealsLetters()
@@ -86,7 +90,7 @@ namespace RosreestDocks.Controllers
                 .Include(acr => acr.RecipientAgency.Director.Position).Include(acr => acr.RecipientAgency.SecondDirector.Position)
                 .Include(acr => acr.TransferAgency.Director.Position).Include(acr => acr.TransferAgency.SecondDirector.Position)
                 .Include(acr => acr.FirstFoiv).Include(acr => acr.SecondFoiv)
-                .Include(acr => acr.TypeOfProperty).Include(acr => acr.ManageRightsFrom).Include(acr => acr.ManageRightsTo).ToList();
+                .Include(acr => acr.TypeOfProperty).Include(acr => acr.ManageRightsFrom).Include(acr => acr.ManageRightsTo).Where(x => x.CreateUser.Id == user.Id).ToList();
             return View(appeal);
         }
         public async Task<IActionResult> AppealsRaspor()
@@ -98,7 +102,7 @@ namespace RosreestDocks.Controllers
                 .Include(acr => acr.RecipientAgency.Director.Position).Include(acr => acr.RecipientAgency.SecondDirector.Position)
                 .Include(acr => acr.TransferAgency.Director.Position).Include(acr => acr.TransferAgency.SecondDirector.Position)
                 .Include(acr => acr.FirstFoiv).Include(acr => acr.SecondFoiv)
-                .Include(acr => acr.TypeOfProperty).Include(acr => acr.ManageRightsFrom).Include(acr => acr.ManageRightsTo).ToList();
+                .Include(acr => acr.TypeOfProperty).Include(acr => acr.ManageRightsFrom).Include(acr => acr.ManageRightsTo).Where(x => x.CreateUser.Id == user.Id).ToList();
             return View(appeal);
         }
         public async Task<IActionResult> AppealsClosed()
@@ -110,7 +114,7 @@ namespace RosreestDocks.Controllers
                 .Include(acr => acr.RecipientAgency.Director.Position).Include(acr => acr.RecipientAgency.SecondDirector.Position)
                 .Include(acr => acr.TransferAgency.Director.Position).Include(acr => acr.TransferAgency.SecondDirector.Position)
                 .Include(acr => acr.FirstFoiv).Include(acr => acr.SecondFoiv)
-                .Include(acr => acr.TypeOfProperty).Include(acr => acr.ManageRightsFrom).Include(acr => acr.ManageRightsTo).ToList();
+                .Include(acr => acr.TypeOfProperty).Include(acr => acr.ManageRightsFrom).Include(acr => acr.ManageRightsTo).Where(x => x.CreateUser.Id == user.Id).ToList();
             return View(appeal);
         }
 
@@ -119,12 +123,12 @@ namespace RosreestDocks.Controllers
             RequestModel consider = db.Request.Include(inc => inc.Status).Include(acr => acr.DockType)
                 .Include(acr => acr.RecipientAgency).Include(acr => acr.RecipientAgency.Acronym).Include(acr => acr.RecipientAgency.Director).Include(acr => acr.RecipientAgency.SecondDirector)
                 .Include(acr => acr.TransferAgency).Include(acr => acr.TransferAgency.Acronym).Include(acr => acr.TransferAgency.Director).Include(acr => acr.TransferAgency.SecondDirector)
-                .Include(acr => acr.FirstFoiv).Include(acr => acr.SecondFoiv)
+                .Include(acr => acr.FirstFoiv).Include(acr => acr.SecondFoiv).Include(acr => acr.ReqType)
                 .Include(acr => acr.FirstFoivAppeal).Include(acr => acr.SecondFoivAppeal).Include(acr => acr.RecipientAppeal).Include(acr => acr.TransferAppeal).Include(acr => acr.RosimAppeal)
                 .Include(acr => acr.TypeOfProperty).Include(acr => acr.ManageRightsFrom).Include(acr => acr.ManageRightsTo).ToList().Where(x=>x.Id == id).SingleOrDefault();
 
             
-            var list = db.Acronyms.ToSelectListItem(null);
+            var list = db.Acronyms.ToSelectListItem(null).OrderBy(x=> x.Text);
             consider.TransferAgencyAcromymList = list;
             consider.RecipientAgencyAcromymList = list;
             consider.DockStatusList = db.DocStatus.ToSelectListItem(null);
@@ -149,6 +153,8 @@ namespace RosreestDocks.Controllers
             consider.RecipientAgency.AcronymSelected = consider.RecipientAgency.Acronym.Id;
             consider.TransferAgency.AcronymSelected = consider.TransferAgency.Acronym.Id;
 
+            consider.ReqTypeList = db.RequestType.ToSelectListItem(null);
+
             return View(consider);
         }
 
@@ -164,7 +170,7 @@ namespace RosreestDocks.Controllers
                 .Include(acr => acr.TypeOfProperty).Include(acr => acr.ManageRightsFrom).Include(acr => acr.ManageRightsTo).ToList().Where(x => x.Id == id).SingleOrDefault();
 
 
-            var list = db.Acronyms.ToSelectListItem(null);
+            var list = db.Acronyms.ToSelectListItem(null).OrderBy(x => x.Text);
             consider.TransferAgencyAcromymList = list;
             consider.RecipientAgencyAcromymList = list;
             consider.DockStatusList = db.DocStatus.ToSelectListItem(null);
@@ -196,6 +202,7 @@ namespace RosreestDocks.Controllers
             var consider = MainVars.CreateFullRquestModel();
             consider.DockStatusList = db.DocStatus.ToSelectListItem(null);
             consider.DockTypeList = db.DocType.ToSelectListItem(null);
+            consider.ReqTypeList = db.RequestType.ToSelectListItem(null);
             return View(consider);
 
         }
@@ -206,6 +213,8 @@ namespace RosreestDocks.Controllers
 
             if (a.CreationDate == DateTime.MinValue)
                 a.CreationDate = DateTime.Now;
+
+            a.UpdateDate = DateTime.Now;
 
             a.Articles = db.Articles.Where(x => x.Id == rasporVyaModel.Articles.Id).SingleOrDefault();
             a.FirstFoiv = db.Foiv.Where(x => x.Id == rasporVyaModel.FirstFoiv.Id).SingleOrDefault();
@@ -218,15 +227,31 @@ namespace RosreestDocks.Controllers
             a.DockType = db.DocType.Where(x => x.Id == rasporVyaModel.DockType.Id).SingleOrDefault();
             a.TypeOfProperty = db.TypeOfPropertyModels.Where(x => x.Id == rasporVyaModel.TypeOfProperty.Id).SingleOrDefault();
             a.CreateUser = db.AppUser.Where(x => x.Id == user.Id).SingleOrDefault();
+            a.ReqType = db.RequestType.Where(x=>x.Id == rasporVyaModel.ReqType.Id).SingleOrDefault();
+
+
             if (rasporVyaModel.Id == 0)
-                db.Request.Update(a);
+                db.Request.Add(a);
             else
                 db.Request.Update(a);
 
             db.SaveChanges();
             return Redirect(Request.Headers["Referer"].ToString());
         }
+        public IActionResult RemoveAppeals(int id)
+        {
+            var consider = db.Request.Where(x=>x.Id == id).SingleOrDefault();
+            db.Appeals.Where(x => x.Id == consider.RecipientAppeal.Id).SingleOrDefault();
+            db.Appeals.Where(x => x.Id == consider.TransferAppeal.Id).SingleOrDefault();
+            db.Appeals.Where(x => x.Id == consider.FirstFoivAppeal.Id).SingleOrDefault();
+            db.Appeals.Where(x => x.Id == consider.SecondFoivAppeal.Id).SingleOrDefault();
+            db.Appeals.Where(x => x.Id == consider.RosimAppeal.Id).SingleOrDefault();
+            consider.DockStatusList = db.DocStatus.ToSelectListItem(null);
+            consider.DockTypeList = db.DocType.ToSelectListItem(null);
+            consider.ReqTypeList = db.RequestType.ToSelectListItem(null);
+            return View(consider);
 
+        }
 
 
         public IActionResult CreateAppealConsider(RequestModel request)
@@ -239,7 +264,6 @@ namespace RosreestDocks.Controllers
             var consider = _docks.CreateAppealRunner(request);
             return DownloadFile(consider[0], consider[1]);
         }
-
         public IActionResult CreateZaprosCentral(RequestModel request)
         {
             var consider = _docks.CreateZaprosCA(request);
@@ -453,7 +477,7 @@ namespace RosreestDocks.Controllers
             agency.Director.PositionList = db.Positions.ToSelectListItem(null);
             agency.SecondDirector.PositionList = db.Positions.ToSelectListItem(null);
             agency.AcronymSelected = 0;
-            agency.AcronymList = db.Acronyms.ToSelectListItem();
+            agency.AcronymList = db.Acronyms.ToSelectListItem(null).OrderBy(x => x.Text);
             return PartialView("Modal/CreateOrganizationModal",agency);
         }
 
@@ -498,7 +522,7 @@ namespace RosreestDocks.Controllers
         }
         #endregion
 
-        #region DocCategoty
+        #region DocCategory
         public IActionResult DocCategories()
         {
             return View(db.DocCategories.ToList());
@@ -550,7 +574,7 @@ namespace RosreestDocks.Controllers
             if (file != null)
             {
                 await UploadFile(file, DockPath);
-                doc.Url = DockPath + file.FileName;
+                doc.Url = DockPathAlt + file.FileName;
             }
             await db.Documents.AddAsync(doc);
             await db.SaveChangesAsync();
@@ -566,17 +590,19 @@ namespace RosreestDocks.Controllers
             {
                 DeleteDocumentsAsync(doc);
                 await UploadFile(file, DockPath);
-                doc.Url = DockPath + file.FileName;
+                doc.Url = DockPathAlt + file.FileName;
             }
             db.Documents.Update(doc);
             await db.SaveChangesAsync();
 
             return Redirect(Request.Headers["Referer"].ToString());
         }
+        
+    
         public async Task<IActionResult> DownloadDocument(int id)
         {
             var doc = await db.Documents.Where(x => x.Id == id).SingleOrDefaultAsync();
-            return DownloadFile(doc.Url);
+            return await DownloadPdfFile(_hostingEnvironment.WebRootPath + doc.Url);
         }
 
         public async Task<IActionResult> RemoveDocument(string id)
@@ -631,16 +657,45 @@ namespace RosreestDocks.Controllers
 
             return false;
         }
-        public IActionResult DownloadFile(string link)
+       
+        [HttpGet]
+        public FileResult DownloadFile(string link, string name = null)
         {
-            var data = MainVars.DownloadFile(link);
+            Tuple<MemoryStream, string, string> data;
+            
+            if (name == null)
+                data = MainVars.GetDownloadFileData(link);
+            else 
+                data = MainVars.GetDownloadFileData(link, name);
+
+            var cd = new System.Net.Mime.ContentDisposition
+            {
+                FileName = data.Item3,
+                Inline = true,
+            };
+            Response.Headers.Add("Content-Disposition", cd.ToString());
+
             return File(data.Item1, data.Item2, data.Item3);
         }
-        public IActionResult DownloadFile(string link, string name)
+
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> DownloadPdfFile(string link, string name = null)
         {
-            var data = MainVars.DownloadFile(link, name);
-            return File(data.Item1, data.Item2, data.Item3);
+            Tuple<MemoryStream, string, string> data;
+
+            if (name == null)
+                data = MainVars.GetDownloadFileData(link);
+            else
+                data = MainVars.GetDownloadFileData(link, name);
+
+            string mimeType = "application/pdf";
+            return new FileStreamResult(data.Item1, mimeType)
+            {
+                FileDownloadName = data.Item3
+            };
         }
+
         public void DeleteDocumentsAsync(DocumentModel prod)
         { 
             //DELETE FOLDER AND FILES

@@ -13,12 +13,14 @@
 <table id="appealtable" class="table table-sm table-hover">
     <thead>
         <tr>
-            <th scope="col" style="width:10%;">#</th>          
+            <th scope="col" style="width:5%;">#</th> 
+            <th scope="col" style="width:5%;">От</th>  
             <th scope="col" style="width:10%;">Вр и отправленный</th>   
             <th scope="col" style="width:10%;">Статус</th>  
             <th scope="col" style="width:10%;">Срок</th>
-            <th scope="col" style="width:35%;">Организации</th>
-            <th scope="col" style="width:10%;">Создано</th>
+            <th scope="col" style="width:30%;">Организации</th>
+            <th scope="col" style="width:5%;">Создано</th>
+            <th scope="col" style="width:5%;">Обновлено</th>
             <th scope="col" style="width:15%;"></th>
             <th scope="col" style="width:0%;"></th>
         </tr>
@@ -27,7 +29,11 @@
         @foreach (var appeal in Model)
         {
             <tr>
-                <td>№ @appeal.DocName <br> @appeal.DocDate.ToShortDateString()</td>
+                <td>@appeal.DocName</td>
+                <td>
+                    <span style="display:none">@Convert.ToDateTime(@appeal.DocDate.ToShortDateString()).ToString("yyyy/MM/dd")</span>
+                    @appeal.DocDate.ToShortDateString()
+                 </td>
                 <td>Вр-@appeal.WorkNumber <br>№ @appeal.SendNumber </td>
                 <td>@appeal.Status.Name <br> @appeal.DockType.Name </td>
                 <td>
@@ -35,15 +41,14 @@
                     var a = @viewHelper.GetColor(appeal.ExpireDate);
                         if(appeal.Status.Id == 5)
                         {
-                            a[0] = "#228b22";
-                            a[1] = "Закрыт";
+                            a[0] = "rgba(43, 169, 114, 0.2)";
+                            a[1] = "#2ba972";
+                            a[2] = "Закрыт";
                         }
-
                     }
-
-                    <div style="background-color:@a[0]; padding:5px; border-radius:5px;">
+                    <div style="background-color:@a[0]; color:@a[1];padding:5px; border-radius:5px;">
                          <b>@appeal.ExpireDate.ToShortDateString()</b>
-                         <p style="margin-bottom: 0;">(@a[1])</p>
+                         <p style="margin-bottom: 0;">(@a[2])</p>
                     </div>     
                  </td>
                 <td>@{
@@ -59,9 +64,16 @@
                         else trname = appeal.TransferAgency.ShortName;
                     }
                     1. @recname <br> 2. @trname </td>
-                <td>@appeal.CreationDate.ToShortDateString()</td>
+                <td>
+                    <span style="display:none">@Convert.ToDateTime(appeal.CreationDate).ToString("yyyy/MM/dd")</span>
+                    @appeal.CreationDate.ToShortDateString()
+                </td>
+                <td>
+                    <span style="display:none">@Convert.ToDateTime(@appeal.UpdateDate.ToShortDateString()).ToString("yyyy/MM/dd")</span>
+                    @appeal.UpdateDate.ToShortDateString()
+                </td>
                 <td class="align-middle">
-                    <button class="btn btn-primary" onclick="window.location.href='@Url.Action("EditAppealConsider", "Data", new {id=@appeal.Id})';">
+                    <button class="btn btn-outline-primary btn-sm update" onclick="window.location.href='@Url.Action("EditAppealConsider", "Data", new {id=@appeal.Id})';">
                         <i class="fas fas-table fa-edit"></i>
                     </button>
                     <button type="button" class="btn btn-outline-danger btn-sm" style="font-size:10px;"

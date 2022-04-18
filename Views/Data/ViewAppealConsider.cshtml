@@ -8,9 +8,10 @@
 @inject DataBaseContext db
 
 @{
-    ViewData["Title"] = "Обращение № " + @Model.DocName + " от " + @Model.DocDate.ToShortDateString();
     ViewHelper viewHelper = new();
 }
+<title>№ @Model.DocName от @Model.DocDate.ToShortDateString()</title>
+
 
 <div>
     <form asp-controller="Data" method="post">
@@ -159,21 +160,21 @@
                        
                 <label for="inp" class="inp">
                         <input id="transferinn" class="fields" type="number"  asp-for="TransferAgency.AgencyINN" placeholder="&nbsp;" disabled/>
-                        <span class="label">ИНН*</span>
+                        <span class="label">ИНН</span>
                         <span class="focus-bg"></span>
                         <span asp-validation-for="TransferAgency.AgencyINN" class="text-danger"></span>
                 </label>
                 
                 <label for="inp" class="inp" style="max-width: 500px;">
                         <input id="transferadress" class="fields"  type="adress" asp-for="TransferAgency.Adress" placeholder="&nbsp;" disabled/>
-                        <span class="label">Адрес без города и индекса*</span>
+                        <span class="label">Адрес без города и индекса</span>
                         <span class="focus-bg"></span>
                         <span asp-validation-for="TransferAgency.Adress" class="text-danger"></span>
                 </label>             
                 
                 <label for="inp" class="inp">
                         <input id="transferzip" class="fields" asp-for="TransferAgency.CityAndZip" placeholder="&nbsp;" disabled/>
-                        <span class="label">г. Москва, 103445*</span>
+                        <span class="label">Город и индекс</span>
                         <span class="focus-bg"></span>
                         <span asp-validation-for="TransferAgency.CityAndZip" class="text-danger"></span>
                 </label>           
@@ -183,7 +184,7 @@
                <input type="hidden" asp-for="TransferAppeal.Id" />
                     <label for="inp" class="inp">
                         <input class="fields" asp-for="TransferAppeal.Date" placeholder="&nbsp;" disabled/>
-                        <span class="label">01 марта 2021*</span>
+                        <span class="label">Дата</span>
                         <span class="focus-bg"></span>
                         <span asp-validation-for="TransferAppeal.Date" class="text-danger"></span>
                     </label>
@@ -191,7 +192,7 @@
 
                     <label for="inp" class="inp">
                         <input class="fields" asp-for="TransferAppeal.Number" placeholder="&nbsp;" disabled/>
-                        <span class="label">124-002/5*</span>
+                        <span class="label">Номер</span>
                         <span class="focus-bg"></span>
                         <span asp-validation-for="TransferAppeal.Number" class="text-danger"></span>
                     </label>        
@@ -249,21 +250,21 @@
                        
                 <label for="inp" class="inp">
                         <input id="recipientinn" class="fields" type="number"  asp-for="RecipientAgency.AgencyINN" placeholder="&nbsp;"  disabled/>
-                        <span class="label">ИНН*</span>
+                        <span class="label">ИНН</span>
                         <span class="focus-bg"></span>
                         <span asp-validation-for="RecipientAgency.AgencyINN" class="text-danger"></span>
                 </label>
                 
                 <label for="inp" class="inp" style="max-width: 500px;">
                         <input id="recipientadress" class="fields"  type="adress" asp-for="RecipientAgency.Adress" placeholder="&nbsp;" disabled/>
-                        <span class="label">Адрес без города и индекса*</span>
+                        <span class="label">Адрес без города и индекса</span>
                         <span class="focus-bg"></span>
                         <span asp-validation-for="RecipientAgency.Adress" class="text-danger"></span>
                 </label>             
                 
                 <label for="inp" class="inp">
                         <input id="recipientzip" class="fields" asp-for="RecipientAgency.CityAndZip" placeholder="&nbsp;" disabled/>
-                        <span class="label">г. Москва, 103445*</span>
+                        <span class="label">Город и индекс</span>
                         <span class="focus-bg"></span>
                         <span asp-validation-for="RecipientAgency.CityAndZip" class="text-danger"></span>
                 </label>           
@@ -273,7 +274,7 @@
                <input type="hidden" asp-for="RecipientAppeal.Id" />
                     <label for="inp" class="inp">
                         <input class="fields" asp-for="RecipientAppeal.Date" placeholder="&nbsp;" disabled/>
-                        <span class="label">01 марта 2021*</span>
+                        <span class="label">Дата</span>
                         <span class="focus-bg"></span>
                         <span asp-validation-for="RecipientAppeal.Date" class="text-danger"></span>
                     </label>
@@ -281,7 +282,7 @@
 
                     <label for="inp" class="inp">
                         <input class="fields" asp-for="RecipientAppeal.Number" placeholder="&nbsp;" disabled/>
-                        <span class="label">124-002/5*</span>
+                        <span class="label">Номер</span>
                         <span class="focus-bg"></span>
                         <span asp-validation-for="RecipientAppeal.Number" class="text-danger"></span>
                     </label>     
@@ -327,14 +328,14 @@
                          <div class="col-2">                
                             <label for="inp" class="inp">
                                 <input class="fields" asp-for="FirstFoivAppeal.Date" placeholder="&nbsp;"  disabled/>
-                                <span class="label">01 марта 2000</span>
+                                <span class="label">Дата</span>
                                 <span class="focus-bg"></span>
                              </label>  
                          </div>
                          <div class="col-2">                
                             <label for="inp" class="inp">
                                 <input class="fields" asp-for="FirstFoivAppeal.Number" placeholder="&nbsp;" disabled/>
-                                <span class="label">124-002/5</span>
+                                <span class="label">Номер</span>
                                 <span class="focus-bg"></span>
                             </label>  
                          </div>
@@ -361,14 +362,14 @@
                         <div class="col-2">                
                             <label for="inp" class="inp">
                                 <input class="fields" asp-for="SecondFoivAppeal.Date" placeholder="&nbsp;" disabled />
-                                <span class="label">01 марта 2000</span>
+                                <span class="label">Дата</span>
                                 <span class="focus-bg"></span>
                             </label>  
                         </div>
                         <div class="col-2">
                             <label for="inp" class="inp">
                                 <input class="fields" asp-for="SecondFoivAppeal.Number" placeholder="&nbsp;" disabled/>
-                                <span class="label">124-002/5</span>
+                                <span class="label">Номер</span>
                                 <span class="focus-bg"></span>
                             </label>                       
                         </div>
@@ -400,12 +401,12 @@
                <div style="display:flex;">
                    <label for="inp" class="inp">
                             <input class="fields" asp-for="RosimAppeal.Date" placeholder="&nbsp;" disabled/>
-                            <span class="label">11 июня 2000</span>
+                            <span class="label">Дата</span>
                             <span class="focus-bg"></span>
                     </label>  
                     <label for="inp" class="inp">
                             <input class="fields" asp-for="RosimAppeal.Number" placeholder="&nbsp;" disabled/>
-                            <span class="label">124-002/5</span>
+                            <span class="label">Номер</span>
                             <span class="focus-bg"></span>
                    </label>    
                </div>

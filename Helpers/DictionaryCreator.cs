@@ -17,6 +17,28 @@ namespace RosreestDocks.Helpers
             db = context;
         }
 
+        private string GetMonth()
+        {
+            var month = DateTime.Now.Month switch
+            {
+                1 => "января",
+                2 => "февраля",
+                3 => "марта",
+                4 => "апреля",
+                5 => "мая",
+                6 => "июня",
+                7 => "июля",
+                8 => "августа",
+                9 => "сентября",
+                10 => "октября",
+                11 => "ноября",
+                12 => "декабря",
+                _ => "unknown",
+            };
+
+            return month;
+        }
+
         private Dictionary<string,string> CreateAgencies(ICommonModel a, ICommonModel raspor)
         {
             Dictionary<string, string> ChangeDic = new();
@@ -29,6 +51,7 @@ namespace RosreestDocks.Helpers
                         AcronymTvorPad = a.TransferAgency.Acronym.AcronymTvorPad,
                         AcronymRodPad = a.TransferAgency.Acronym.AcronymRodPad,
                         Name = "",
+                        ShortName = a.TransferAgency.ShortName ?? "Учреждение",
                         NameDatPad = a.TransferAgency.NameDatPad,
                         NameRodPad = a.TransferAgency.NameRodPad,
                         NameTvorPad = a.TransferAgency.NameTvorPad,
@@ -45,6 +68,7 @@ namespace RosreestDocks.Helpers
                         AcronymTvorPad = a.TransferAgency.Acronym.AcronymTvorPad,
                         AcronymRodPad = a.TransferAgency.Acronym.AcronymRodPad,
                         Name = "«" + a.TransferAgency.Name + "»",
+                        ShortName = a.TransferAgency.ShortName ?? "Учреждение",
                         NameDatPad = "",
                         NameRodPad = "",
                         NameTvorPad = "",
@@ -62,6 +86,7 @@ namespace RosreestDocks.Helpers
                         AcronymTvorPad = a.RecipientAgency.Acronym.AcronymTvorPad,
                         AcronymRodPad = a.RecipientAgency.Acronym.AcronymRodPad,
                         Name = "",
+                        ShortName = a.RecipientAgency.ShortName ?? "Учреждение",
                         NameDatPad = a.RecipientAgency.NameDatPad,
                         NameRodPad = a.RecipientAgency.NameRodPad,
                         NameTvorPad = a.RecipientAgency.NameTvorPad,
@@ -78,6 +103,7 @@ namespace RosreestDocks.Helpers
                         AcronymRodPad = a.RecipientAgency.Acronym.AcronymRodPad,
                         AcronymTvorPad = a.RecipientAgency.Acronym.AcronymTvorPad,
                         Name = "«" + a.RecipientAgency.Name + "»",
+                        ShortName = a.RecipientAgency.ShortName ?? "Учреждение",
                         NameDatPad = "",
                         NameRodPad = "",
                         NameTvorPad = "",
@@ -98,6 +124,7 @@ namespace RosreestDocks.Helpers
                         AcronymRodPad = a.RecipientAgency.Acronym.AcronymRodPad,
                         AcronymTvorPad = a.RecipientAgency.Acronym.AcronymTvorPad,
                         Name = "",
+                        ShortName = a.RecipientAgency.ShortName ?? "Учреждение",
                         NameDatPad = a.RecipientAgency.NameDatPad,
                         NameRodPad = a.RecipientAgency.NameRodPad,
                         NameTvorPad = a.RecipientAgency.NameTvorPad,
@@ -114,6 +141,7 @@ namespace RosreestDocks.Helpers
                         AcronymRodPad = a.RecipientAgency.Acronym.AcronymRodPad,
                         AcronymTvorPad = a.RecipientAgency.Acronym.AcronymTvorPad,
                         Name = "«" + a.RecipientAgency.Name + "»",
+                        ShortName = a.RecipientAgency.ShortName ?? "Учреждение",
                         NameDatPad = "",
                         NameRodPad = "",
                         NameTvorPad = "",
@@ -130,6 +158,7 @@ namespace RosreestDocks.Helpers
                         AcronymRodPad = a.TransferAgency.Acronym.AcronymRodPad,
                         AcronymTvorPad = a.TransferAgency.Acronym.AcronymTvorPad,
                         Name = "",
+                        ShortName = a.TransferAgency.ShortName ?? "Учреждение",
                         NameDatPad = a.TransferAgency.NameDatPad,
                         NameRodPad = a.TransferAgency.NameRodPad,
                         NameTvorPad = a.TransferAgency.NameTvorPad,
@@ -145,6 +174,7 @@ namespace RosreestDocks.Helpers
                         AcronymRodPad = a.TransferAgency.Acronym.AcronymRodPad,
                         AcronymTvorPad = a.TransferAgency.Acronym.AcronymTvorPad,
                         Name = "«" + a.TransferAgency.Name + "»",
+                        ShortName = a.TransferAgency.ShortName ?? "Учреждение",
                         NameDatPad = "",
                         NameRodPad = "",
                         NameTvorPad = "",
@@ -160,12 +190,14 @@ namespace RosreestDocks.Helpers
             ChangeDic.Add("WhoAgreeDatPad", a.WhoAgreeModelAgency.NameDatPad);
             ChangeDic.Add("WhoAgreeTvorPad", a.WhoAgreeModelAgency.NameTvorPad);
             ChangeDic.Add("WhoAgreeName", a.WhoAgreeModelAgency.Name);
+            ChangeDic.Add("WhoAgreeShortName", a.WhoAgreeModelAgency.ShortName);
 
             ChangeDic.Add("WhoAppliedImPadPad", a.WhoAppliedAgency.NameImPad);
             ChangeDic.Add("WhoAppliedRodPad", a.WhoAppliedAgency.NameRodPad);
             ChangeDic.Add("WhoApplieDatPad", a.WhoAppliedAgency.NameDatPad);
             ChangeDic.Add("WhoAppliedTvorPad", a.WhoAppliedAgency.NameTvorPad);
             ChangeDic.Add("WhoAppliedName", a.WhoAppliedAgency.Name);
+            ChangeDic.Add("WhoAppliedShortName", a.WhoAppliedAgency.ShortName);
 
             if (a.RecipientAgency.NameRodPad != null)
             {
@@ -528,7 +560,7 @@ namespace RosreestDocks.Helpers
 
             if (a.IsRosim == true)
             {
-                ChangeDic.Add("RosImRaspor", "во исполнении поручений Федерального агентства по управлению государственным имуществом от 06 июня 2017 г. № ДП-08/22081 и от " + a.RosimDate + " г. № " + a.RosimNumber);
+                ChangeDic.Add("RosImRaspor", "во исполнение поручений Федерального агентства по управлению государственным имуществом от 06 июня 2017 г. № ДП-08/22081 и от " + a.RosimDate + " г. № " + a.RosimNumber);
                 ChangeDic.Add("RosImSoprovod", "Во исполнение поручения Федерального агентства по управлению государственным имуществом (далее - Росимущество) от" + a.RosimDate + " г. № "+ a.RosimNumber +
                     " Территориальное управление Росимущества в городе Москве (далее – Территориальное управление)");
                 ChangeDic.Add("SopPrilRosIm", "1 экз. Распоряжения в электронном виде в третий адрес");
@@ -536,7 +568,7 @@ namespace RosreestDocks.Helpers
             }
             else
             {
-                ChangeDic.Add("RosImRaspor", "во исполнении поручения Федерального агентства по управлению государственным имуществом от 06 июня 2017 г. № ДП-08/22081");
+                ChangeDic.Add("RosImRaspor", "во исполнение поручения Федерального агентства по управлению государственным имуществом от 06 июня 2017 г. № ДП-08/22081");
                 ChangeDic.Add("RosImSoprovod", "Территориальное управление Федерального агентства по управлению государственным имуществом в городе Москве (далее – Территориальное управление)");
                 ChangeDic.Add("SopPrilRosIm", "1 экз. Распоряжения в электронном виде в третий адрес.");             
                 ChangeDic.Add("RosImName", "");
@@ -548,7 +580,7 @@ namespace RosreestDocks.Helpers
             return ChangeDic;
         }
 
-
+        //Create raspor, annex, soprovod
         public Dictionary<string, string> CreateRasporVyaByRequest(RequestModel raspor)
         {
             var a = raspor;
@@ -559,7 +591,6 @@ namespace RosreestDocks.Helpers
             a.RecipientAgency = db.Agency.Where(x => x.Id == raspor.RecipientAgency.Id).Include(x => x.Acronym).FirstOrDefault();
             a.TransferAgency = db.Agency.Where(x => x.Id == raspor.TransferAgency.Id).Include(x => x.Acronym).FirstOrDefault();
             var ChangeDic = CreateAgencies(a, raspor);
-
 
 
             if (!String.IsNullOrEmpty(a.FirstFoivAppeal.Number))
@@ -592,7 +623,7 @@ namespace RosreestDocks.Helpers
             else
             {
                 if(raspor.WhatAnnex == 0 || raspor.WhatAnnex == 1)
-                    ChangeDic.Add("RosImRaspor", "во исполнении поручения Федерального агентства по управлению государственным имуществом от 06 июня 2017 г. № ДП-08/22081");
+                    ChangeDic.Add("RosImRaspor", "во исполнение поручения Федерального агентства по управлению государственным имуществом от 06 июня 2017 г. № ДП-08/22081");
                 else ChangeDic.Add("RosImRaspor", "");
 
                 ChangeDic.Add("RosImSoprovod", "Территориальное управление Федерального агентства по управлению государственным имуществом в городе Москве (далее - Территориальное управление) ");
@@ -603,6 +634,10 @@ namespace RosreestDocks.Helpers
             if (a.BuildingsString)
                 ChangeDic.Add("BuildingsString", "- обеспечить оформление земельно-правовых отношений.");
             else ChangeDic.Add("BuildingsString", "");
+
+            ChangeDic.Add("Month", GetMonth());
+            ChangeDic.Add("Year", DateTime.Now.Year.ToString());
+
             return ChangeDic;
         }
         public Dictionary<string,string> CreateRunner(RequestModel raspor)
@@ -713,10 +748,16 @@ namespace RosreestDocks.Helpers
             ChangeDic.Add("PropertyDiscription", $"{a.PropertyDiscription}");
 
             if (raspor.IsRosim)
+            {
                 ChangeDic.Add("RosImDeny", "Во исполнение поручения Федерального агентства по управлению государственным имуществом (далее - Росимущество) от " + a.RosimAppeal.Date + " г. № " + a.RosimAppeal.Number +
         " Территориальное управление Росимущества в городе Москве (далее – Территориальное управление)");
-            else ChangeDic.Add("RosImDeny", "Территориальное управление Федерального агентства по управлению государственным имуществом в городе Москве (далее – Территориальное управление)");
-
+                ChangeDic.Add("RosImName", "Росимущество");
+            }
+            else
+            {
+                ChangeDic.Add("RosImDeny", "Территориальное управление Федерального агентства по управлению государственным имуществом в городе Москве (далее – Территориальное управление)");
+                ChangeDic.Add("RosImName", "");
+            }
 
             return ChangeDic;
         }

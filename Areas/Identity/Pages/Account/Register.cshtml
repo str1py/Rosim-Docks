@@ -4,13 +4,11 @@
     ViewData["Title"] = "Register";
 }
 
-<h1>@ViewData["Title"]</h1>
-
 
        <div class="parent">
             <form asp-route-returnUrl="@Model.ReturnUrl" class="authform" method="post">
                 <img src="/images/logo_FAUGI.svg"  class="d-inline-block align-top" alt="">
-                <h4 class="text-center" style="margin-top:30px;">Регистрация</h4>
+                <h3 class="text-center" style="margin-top:30px;">Регистрация</h3>
                 <div asp-validation-summary="All" class="text-danger"></div>
 
                 <div class="fields" style="margin-top:20px;">               
@@ -68,7 +66,7 @@
                     </label>   
                 </div>
           
-                  <button type="submit" style="margin-top:40px;" class="btn btn-primary bg-primary">Зарегистрироваться</button>
+                  <button type="submit" style="margin-top:40px;" class="btn bg-primary">Зарегистрироваться</button>
                 <hr />
                 <div class="mx-auto">
                      <div class="text-center">

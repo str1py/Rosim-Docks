@@ -16,6 +16,8 @@ namespace RosreestDocks.Models
         public string NameRodPad { get; set; }
         [NotMapped]
         public string NameDatPad { get; set; }
+        [NotMapped]
+        public string ShortName { get; set; }
         public string AddInfo { get; set; }
         public string Date { get; set; }
         public string Number { get; set; }

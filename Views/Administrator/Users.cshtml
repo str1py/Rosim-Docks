@@ -14,8 +14,11 @@
     string removeaction = "Remove" + Name;
 }
 
-   <h3 class="text-center category">Пользователи</h3>
-   <hr class="line-h1" >
+<div class="text-center">
+    <h1 class="display-4">Пользователи</h1>
+</div>
+
+<hr class="line-h1" >
 <table class="table table-sm table-hover">
     <thead>
         <tr>
@@ -35,10 +38,16 @@
                 <td>@user.Email </td>
                 <td>@user.RoleName </td>
                 <td class="align-middle">
-                    <button class="btn btn-outline-primary btn-sm update" asp-controller="Administrator" data-name="@Name" asp-action="@ActionNameForUpdate" asp-route-id="@user.Id" >Правка</button>
+
+                    <button class="btn btn-outline-primary btn-sm update" 
+                    asp-controller="Administrator" 
+                    data-name="@Name" 
+                    asp-action="@ActionNameForUpdate" 
+                    asp-route-id="@user.Id" ><i class="fas fas-table fa-edit"></i></button>
+
                     <button type="button" class="btn btn-outline-danger btn-sm"
                             data-toggle="modal" data-target="#comfirmDelete" data-action="@removeaction" data-name="пользователя" data-name="@Controller"
-                            data-item="@user.Id">Удалить </button>
+                            data-item="@user.Id"><i class="fas fas-table fa-trash-alt"></i></button>
                 </td>
             </tr>
         }

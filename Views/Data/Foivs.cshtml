@@ -1,7 +1,7 @@
 ﻿@model List<FoivModel>
-@{
-    ViewData["Title"] = "ФОИВ`ы";
-}
+
+
+<title>ФОИВ`ы</title>
 @{
     string Name = "Foiv";
     string Controller = "Data";
@@ -14,7 +14,9 @@
     string removeaction = "Remove" + Name;
 }
 
-   <h3 class="text-center category">ФОИВ`ы</h3>
+<div class="text-center">
+    <h1 class="display-4">ФОИВЫ</h1>
+</div>
 
    <button class="btn btn-outline-primary btn-sm create" data-name="@Name" asp-controller="Data" asp-action="@ActionNameForAdd">Добавить</button>
 <table id="foivtable" class="table table-sm table-hover">

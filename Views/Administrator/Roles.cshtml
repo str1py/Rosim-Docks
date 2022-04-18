@@ -16,7 +16,9 @@
     string removeaction = "Remove" + Name;
 }
 
-   <h3 class="text-center category">Роли</h3>
+<div class="text-center">
+    <h1 class="display-4">Роли</h1>
+</div>
    <hr class="line-h1" >
    <button class="btn btn-outline-primary btn-sm create" data-name="@Name" asp-controller="Administrator" asp-action="@ActionNameForAdd">Добавить</button>
 <table class="table table-sm table-hover">
@@ -36,10 +38,14 @@
                 <td> @role.Name </td>
                 <td>@role.ConcurrencyStamp </td>
                 <td class="align-middle">
-                    <button class="btn btn-outline-primary btn-sm update" asp-controller="Administrator" data-name="@Name" asp-action="@ActionNameForUpdate" asp-route-id="@role.Id" >Правка</button>
+                    <button class="btn btn-outline-primary btn-sm update" 
+                    asp-controller="Administrator" 
+                    data-name="@Name" 
+                    asp-action="@ActionNameForUpdate" 
+                    asp-route-id="@role.Id" ><i class="fas fas-table fa-edit"></i></button>
                     <button type="button" class="btn btn-outline-danger btn-sm"
                             data-toggle="modal" data-target="#comfirmDelete" data-action="@removeaction" data-name="роль" data-name="@Controller"
-                            data-item="@role.Id">Удалить </button>
+                            data-item="@role.Id"><i class="fas fas-table fa-trash-alt"></i></button>
                 </td>
             </tr>
         }

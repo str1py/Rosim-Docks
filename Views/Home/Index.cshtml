@@ -7,8 +7,10 @@
 @inject UserManager<User> UserManager
 @inject DataBaseContext db
 
+<title>Росимущество</title>
+
+
 @{
-    ViewData["Title"] = "Росимущество - Гланая страница";
     ViewHelper viewHelper = new();
     var userid = UserManager.GetUserId(User);
  
@@ -22,7 +24,7 @@
     var notes = db.Notes.Include(x=>x.Importance).Where(x=>x.Creator.Id == userid).ToList();
 }
 <!-- CHARTS -->
-@*@await Html.PartialAsync("/Views/Data/Modal/Partial/_ChartsModal.cshtml",notes)*@
+@await Html.PartialAsync("/Views/Data/Modal/Partial/_ChartsPartial.cshtml")
 <!-- ALL NOTES -->
 @await Html.PartialAsync("/Views/Data/Modal/Partial/_NotesModal.cshtml",notes)
 

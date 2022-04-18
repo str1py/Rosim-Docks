@@ -53,12 +53,14 @@ namespace RosreestDocks.Models
 
         public bool BuildingsString { get; set; }
         public DateTime CreationDate { get; set; }
+        public DateTime UpdateDate { get; set; }
         public DateTime ExpireDate { get; set; }
 
 
         public TypeOfPropertyModel TypeOfProperty { get; set; }
         public ManageRightsModel ManageRightsFrom { get; set; }
         public ManageRightsModel ManageRightsTo { get; set; }
+        public RequestType ReqType { get; set; }
 
 
         public int WhoApplied { get; set; }
@@ -77,7 +79,8 @@ namespace RosreestDocks.Models
         [NotMapped]
         public WhoAgreeModel WhoAgreeModelAgency { get; set; }
 
-
+        [NotMapped]
+        public IEnumerable<SelectListItem> ReqTypeList { get; set; }
         [NotMapped]
         public IEnumerable<SelectListItem> SideList { get; set; }
         [NotMapped]

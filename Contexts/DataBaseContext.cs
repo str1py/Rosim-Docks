@@ -27,7 +27,7 @@ namespace RosreestDocks.Contexts
         public DbSet<ImportanceState> Importance { get; set; }
         public DbSet<NoteModel> Notes { get; set; }
 
-
+        public DbSet<RequestType> RequestType { get; set; }
         public DbSet<User> AppUser { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

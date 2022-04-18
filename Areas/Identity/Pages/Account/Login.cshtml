@@ -6,8 +6,10 @@
 }
         <div class="parent">
             <form class="authform" method="post">
-                <img src="/images/logo_FAUGI.svg"  class="d-inline-block align-top" alt="">
-                <h4 class="text-center" style="margin-top:30px;">Авторизация</h4>
+       @*         <img src="/images/logo_FAUGI.svg"  class="d-inline-block align-top" alt="">*@
+                <h1 class="text-center" style="color: #D83f87 !important;margin:0px;">РОС</h1>
+                <h1 class="text-center" style="margin-bottom:30px;color: #4781da !important;">ИМУЩЕСТВО</h1>
+                <h2 class="text-center" style="margin-top:30px;">Авторизация</h2>
  
                 <div asp-validation-summary="All" class="text-danger"></div>
 
@@ -27,7 +29,7 @@
                     </label>   
                 </div>
           
-@*
+
                 <div>
                     <span class="checkbox">
                         <label asp-for="Input.RememberMe">
@@ -35,13 +37,13 @@
                             @Html.DisplayNameFor(m => m.Input.RememberMe)
                         </label>
                     </span>
-                    <span style="float:right">
+ @*                   <span style="float:right">
                         <a id="forgot-password" asp-page="./ForgotPassword">Забыли пароль?</a>
-                    </span>
-                </div>*@
+                    </span>*@
+                </div>
 
                 <div class="text-center" style="margin-top:30px;">
-                    <button type="submit" class="btn btn-primary bg-primary">Войти</button>
+                    <button type="submit" class="btn bg-primary">Войти</button>
                 </div>
 
                 <hr />

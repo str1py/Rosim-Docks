@@ -1,4 +1,7 @@
-﻿
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+    var theme = HttpContextAccessor.HttpContext.Request.Cookies["theme"];
+}
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,14 +10,30 @@
     <title>Панель администратора</title>
     <link rel="stylesheet" href="~/css/style.css" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
+    @{
+        if (theme == null)
+        {
+            <link  href="~/css/site-light.css" rel="stylesheet" type="text/css" />
+        }
+        else
+        {
+            if (theme == "dark")
+            {
+                <link href="~/css/site-dark.css"  rel="stylesheet" type="text/css" />
+            }
+            if (theme == "light")
+            {
+                <link href="~/css/site-light.css" rel="stylesheet" type="text/css" />
+            }
+        }
+    }
     <link rel="stylesheet" href="~/css/jquery.dropdown.css">
     <link rel="stylesheet" href="~/css/jquery.dataTables.css">
     <script src="https://kit.fontawesome.com/d2c0d13beb.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
-<div style="background-color:lightgray;">
+<div class="loginbackground"">
       @RenderBody()
 </div>
         
