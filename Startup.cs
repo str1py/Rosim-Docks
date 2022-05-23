@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -25,20 +26,29 @@ namespace RosreestDocks
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            services.Configure<RouteOptions>(options =>
+            {
+                options.AppendTrailingSlash = true;
+                options.LowercaseUrls = true;
+                options.LowercaseQueryStrings = true;
+
+            });
+
             services.AddControllersWithViews();
-
-           
-
+                       
             services.AddDefaultIdentity<User>(config =>
             {
-                config.SignIn.RequireConfirmedEmail = false;
+                config.SignIn.RequireConfirmedEmail = true;
                 config.User.RequireUniqueEmail = true;
-                config.SignIn.RequireConfirmedAccount = false;
+                config.SignIn.RequireConfirmedAccount = true;
             }).AddRoles<IdentityRole>().AddEntityFrameworkStores<DataBaseContext>();
 
             services.AddDbContext<DataBaseContext>();
             services.AddScoped<DocksService>();
-
+            services.AddScoped<FileService>();
+            services.AddScoped<EgrulService>();
+            services.AddScoped<DatabaseService>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
@@ -47,15 +57,6 @@ namespace RosreestDocks
             services.AddRazorPages();
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
-            //services.AddMemoryCache();
-            //services.AddSession();
-
-            //services.AddSession(options =>
-            //{
-            //    //options.IdleTimeout = TimeSpan.FromSeconds(10);
-            //    options.Cookie.HttpOnly = true;
-            //    options.Cookie.IsEssential = true;
-            //});
 
             services.AddRouting(options => options.LowercaseUrls = true);
         }
@@ -89,7 +90,6 @@ namespace RosreestDocks
             app.UseStaticFiles();
 
             app.UseRouting();
-            //app.UseSession();
 
             app.UseAuthentication();
             app.UseAuthorization();

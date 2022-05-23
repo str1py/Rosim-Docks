@@ -14,22 +14,13 @@ namespace RosreestDocks.Controllers
     public class ErrorController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IWebHostEnvironment _hostingEnvironment;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+
         private readonly DataBaseContext db;
-        private readonly DocksService _docks;
-        private MainVars MainVars;
-        private DictionaryCreator dicCreator;
-        public ErrorController(ILogger<HomeController> logger, DataBaseContext context, IWebHostEnvironment hostingEnvironment, DocksService docks, IHttpContextAccessor httpContextAccessor)
+
+        public ErrorController(ILogger<HomeController> logger, DataBaseContext context, IWebHostEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor)
         {
             _logger = logger;
             db = context;
-            _docks = docks;
-            MainVars = new(db);
-            _hostingEnvironment = hostingEnvironment;
-            _httpContextAccessor = httpContextAccessor;
-            dicCreator = new(db);
-
         }
 
 

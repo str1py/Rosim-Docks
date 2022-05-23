@@ -52,11 +52,11 @@
                         <td>@doc.Category.Name</td>
                         <td>@doc.LastUpdate.ToShortDateString()</td>
                         <td class="align-middle">
-                            <button class="btn btn-outline-primary btn-sm update" 
+                            <button class="btn btn-outline-primary btn-sm update"
                                 asp-controller="Data"
                                 asp-action="@ActionNameForDownload"
                                 asp-route-id="@doc.Id" ><i class="fas fas-table fa-download"></i></button>
-
+                      
                             <button class="btn btn-outline-primary btn-sm update" 
                                 asp-controller="Data" data-name="@Name"
                                 asp-action="@ActionNameForUpdate"

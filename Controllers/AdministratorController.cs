@@ -4,11 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using RosreestDocks.Contexts;
 using RosreestDocks.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using RosreestDocks.Helpers;
+
 
 namespace RosreestDocks.Controllers
 {
@@ -78,7 +77,6 @@ namespace RosreestDocks.Controllers
             {
                 roleName = role[0];
                 roles.Where(x => x.Text == roleName).FirstOrDefault().Selected = true;
-
             }
             else
             {
@@ -133,8 +131,7 @@ namespace RosreestDocks.Controllers
         #region Roles
         public IActionResult Roles()
         {
-            var roles = db.Roles.ToList();
-            return View(roles);
+            return View(db.Roles.ToList());
         }
         public async Task<IActionResult> CreateRole(IdentityRole role)
         {
@@ -200,8 +197,6 @@ namespace RosreestDocks.Controllers
         }
 
         #endregion
-
-
 
         private List<SelectListItem> CreateRoleList()
         {

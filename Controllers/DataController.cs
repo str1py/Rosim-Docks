@@ -10,10 +10,9 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Dadata;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using System.Web;
+using Dadata.Model;
 
 namespace RosreestDocks.Controllers
 {
@@ -24,26 +23,33 @@ namespace RosreestDocks.Controllers
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly DataBaseContext db;
         private readonly DocksService _docks;
+        private readonly FileService _files;
         private readonly UserManager<User> _userManager;
+        private readonly EgrulService _egrul;
+        private readonly DatabaseService _dbservice;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        MainVars MainVars;
+
         private readonly string DockPath;
         private readonly string DockPathAlt;
-        public DataController(ILogger<DataController> logger, DataBaseContext context, IWebHostEnvironment hostingEnvironment, 
-            DocksService docks, UserManager<User> userManager, IHttpContextAccessor httpContextAccessor)
+        public DataController(ILogger<DataController> logger, DataBaseContext context, IWebHostEnvironment hostingEnvironment, DatabaseService dbservice,
+            DocksService docks, UserManager<User> userManager, IHttpContextAccessor httpContextAccessor, FileService files, EgrulService egrul)
         {
             _userManager = userManager;
             _httpContextAccessor = httpContextAccessor;
             _logger = logger;
             db = context;
+            _dbservice = dbservice;
             _hostingEnvironment = hostingEnvironment;
-            MainVars = new(db);
+
             _docks = docks;
+            _files = files;
+            _egrul = egrul;
             DockPath = Path.Combine(_hostingEnvironment.WebRootPath, "Documents\\");
             DockPathAlt = "\\Documents\\";
         }
 
         #region Appeals 
+        //SHOW ALL APPEALS BY ALL EMPLOYEES
         public IActionResult AllAppeals()
         {
             var appeal = db.Request.Include(inc => inc.Status).Include(inc => inc.CreateUser).Include(acr => acr.DockType)
@@ -55,6 +61,8 @@ namespace RosreestDocks.Controllers
                 .Include(acr => acr.TypeOfProperty).Include(acr => acr.ManageRightsFrom).Include(acr => acr.ManageRightsTo).ToList();
             return View(appeal);
         }
+
+        //SHOW ALL APPEALS BY ALL CURRENT EMPLOYEE
         public async Task<IActionResult> Appeals()
         {
             var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
@@ -118,101 +126,51 @@ namespace RosreestDocks.Controllers
             return View(appeal);
         }
 
+        //GET DATA FOR EXIST APPEAL CONSIDER == REFACTORED
         public IActionResult EditAppealConsider(int id)
         {
-            RequestModel consider = db.Request.Include(inc => inc.Status).Include(acr => acr.DockType)
-                .Include(acr => acr.RecipientAgency).Include(acr => acr.RecipientAgency.Acronym).Include(acr => acr.RecipientAgency.Director).Include(acr => acr.RecipientAgency.SecondDirector)
-                .Include(acr => acr.TransferAgency).Include(acr => acr.TransferAgency.Acronym).Include(acr => acr.TransferAgency.Director).Include(acr => acr.TransferAgency.SecondDirector)
-                .Include(acr => acr.FirstFoiv).Include(acr => acr.SecondFoiv).Include(acr => acr.ReqType)
-                .Include(acr => acr.FirstFoivAppeal).Include(acr => acr.SecondFoivAppeal).Include(acr => acr.RecipientAppeal).Include(acr => acr.TransferAppeal).Include(acr => acr.RosimAppeal)
-                .Include(acr => acr.TypeOfProperty).Include(acr => acr.ManageRightsFrom).Include(acr => acr.ManageRightsTo).ToList().Where(x=>x.Id == id).SingleOrDefault();
+            RequestModel consider = _dbservice.GetFullRequest(id);
 
-            
-            var list = db.Acronyms.ToSelectListItem(null).OrderBy(x=> x.Text);
-            consider.TransferAgencyAcromymList = list;
-            consider.RecipientAgencyAcromymList = list;
-            consider.DockStatusList = db.DocStatus.ToSelectListItem(null);
-            consider.ArticlesList = db.Articles.ToSelectListItem(null);
-            consider.ManageRightsList = db.ManageRights.ToSelectListItem(null);
-            consider.TypeOfPropertyList = db.TypeOfPropertyModels.ToSelectListItem(null);
-            consider.AnnexList = MainVars.anexlist.ToSelectListItem(null);
-            consider.SideList = MainVars.sideList.ToSelectListItem(null);
-            var foivs = db.Foiv.ToSelectListItem(null);
-            consider.FirstFoivList = foivs;
-            consider.SecondFoivList = foivs;
-            var agencies = db.Agency.
-                  Include(ag => ag.Director).Include(ag => ag.Director.Position).
-                  Include(ag => ag.SecondDirector).Include(ag => ag.SecondDirector.Position);
-            consider.TransferAgencyList = agencies.ToSelectListItem(null);
-            consider.RecipientAgencyList = agencies.ToSelectListItem(null);
-            consider.RecipientAgencyNormalList = agencies.ToList();
-            consider.TransferAgencyNormalList = agencies.ToList();
-            consider.FoivNormalList = db.Foiv.ToList();
-            consider.DockTypeList = db.DocType.ToSelectListItem(null);
-
-            consider.RecipientAgency.AcronymSelected = consider.RecipientAgency.Acronym.Id;
-            consider.TransferAgency.AcronymSelected = consider.TransferAgency.Acronym.Id;
-
-            consider.ReqTypeList = db.RequestType.ToSelectListItem(null);
-
-            return View(consider);
+            if (consider == null)
+            {
+                _logger.LogError("LogError {0}", "Request return null (EditAppealConsider)");
+                return BadRequest();
+            }
+            else
+                return View(consider);
         }
 
+        //IF APPEAL DOEST EXIST TO CURRENT USER CREATE VIEW WITHOUT EDIT == REFACTORED
         public IActionResult ViewAppealConsider(int id)
         {
-            RequestModel consider = db.Request.Include(inc=> inc.CreateUser).Include(inc => inc.Status).Include(acr => acr.DockType)
-                .Include(acr => acr.RecipientAgency).Include(acr => acr.RecipientAgency.Acronym).Include(acr => acr.RecipientAgency.Director).Include(acr => acr.RecipientAgency.SecondDirector)
-                .Include(acr => acr.TransferAgency).Include(acr => acr.TransferAgency.Acronym).Include(acr => acr.TransferAgency.Director).Include(acr => acr.TransferAgency.SecondDirector)
-                .Include(acr => acr.RecipientAgency.Director.Position).Include(acr => acr.RecipientAgency.SecondDirector.Position)
-                .Include(acr => acr.TransferAgency.Director.Position).Include(acr => acr.TransferAgency.SecondDirector.Position)
-                .Include(acr => acr.FirstFoiv).Include(acr => acr.SecondFoiv)
-                .Include(acr => acr.FirstFoivAppeal).Include(acr => acr.SecondFoivAppeal).Include(acr => acr.RecipientAppeal).Include(acr => acr.TransferAppeal).Include(acr => acr.RosimAppeal)
-                .Include(acr => acr.TypeOfProperty).Include(acr => acr.ManageRightsFrom).Include(acr => acr.ManageRightsTo).ToList().Where(x => x.Id == id).SingleOrDefault();
+            RequestModel consider = _dbservice.GetFullRequest(id, true);
 
-
-            var list = db.Acronyms.ToSelectListItem(null).OrderBy(x => x.Text);
-            consider.TransferAgencyAcromymList = list;
-            consider.RecipientAgencyAcromymList = list;
-            consider.DockStatusList = db.DocStatus.ToSelectListItem(null);
-            consider.ArticlesList = db.Articles.ToSelectListItem(null);
-            consider.ManageRightsList = db.ManageRights.ToSelectListItem(null);
-            consider.TypeOfPropertyList = db.TypeOfPropertyModels.ToSelectListItem(null);
-            consider.AnnexList = MainVars.anexlist.ToSelectListItem(null);
-            consider.SideList = MainVars.sideList.ToSelectListItem(null);
-            var foivs = db.Foiv.ToSelectListItem(null);
-            consider.FirstFoivList = foivs;
-            consider.SecondFoivList = foivs;
-            var agencies = db.Agency.
-                  Include(ag => ag.Director).Include(ag => ag.Director.Position).
-                  Include(ag => ag.SecondDirector).Include(ag => ag.SecondDirector.Position);
-            consider.TransferAgencyList = agencies.ToSelectListItem(null);
-            consider.RecipientAgencyList = agencies.ToSelectListItem(null);
-            consider.RecipientAgencyNormalList = agencies.ToList();
-            consider.TransferAgencyNormalList = agencies.ToList();
-            consider.FoivNormalList = db.Foiv.ToList();
-            consider.DockTypeList = db.DocType.ToSelectListItem(null);
-
-            consider.RecipientAgency.AcronymSelected = consider.RecipientAgency.Acronym.Id;
-            consider.TransferAgency.AcronymSelected = consider.TransferAgency.Acronym.Id;
-
-            return View(consider);
+            if (consider == null)
+            {
+                _logger.LogError("LogError {0}", "Request return null (EditAppealConsider)");
+                return BadRequest();
+            }
+            else
+                return View(consider);
         }
+
+        //GET DATA FOR NEW APPEAL CONSIDER  ==  REFACTORED
         public IActionResult AppealConsider()
         {
-            var consider = MainVars.CreateFullRquestModel();
-            consider.DockStatusList = db.DocStatus.ToSelectListItem(null);
-            consider.DockTypeList = db.DocType.ToSelectListItem(null);
-            consider.ReqTypeList = db.RequestType.ToSelectListItem(null);
-            return View(consider);
-
+            return View(_dbservice.CreateFullRequestModel());
         }
+
+        //FOR NEW APPEALS AND SAVE
         public async Task<IActionResult> AppealConsiderSave(RequestModel rasporVyaModel)
         {
             var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
+
+
             var a = rasporVyaModel;
 
             if (a.CreationDate == DateTime.MinValue)
                 a.CreationDate = DateTime.Now;
+
 
             a.UpdateDate = DateTime.Now;
 
@@ -235,44 +193,50 @@ namespace RosreestDocks.Controllers
             else
                 db.Request.Update(a);
 
-            db.SaveChanges();
+
+
+            await db.SaveChangesAsync();
             return Redirect(Request.Headers["Referer"].ToString());
         }
-        public IActionResult RemoveAppeals(int id)
+        
+        //NOT TESTED YET
+        public async Task<IActionResult> RemoveAppeals(int id)
         {
-            var consider = db.Request.Where(x=>x.Id == id).SingleOrDefault();
-            db.Appeals.Where(x => x.Id == consider.RecipientAppeal.Id).SingleOrDefault();
-            db.Appeals.Where(x => x.Id == consider.TransferAppeal.Id).SingleOrDefault();
-            db.Appeals.Where(x => x.Id == consider.FirstFoivAppeal.Id).SingleOrDefault();
-            db.Appeals.Where(x => x.Id == consider.SecondFoivAppeal.Id).SingleOrDefault();
-            db.Appeals.Where(x => x.Id == consider.RosimAppeal.Id).SingleOrDefault();
-            consider.DockStatusList = db.DocStatus.ToSelectListItem(null);
-            consider.DockTypeList = db.DocType.ToSelectListItem(null);
-            consider.ReqTypeList = db.RequestType.ToSelectListItem(null);
-            return View(consider);
+            var consider = db.Request.Where(x=>x.Id == id)
+                .Include(x=>x.RecipientAppeal).Include(x => x.TransferAppeal).Include(x => x.FirstFoivAppeal)
+                .Include(x => x.SecondFoivAppeal).Include(x => x.RosimAppeal).SingleOrDefault();
 
+            db.Remove(db.Appeals.Where(x => x.Id == consider.RecipientAppeal.Id).SingleOrDefault());
+            db.Remove(db.Appeals.Where(x => x.Id == consider.TransferAppeal.Id).SingleOrDefault());
+            db.Remove(db.Appeals.Where(x => x.Id == consider.FirstFoivAppeal.Id).SingleOrDefault());
+            db.Remove(db.Appeals.Where(x => x.Id == consider.SecondFoivAppeal.Id).SingleOrDefault());
+            db.Remove(db.Appeals.Where(x => x.Id == consider.RosimAppeal.Id).SingleOrDefault());
+            db.Remove(consider);
+
+            await db.SaveChangesAsync();
+
+            return Redirect(Request.Headers["Referer"].ToString());
         }
-
 
         public IActionResult CreateAppealConsider(RequestModel request)
         {
             var consider = _docks.CreateAppealDocks(request);
-            return DownloadFile(consider[0], consider[1]);
+            return _files.DownloadFile(consider[0], consider[1]);
         }
         public IActionResult CreateAppealRunner(RequestModel request)
         {
             var consider = _docks.CreateAppealRunner(request);
-            return DownloadFile(consider[0], consider[1]);
+            return _files.DownloadFile(consider[0], consider[1]);
         }
         public IActionResult CreateZaprosCentral(RequestModel request)
         {
             var consider = _docks.CreateZaprosCA(request);
-            return DownloadFile(consider[0], consider[1]);
+            return _files.DownloadFile(consider[0], consider[1]);
         }
         public IActionResult CreateDeny(RequestModel request)
         {
             var consider = _docks.CreateDeny(request);
-            return DownloadFile(consider[0], consider[1]);
+            return _files.DownloadFile(consider[0], consider[1]);
         }
         #endregion
 
@@ -493,33 +457,7 @@ namespace RosreestDocks.Controllers
         }
 
  
-        public async Task<ActionResult> UpdateAgencies()
-        {
-            var list = db.Agency.ToList();
 
-            var token = "12808f894ea95b42fadb5d3589a38dc5664ca572";
-            var secret = "f714df62ebbbb6cc4a24c184db525ee130e6b24c";
-            var api = new SuggestClientAsync(token);
-
-            foreach (var agency in list)
-            {
-                if (!String.IsNullOrEmpty(agency.AgencyINN))
-                {
-                    var response = await api.FindParty(agency.AgencyINN);
-                    var b = response;
-                }
-                else
-                {
-                    var response = await api.SuggestParty(agency.Name);
-                    var b = response;
-                }
-            }
-
-            //var response = await api.FindParty("7707083893"); //by inn
-            //var response = await api.SuggestParty("сбер");  //by name
-
-            return Redirect(Request.Headers["Referer"].ToString());
-        }
         #endregion
 
         #region DocCategory
@@ -573,7 +511,7 @@ namespace RosreestDocks.Controllers
             doc.Category = await db.DocCategories.Where(x => x.Id == doc.CategorySelected).SingleOrDefaultAsync();
             if (file != null)
             {
-                await UploadFile(file, DockPath);
+                await _files.UploadFile(file, DockPath);
                 doc.Url = DockPathAlt + file.FileName;
             }
             await db.Documents.AddAsync(doc);
@@ -589,7 +527,7 @@ namespace RosreestDocks.Controllers
             if (file != null)
             {
                 DeleteDocumentsAsync(doc);
-                await UploadFile(file, DockPath);
+                await _files.UploadFile(file, DockPath);
                 doc.Url = DockPathAlt + file.FileName;
             }
             db.Documents.Update(doc);
@@ -597,12 +535,12 @@ namespace RosreestDocks.Controllers
 
             return Redirect(Request.Headers["Referer"].ToString());
         }
-        
-    
+
+        [HttpGet]
         public async Task<IActionResult> DownloadDocument(int id)
         {
             var doc = await db.Documents.Where(x => x.Id == id).SingleOrDefaultAsync();
-            return await DownloadPdfFile(_hostingEnvironment.WebRootPath + doc.Url);
+            return  _files.DownloadFile(_hostingEnvironment.WebRootPath + doc.Url);
         }
 
         public async Task<IActionResult> RemoveDocument(string id)
@@ -632,69 +570,6 @@ namespace RosreestDocks.Controllers
         }
         #endregion
 
-        public async Task<bool> UploadFile(IFormFile ufile, string path)
-        {
-            if (ufile != null)
-            {
-                var fileName = Path.GetFileName(ufile.FileName);
-                string[] files = Directory.GetFiles(path);
-
-                if (!files.Contains(path + fileName))
-                {
-                    if (ufile != null && ufile.Length > 0)
-                    {
-                        var filePath = path + fileName;
-                        using (var fileSrteam = new FileStream(filePath, FileMode.Create))
-                        {
-                            await ufile.CopyToAsync(fileSrteam);
-                        }
-                        return true;
-                    }
-                }
-                else
-                    return false;
-            }
-
-            return false;
-        }
-       
-        [HttpGet]
-        public FileResult DownloadFile(string link, string name = null)
-        {
-            Tuple<MemoryStream, string, string> data;
-            
-            if (name == null)
-                data = MainVars.GetDownloadFileData(link);
-            else 
-                data = MainVars.GetDownloadFileData(link, name);
-
-            var cd = new System.Net.Mime.ContentDisposition
-            {
-                FileName = data.Item3,
-                Inline = true,
-            };
-            Response.Headers.Add("Content-Disposition", cd.ToString());
-
-            return File(data.Item1, data.Item2, data.Item3);
-        }
-
-
-        [HttpGet("{id}")]
-        public async Task<IActionResult> DownloadPdfFile(string link, string name = null)
-        {
-            Tuple<MemoryStream, string, string> data;
-
-            if (name == null)
-                data = MainVars.GetDownloadFileData(link);
-            else
-                data = MainVars.GetDownloadFileData(link, name);
-
-            string mimeType = "application/pdf";
-            return new FileStreamResult(data.Item1, mimeType)
-            {
-                FileDownloadName = data.Item3
-            };
-        }
 
         public void DeleteDocumentsAsync(DocumentModel prod)
         { 
@@ -732,5 +607,12 @@ namespace RosreestDocks.Controllers
             return Redirect(Request.Headers["Referer"].ToString());
         }
         #endregion
+
+
+        public async Task<Suggestion<Party>> ShowAgencyInfo(string inn)
+        {
+            return await _egrul.GetAgencyInfo(inn);
+
+        }
     }
 }

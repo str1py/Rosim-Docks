@@ -9,64 +9,111 @@
 
 @{
     ViewHelper viewHelper = new();
-}
-<title>№ @Model.DocName от @Model.DocDate.ToShortDateString()</title>
 
+    string GetUpdateDate(DateTime update){
+        if (update == DateTime.MinValue)
+            return "никогда";
+        else return update.ToShortDateString();
+    }
+}
+
+<div style="display:flex;  justify-content: center;   align-items: center;">
+    <h3  style="margin-right:10px;" >Обращение №  @Model.DocName  от  @Model.DocDate.ToShortDateString()</h3>
+    <h3  style="margin-right:10px;" >Срок: @Model.ExpireDate.ToShortDateString()</h3>
+</div>
+
+<title>№ @Model.DocName от @Model.DocDate.ToShortDateString()</title>
+<h5>Создано: @Model.CreationDate (Последнеие обновление: @GetUpdateDate(@Model.UpdateDate))</h5>
+<label style="font-size:9px;">Исполнитель: @viewHelper.GetInitials(@Model.CreateUser)</label>
 
 <div>
     <form asp-controller="Data" method="post">
-           <div style="display:flex;  justify-content: center;   align-items: center;">
-               <h3  style="margin-right:10px;" >Обращение №  @Model.DocName  от  @Model.DocDate.ToShortDateString()</h3>
-               <h3  style="margin-right:10px;" >Срок: @Model.ExpireDate.ToShortDateString()</h3>
-           </div>
-            <label style="font-size:9px;">Исполнитель: @viewHelper.GetInitials(@Model.CreateUser)</label>
        <div class="form-group">      
            <input type="hidden" asp-for="@Model.Id" />
            <input type="hidden" asp-for="@Model.DocName" />
            <input type="hidden" asp-for="@Model.DocDate" />
            <input type="hidden" asp-for="@Model.ExpireDate" />
            <input type="hidden" asp-for="@Model.CreationDate" />
-           <input type="hidden" asp-for="@Model.CreateUser" />
-           <div>
-               <div style="display:flex;">
-                  <div>
-                    <label>Статус обращения</label>
-                    <select class="form-select select" asp-for="Status.Id"  asp-items="@Model.DockStatusList" disabled></select>                                                      
-                    <span asp-validation-for="Status.Id"></span> 
-                  </div>
-                  <div style="margin-left:10px;">
-                    <label>Тип ответа</label>
-                    <select class="form-select select" asp-for="DockType.Id"  asp-items="@Model.DockTypeList" disabled></select>                                                      
-                    <span asp-validation-for="Status.Id"></span> 
-                  </div>
-               </div>      
-               <label style="margin-left:10px;" for="inp" class="inp">
-                    <input type="text" class="fields" asp-for="AddInfo" placeholder="&nbsp;" disabled/>
-                    <span class="label">Дополнительная информация </span>
-                    <span class="focus-bg"></span>
-               </label>
+           <input type="hidden" asp-for="@Model.CreateUser" /
+           >
+           <div class="container" style="margin-top: 20px;">
+               <div class="row" style="display: flex; justify-content: flex-start">
+                   <div class="col-3">
+                      <div class="selectdiv"> 
+                        <label>Статус обращения</label>
+                        <select class="form-select select" asp-for="Status.Id"  disabled asp-items="@Model.DockStatusList"></select>                                                      
+                        <span asp-validation-for="Status.Id"></span> 
+                      </div>
+                   </div>
+                   <div class="col-3">
+                      <div class="selectdiv">
+                        <label>Тип ответа</label>
+                        <select class="form-select select" asp-for="DockType.Id" disabled asp-items="@Model.DockTypeList"></select>                                                      
+                        <span asp-validation-for="DockType.Id"></span> 
+                      </div>
+                   </div>
+                   <div class="col-3" >
+                      <div class="selectdiv">
+                           <label>Тип обращения</label>
+                           <select class="form-select select" asp-for="ReqType.Id" disabled asp-items="@Model.ReqTypeList"></select>                                                      
+                           <span asp-validation-for="ReqType.Id"></span> 
+                       </div>
+                   </div>
+                </div>
            </div>
 
+ 
+           <div class="container" style="margin-top: 15px;">
+              <div class="row">
+                <div class="col">
+                   <label for="inp" class="inp" >
+                        <input class="fields"  type="text" asp-for="DocName" placeholder="&nbsp;" required  disabled/>
+                        <span class="label">Номер обращения*</span>
+                        <span class="focus-bg"></span>
+                        <span asp-validation-for="DocName" class="text-danger"></span>
+                   </label> 
+                </div>
+                <div class="col">
+                   <label for="inp" class="inp">                   
+                        <input class="fields"  type="date" asp-for="DocDate" disabled />
+                        <span class="label">От</span>
+                        <span class="focus-bg"></span>
+                   </label>  
+                </div>
+                <div class="col">
+                   <label for="inp" class="inp">
+                        <input class="fields"  type="date" asp-for="ExpireDate" disabled/>
+                        <span class="label">Срок</span>
+                        <span class="focus-bg"></span>
+                   </label> 
+                </div>
+              </div>
+           </div>
 
-      
-           <div style="margin-top: 20px;">
-               <div style="display:inline-flex;">
-                   <label for="inp" class="inp" style="margin-right: 20px;">
-                            <input class="inp"  type="text" asp-for="WorkNumber" placeholder="&nbsp;" disabled/>
-                            <span class="label">Временный номер</span>
+            <div class="container" style="margin-top: 15px;">
+              <div class="row">
+                <div class="col">
+                       <label for="inp" class="inp">
+                             <input class="fields"  type="text" asp-for="WorkNumber"  placeholder="&nbsp;" disabled/>
+                             <span class="label">Временный номер</span>
+                             <span class="focus-bg"></span>
+                       </label>  
+                </div>
+                <div class="col">
+                       <label for="inp" class="inp">
+                            <input class="fields"  type="text" asp-for="SendNumber"  placeholder="&nbsp;" disabled/>
+                            <span class="label">Отправленный номер</span>
                             <span class="focus-bg"></span>
-                    </label>  
-                   <label for="inp" class="inp">
-                        <input class="inp"  type="text" asp-for="SendNumber"  placeholder="&nbsp;" disabled/>
-                        <span class="label">Отправленный номер</span>
-                        <span class="focus-bg"></span>
-                   </label>
-                   <label for="inp" class="inp">
-                        <input class="inp"  type="text" asp-for="SoprovodNumber" placeholder="&nbsp;" disabled/>
-                        <span class="label">Сопровод</span>
-                        <span class="focus-bg"></span>
-                   </label>
-               </div>
+                       </label>
+                </div>
+                <div class="col">
+                       <label for="inp" class="inp">
+                            <input class="fields"  type="text" asp-for="SoprovodNumber"  placeholder="&nbsp;" disabled/>
+                            <span class="label">Сопровод</span>
+                            <span class="focus-bg"></span>
+                       </label>
+                </div>
+              </div>
            </div>
        </div>
 
@@ -76,27 +123,27 @@
            <div class="container">
                 <div class="row">
                     <div class="col-3">
-                        <div>                          
+                        <div class="selectdiv">                          
                             <label class="selectlabel">На основание обращения </label>
                             <select class="form-select select" asp-for="WhoApplied" asp-items="@Model.SideList" disabled></select>     
                         </div>
                     </div>
                     <div class="col-3">
-                        <div>    
+                        <div class="selectdiv">    
                             <label class="selectlabel" >Прекращение права</label>
                             <select class="form-select select" asp-for="ManageRightsFrom.Id"  asp-items="@Model.ManageRightsList" disabled></select>                                                      
                             <span asp-validation-for="ManageRightsFrom.Id"></span> 
                         </div>
                     </div>
                     <div class="col-3">
-                        <div>    
+                        <div class="selectdiv">    
                             <label class="selectlabel">Закрепление на праве</label>
                             <select class="form-select select" asp-for="ManageRightsTo.Id"   asp-items="@Model.ManageRightsList" disabled></select>                                                      
                             <span asp-validation-for="ManageRightsTo.Id"></span>   
                         </div> 
                     </div>
                     <div class="col-3" style="align-self: flex-end;">
-                        <div>
+                        <div class="selectdiv">
                             <label class="selectlabel">Статьи</label>
                             <select class="form-select select" asp-for="Articles.Id"  asp-items="@Model.ArticlesList" disabled></select>                                                      
                             <span asp-validation-for="Articles"></span> 
@@ -105,208 +152,283 @@
                 </div>
            </div>
 
-           <div class="container-flex" style="margin-top:15px;">
+           <div class="container" style="margin-top:10px;">
                 <div class="row">
-                    <div class="col-2">
-                        <div>
+                    <div class="col-3">
+                        <div class="selectdiv">
                             <label class="selectlabel">Приложение для </label>
                             <select asp-for="WhatAnnex" class="form-select select"  asp-items="@Model.AnnexList" disabled></select>           
                         </div>
                     </div>
                     <div class="col-3">
-                        <div >
+                        <div class="selectdiv">
                             <label class="selectlabel">Закрепление</label>
                             <select  class="form-select select" asp-for="TypeOfProperty.Id"   asp-items="@Model.TypeOfPropertyList" disabled></select>                                                      
                              <span asp-validation-for="TypeOfProperty.Id"></span>
                         </div>       
                     </div>
-                    <div class="col-7" style="align-self: flex-end;">
+                </div>
+           </div>
+
+           <div class="container" style="margin-top:10px;">
+                <div class="row">
+                    <div class="col-3">
+                         <div>
+                            <label for="inp" class="inp" >
+                                <input class="fields" type="text" asp-for="PropertyCount" placeholder="&nbsp;"  disabled />
+                                <span class="label">Кол-во*</span>
+                                <span class="focus-bg"></span>
+                                <span asp-validation-for="PropertyCount" class="text-danger"></span>
+                            </label>  
+                          </div>
+                    </div>
+                    <div class="col-9">
                         <div>
                             <label for="inp" class="inp" style="margin-left:5px;">
                                 <input class="fields"  type="text" asp-for="PropertyDiscription" placeholder="&nbsp;" disabled/>
-                                <span class="label">Конкретнее</span>
+                                <span class="label">Описание</span>
                                 <span class="focus-bg"></span>
-                            </label>                      
+                             </label>                      
                         </div>
                     </div>
                 </div>
+           </div>
+
+            <div class="container" style="margin-top:10px;">
+               <div class="row">
+                   <div class="col-12">
+                        <label for="inp" class="inp">
+                            <input type="text" class="fields" asp-for="AddInfo" placeholder="&nbsp;" disabled/>
+                            <span class="label">Дополнительная информация </span>
+                            <span class="focus-bg"></span>
+                        </label>
+                   </div>
+               </div>
            </div>
        </div>
 
 @*       ПЕРЕДАЮЩАЯ СТОРОНА*@
        <div class="form-group">
-            <h3>Передающая сторона</h3>
-            <div>             
-                <div class="container" style="margin-top: 10px;">
-                    <div class="row">
-                        <div class="col-2" style="padding-left:10px;">
-                            <input type="hidden" asp-for="TransferAgency.Id" id="transferagid" />
-                             <select id="transferacronym" class="form-select select" asp-for="TransferAgency.Acronym.Id" asp-items="@Model.TransferAgencyAcromymList" disabled></select>  
+           <h3>Передающая сторона</h3>               
+           <div class="container" style="margin-top:10px;">
+                <div class="row">
+                    <input type="hidden" asp-for="TransferAgency.Id" id="transferagid" />
+                    <div class="col-2">
+                        <select id="transferacronym" class="form-select select" asp-for="TransferAgency.Acronym.Id" asp-items="@Model.TransferAgencyAcromymList" disabled></select>  
+                    </div>
+                    <div class="col-10">
+                        <input asp-for="TransferAgency.Name" class="writeinput" list="transferlist" 
+                               id="transfernameinput" placeholder="Название организации" disabled/>
+
+                    </div>
+                </div>                                                  
+           </div>
+         
+           <div class="container" >
+                <div class="row">
+                    <div class="col-3">
+                        <div>
+                            <label for="fields" class="inp">
+                                <input id="transfernameaddinfo" class="fields" asp-for="TransferAgency.AddInfo" placeholder="&nbsp;" disabled/>
+                                <span class="label">Министрерства здравоохранения...</span>
+                                <span class="focus-bg"></span>
+                            </label>                    
                         </div>
-                        <div class="col-10">
-                                <input asp-for="TransferAgency.Name" class="wtriteinput" list="transferlist" 
-                                id="transfernameinput" placeholder="Название организации" autocomplete="on" onChange="get_data_transfer()" disabled>
+                    </div>
+                    <div class="col-3">
+                         <div>
+                            <label for="inp" class="inp">
+                                    <input id="transferinn" class="fields" type="number"  asp-for="TransferAgency.AgencyINN" placeholder="&nbsp;"  disabled/>
+                                    <span class="label">ИНН</span>
+                                    <span class="focus-bg"></span>
+                                    <span asp-validation-for="TransferAgency.AgencyINN" class="text-danger"></span>
+                            </label>
                          </div>
-                    </div>                                                  
-                </div>
-            </div>
-
-           <div style="display:flex;">        
-                <label for="fields" class="inp">
-                    <input id="transfernameaddinfo" class="fields" asp-for="TransferAgency.AddInfo" placeholder="&nbsp;" disabled/>
-                    <span class="label">Министрерства здравоохранения...</span>
-                    <span class="focus-bg"></span>
-                </label>  
-                       
-                <label for="inp" class="inp">
-                        <input id="transferinn" class="fields" type="number"  asp-for="TransferAgency.AgencyINN" placeholder="&nbsp;" disabled/>
-                        <span class="label">ИНН</span>
-                        <span class="focus-bg"></span>
-                        <span asp-validation-for="TransferAgency.AgencyINN" class="text-danger"></span>
-                </label>
-                
-                <label for="inp" class="inp" style="max-width: 500px;">
-                        <input id="transferadress" class="fields"  type="adress" asp-for="TransferAgency.Adress" placeholder="&nbsp;" disabled/>
-                        <span class="label">Адрес без города и индекса</span>
-                        <span class="focus-bg"></span>
-                        <span asp-validation-for="TransferAgency.Adress" class="text-danger"></span>
-                </label>             
-                
-                <label for="inp" class="inp">
-                        <input id="transferzip" class="fields" asp-for="TransferAgency.CityAndZip" placeholder="&nbsp;" disabled/>
-                        <span class="label">Город и индекс</span>
-                        <span class="focus-bg"></span>
-                        <span asp-validation-for="TransferAgency.CityAndZip" class="text-danger"></span>
-                </label>           
-           </div>
-
-           <div style="display:flex;">
-               <input type="hidden" asp-for="TransferAppeal.Id" />
-                    <label for="inp" class="inp">
-                        <input class="fields" asp-for="TransferAppeal.Date" placeholder="&nbsp;" disabled/>
-                        <span class="label">Дата</span>
-                        <span class="focus-bg"></span>
-                        <span asp-validation-for="TransferAppeal.Date" class="text-danger"></span>
-                    </label>
-                
-
-                    <label for="inp" class="inp">
-                        <input class="fields" asp-for="TransferAppeal.Number" placeholder="&nbsp;" disabled/>
-                        <span class="label">Номер</span>
-                        <span class="focus-bg"></span>
-                        <span asp-validation-for="TransferAppeal.Number" class="text-danger"></span>
-                    </label>        
-           </div>
-
-           <div class="form-group">
-                <b>Дополнительная информация</b>     
-                <input type="hidden" asp-for="TransferAgency.Director.Id" id="transferdirectorid"/>
-                 <input type="hidden" asp-for="TransferAgency.SecondDirector.Id" id="transferseconddirectorid"/>
-                <div>
-                     <b class="infolabel" id="transferdirector" ></b>
-                </div>
-                <div>
-                     <b class="infolabel" id="transferseconddirector" ></b>
-                </div>
-                <div>
-                   <b class="infolabel" id="transferregul" ></b>
-                </div>
-                <div>
-                    <b class="infolabel" id="transferstatus"></b>
+                    </div>
+                    <div class="col-3">
+                         <div>
+                            <label for="inp" class="inp" style="max-width: 500px;">
+                                    <input id="transferadress" class="fields"  type="adress" asp-for="TransferAgency.Adress" placeholder="&nbsp;" disabled/>
+                                    <span class="label">Адрес без города и индекса</span>
+                                    <span class="focus-bg"></span>
+                                    <span asp-validation-for="TransferAgency.Adress" class="text-danger"></span>
+                            </label>  
+                         </div>
+                    </div>
+                    <div class="col-3">
+                         <div>
+                            <label for="inp" class="inp">
+                                    <input id="transferzip" class="fields" asp-for="TransferAgency.CityAndZip" placeholder="&nbsp;" disabled/>
+                                    <span class="label">Город и индекс</span>
+                                    <span class="focus-bg"></span>
+                                    <span asp-validation-for="TransferAgency.CityAndZip" class="text-danger"></span>
+                            </label>  
+                        </div>
+                    </div>
                 </div>
            </div>
 
+           <div class="container" >
+                <div class="row">
+                    <div class="col-3">
+                        <label for="inp" class="inp">
+                            <input class="fields" asp-for="TransferAppeal.Date" placeholder="&nbsp;" disabled/>
+                            <span class="label">Дата</span>
+                            <span class="focus-bg"></span>
+                            <span asp-validation-for="TransferAppeal.Date" class="text-danger"></span>
+                        </label>
+                    </div>
+                    <div class="col-3">
+                        <label for="inp" class="inp">
+                            <input class="fields" asp-for="TransferAppeal.Number" placeholder="&nbsp;" disabled/>
+                            <span class="label">Номер</span>
+                            <span class="focus-bg"></span>
+                            <span asp-validation-for="TransferAppeal.Number" class="text-danger"></span>
+                        </label>
+                    </div>
+                </div>
+           </div>
+
+           <div class="container-flex" style="margin-top:15px;">
+                <div class="row">
+                    <div class="col-6">
+                        <div style="display:flex;">
+                            <h3 class="h3_index item"><i class="fas fa-sticky-note"></i>Дополнительная информация</h3>
+                        </div> 
+                        <details>
+                        <summary>Подробнее</summary> 
+                           <div class="form-group">
+                                <input type="hidden" asp-for="TransferAgency.Director.Id" />
+                                <input type="hidden" asp-for="TransferAgency.SecondDirector.Id" />   
+                                <div>
+                                     <b class="infolabel" id="transferdirector"></b>
+                                </div>
+                                <div>
+                                     <b class="infolabel" id="transferseconddirector"></b>
+                                </div>
+                                <div>
+                                   <b class="infolabel" id="transferregul"></b>
+                                </div>
+                                <div>
+                                    <b class="infolabel" id="transferstatus"></b>
+                                </div>
+                           </div>
+                        </details>
+                    </div>
+
+                </div>
+           </div>
        </div>
  @*      КОНЕЦ ПЕРЕДАЮЩЕЙ СТОРОНЫ*@
 
 
 
-
+@*       ПРИНИМАЮЩАЯ СТОРОНА*@
         <div class="form-group">
-
-            <h3>Принимающая сторона</h3>
-            <div>             
-                <div class="container" style="margin-top:10px;">
-                    <div class="row">
-                        <input type="hidden" asp-for="RecipientAgency.Id" id="recipientagid" />
-                        <div class="col-2" style="padding-left:10px;">
-                             <select id="recipientacronym" class="form-select select" asp-for="RecipientAgency.Acronym.Id" asp-items="@Model.RecipientAgencyAcromymList" disabled></select>  
-                        </div>
-                        <div class="col-10">
-                                <input asp-for="RecipientAgency.Name" class="wtriteinput" list="recipientlist" 
-                                id="recipientnameinput" placeholder="Название организации" autocomplete="on" onChange="get_data_recipient()" disabled>
-                         </div>
-                    </div>                                                  
+            <h3>Принимающая сторона</h3>           
+            <div class="container" style="margin-top:10px;">
+                <div class="row">
+                <input type="hidden" asp-for="RecipientAgency.Id" id="recipientagid" />
+                    <div class="col-2" >
+                        <select id="recipientacronym" class="form-select select" asp-for="RecipientAgency.Acronym.Id" asp-items="@Model.RecipientAgencyAcromymList" disabled></select>  
+                    </div>
+                     <div class="col-10">
+                        <input asp-for="RecipientAgency.Name" class="writeinput" list="recipientlist" 
+                               id="recipientnameinput" placeholder="Название организации" autocomplete="on"                                
+                               disabled />
+                     </div>
+                </div>                                                  
+            </div>
+ 
+            <div class="container">
+                <div class="row">
+                    <div class="col-3">
+                         <label for="fields" class="inp">
+                            <input id="recipientnameaddinfo" class="fields" asp-for="RecipientAgency.AddInfo" placeholder="&nbsp;" disabled/>
+                            <span class="label">Министрерства здравоохранения...</span>
+                            <span class="focus-bg"></span>
+                        </label> 
+                    </div>
+                    <div class="col-3">
+                        <label for="inp" class="inp">
+                                <input id="recipientinn" class="fields" type="number"  asp-for="RecipientAgency.AgencyINN" placeholder="&nbsp;"  disabled/>
+                                <span class="label">ИНН*</span>
+                                <span class="focus-bg"></span>
+                                <span asp-validation-for="RecipientAgency.AgencyINN" class="text-danger"></span>
+                        </label>
+                    </div>
+                    <div class="col-3">
+                        <label for="inp" class="inp" style="max-width: 500px;">
+                                <input id="recipientadress" class="fields"  type="adress" asp-for="RecipientAgency.Adress" placeholder="&nbsp;" disabled/>
+                                <span class="label">Адрес без города и индекса</span>
+                                <span class="focus-bg"></span>
+                                <span asp-validation-for="RecipientAgency.Adress" class="text-danger"></span>
+                        </label> 
+                    </div>
+                    <div class="col-3">
+                        <label for="inp" class="inp">
+                                <input id="recipientzip" class="fields" asp-for="RecipientAgency.CityAndZip" placeholder="&nbsp;" disabled/>
+                                <span class="label">Город и индекс</span>
+                                <span class="focus-bg"></span>
+                                <span asp-validation-for="RecipientAgency.CityAndZip" class="text-danger"></span>
+                        </label>  
+                    </div>
                 </div>
             </div>
 
-           <div style="display:flex;">  
-               
-                <label for="fields" class="inp">
-                    <input id="recipientnameaddinfo" class="fields" asp-for="RecipientAgency.AddInfo" placeholder="&nbsp;" disabled/>
-                    <span class="label">Министрерства здравоохранения...</span>
-                    <span class="focus-bg"></span>
-                </label>  
-                       
-                <label for="inp" class="inp">
-                        <input id="recipientinn" class="fields" type="number"  asp-for="RecipientAgency.AgencyINN" placeholder="&nbsp;"  disabled/>
-                        <span class="label">ИНН</span>
-                        <span class="focus-bg"></span>
-                        <span asp-validation-for="RecipientAgency.AgencyINN" class="text-danger"></span>
-                </label>
-                
-                <label for="inp" class="inp" style="max-width: 500px;">
-                        <input id="recipientadress" class="fields"  type="adress" asp-for="RecipientAgency.Adress" placeholder="&nbsp;" disabled/>
-                        <span class="label">Адрес без города и индекса</span>
-                        <span class="focus-bg"></span>
-                        <span asp-validation-for="RecipientAgency.Adress" class="text-danger"></span>
-                </label>             
-                
-                <label for="inp" class="inp">
-                        <input id="recipientzip" class="fields" asp-for="RecipientAgency.CityAndZip" placeholder="&nbsp;" disabled/>
-                        <span class="label">Город и индекс</span>
-                        <span class="focus-bg"></span>
-                        <span asp-validation-for="RecipientAgency.CityAndZip" class="text-danger"></span>
-                </label>           
-           </div>
-
-           <div style="display:flex;">
-               <input type="hidden" asp-for="RecipientAppeal.Id" />
-                    <label for="inp" class="inp">
-                        <input class="fields" asp-for="RecipientAppeal.Date" placeholder="&nbsp;" disabled/>
-                        <span class="label">Дата</span>
-                        <span class="focus-bg"></span>
-                        <span asp-validation-for="RecipientAppeal.Date" class="text-danger"></span>
-                    </label>
-                
-
-                    <label for="inp" class="inp">
-                        <input class="fields" asp-for="RecipientAppeal.Number" placeholder="&nbsp;" disabled/>
-                        <span class="label">Номер</span>
-                        <span class="focus-bg"></span>
-                        <span asp-validation-for="RecipientAppeal.Number" class="text-danger"></span>
-                    </label>     
-           </div>
-
-           <div class="form-group">
-                <b>Дополнительная информация</b>
-                <input type="hidden" asp-for="RecipientAgency.Director.Id" id="recipientdirectorid"/>
-                <input type="hidden" asp-for="RecipientAgency.SecondDirector.Id" id="recipientseconddirectorid"/>
-                <div>
-                     <b class="infolabel" id="recipientdirector"></b>
+            <div class="container">
+                <div class="row">
+                    <div class="col-3">
+                        <label for="inp" class="inp">
+                            <input class="fields" asp-for="RecipientAppeal.Date" placeholder="&nbsp;" disabled/>
+                            <span class="label">Дата</span>
+                            <span class="focus-bg"></span>
+                            <span asp-validation-for="RecipientAppeal.Date" class="text-danger"></span>
+                        </label>
+                    </div>
+                    <div class="col-3">
+                        <label for="inp" class="inp">
+                            <input class="fields" asp-for="RecipientAppeal.Number" placeholder="&nbsp;" disabled/>
+                            <span class="label">Номер</span>
+                            <span class="focus-bg"></span>
+                            <span asp-validation-for="RecipientAppeal.Number" class="text-danger"></span>
+                        </label> 
+                    </div>
                 </div>
-                <div>
-                     <b class="infolabel" id="recipientseconddirector"></b>
-                </div>
-                <div>
-                   <b class="infolabel" id="recipientregul"></b>
-                </div>
-                <div>
-                    <b class="infolabel" id="recipientstatus"></b>
+        </div>
+
+
+                   <div class="container-flex" style="margin-top:15px;">
+                <div class="row">
+                    <div class="col-6">
+                        <div style="display:flex;">
+                            <h3 class="h3_index item"><i class="fas fa-sticky-note"></i>Дополнительная информация</h3>
+                        </div> 
+                        <details>
+                        <summary>Подробнее</summary> 
+                           <div class="form-group">
+                                <input type="hidden" asp-for="RecipientAgency.Director.Id" />
+                                <input type="hidden" asp-for="RecipientAgency.SecondDirector.Id" />
+                                <div>
+                                     <b class="infolabel" id="recipientdirector"></b>
+                                </div>
+                                <div>
+                                     <b class="infolabel" id="recipientseconddirector"></b>
+                                </div>
+                                <div>
+                                   <b class="infolabel" id="recipientregul"></b>
+                                </div>
+                                <div>
+                                    <b class="infolabel" id="recipientstatus"></b>
+                                </div>
+                           </div>
+                        </details>
+                    </div>
                 </div>
            </div>
-
          </div>
+
+
 
         @*ФОИВЫ*@
         <div class="form-group">
@@ -317,13 +439,11 @@
                         <div class="col-1" style="align-self: flex-end;">
                             <label class="selectlabel">ФОИВ 1</label>
                         </div>
-                        <div class="col-7" style="align-self: flex-end;">
-                            <input type="hidden" asp-for="FirstFoiv.Id" id="firstfoivid"  />
-                            <input asp-for="FirstFoiv.Name" class="wtriteinput" list="firstfoivtlist" onchange="get_data_firstfoiv()" id="firstfoivnameinput"
-                                       placeholder="Название фоива в Твор.пад" autocomplete="on" style="align-self: flex-end;" disabled>
-@*                            <datalist id="firstfoivtlist" style="height:5.1em;overflow:hidden">
-                                           @{foreach(var ffoiv in @Model.FirstFoivList){ <option value="@ffoiv.Text"></option>} }
-                            </datalist>*@
+                        <div class="col-7" style="align-self: flex-end;"> 
+                            <input type="hidden" asp-for="FirstFoiv.Id"  id="firstfoivid" />
+                            <input asp-for="FirstFoiv.Name" class="writeinput" list="firstfoivtlist"  id="firstfoivnameinput"
+                                       placeholder="Наименование ФОИВА" autocomplete="on" style="align-self: flex-end;" disabled>
+
                         </div>
                          <div class="col-2">                
                             <label for="inp" class="inp">
@@ -349,19 +469,14 @@
                         <div class="col-1" style="align-self: flex-end;">
                             <label class="selectlabel" >ФОИВ 2</label>
                         </div>
-                        <div class="col-7" style="align-self: flex-end;">   
+                        <div class="col-7" style="align-self: flex-end;">    
                             <input type="hidden" asp-for="SecondFoiv.Id" id="secondfoivid"  />
-                            <input asp-for="SecondFoiv.Name" class="wtriteinput" list="secondfoivtlist"  onchange="get_data_secondfoiv()" id="secondfoivnameinput"
-                                   placeholder="Название фоива в Твор.пад" autocomplete="on" disabled>
-@*                            <datalist id="secondfoivtlist" style="height:5.1em;overflow:hidden">
-                                       @{
-                                       foreach(var sfoiv in @Model.SecondFoivList){ <option value="@sfoiv.Text"></option>} 
-                                        }
-                            </datalist>*@
+                            <input asp-for="SecondFoiv.Name" class="writeinput" list="secondfoivtlist" id="secondfoivnameinput"
+                                   placeholder="Наименование ФОИВА" autocomplete="on" disabled>
                         </div>                    
                         <div class="col-2">                
                             <label for="inp" class="inp">
-                                <input class="fields" asp-for="SecondFoivAppeal.Date" placeholder="&nbsp;" disabled />
+                                <input class="fields" asp-for="SecondFoivAppeal.Date" placeholder="&nbsp;"  disabled/>
                                 <span class="label">Дата</span>
                                 <span class="focus-bg"></span>
                             </label>  
@@ -388,7 +503,7 @@
             </div>           
         </div>
 
-@*        ПОРУЧЕНИЕ РОСИМУЩЕСТВА*@
+
         <div class="form-group" style="display:flex;">
             <div class="form-check" style="align-self: flex-end; margin-right: 20px;">
               <input class="form-check-input" type="checkbox"  asp-for="IsRosim" id="gridCheckRosIm" disabled>
@@ -411,14 +526,15 @@
                    </label>    
                </div>
            </div>
-        </div>
+       </div>
+
         <div style="margin:20px 0 20px 0">
             <input type="submit" class="btn btn-info" asp-action="CreateAppealRunner" value="Создать бегунок" />
             <input type="submit" class="btn btn-warning" asp-action="CreateZaprosCentral" value="Создать запрос ЦА" />
             <input type="submit" class="btn btn-danger" asp-action="CreateDeny" value="Создать отказ" />
             <input type="submit" class="btn btn-success" asp-action="CreateAppealConsider" value="Создать распор/прилож/сопровод"/>
         </div>
-@*         <input type="submit"  class="btn btn-primary button-main"  asp-action="AppealConsiderSave" value="Сохранить"/>*@
+
     </form>
 
 

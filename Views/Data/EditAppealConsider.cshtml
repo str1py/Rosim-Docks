@@ -4,21 +4,7 @@
 @using RosreestDocks.Helpers
 @model RequestModel
 
-@inject DataBaseContext db
 
-@{
-    string GetUpdateDate(DateTime update){
-        if (update == DateTime.MinValue)
-            return "никогда";
-        else return update.ToShortDateString();
-    }
-}
-<title>№ @Model.DocName от @Model.DocDate.ToShortDateString()</title>
-
- <div style="display:flex;  justify-content: center;   align-items: center;">
-    <h3  style="margin-right:10px;" >Редактировать обращение</h3>           
-</div>
-<h5 >Создано: @Model.CreationDate (Последнеие обновление: @GetUpdateDate(@Model.UpdateDate))</h5>
 
 
 @await Html.PartialAsync("/Views/Data/Modal/Partial/_AppealConsiderPartial.cshtml", @Model)

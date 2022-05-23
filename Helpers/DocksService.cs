@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using RosreestDocks.Helpers;
 
 namespace RosreestDocks.Helpers
 {
@@ -14,6 +15,7 @@ namespace RosreestDocks.Helpers
         private DictionaryCreator dicCreator;
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly DataBaseContext db;
+
         public DocksService(DataBaseContext context, IWebHostEnvironment hostingEnvironment)
         {
             db = context;
@@ -177,8 +179,8 @@ namespace RosreestDocks.Helpers
         public List<string> CreateDeny(RequestModel request)
         {
             string pathToDeny = "";
-            var path = _hostingEnvironment.WebRootPath + "\\Docks\\" + request.DocName.Trim() + "\\";
 
+            var path = _hostingEnvironment.WebRootPath + "\\Docks\\" + request.DocName.Trim() + "\\";
 
             pathToDeny = _hostingEnvironment.WebRootPath + "\\Patterns\\DeniedTemplate.docx";
 
@@ -197,7 +199,7 @@ namespace RosreestDocks.Helpers
             var first = request.TransferAgency.ShortName ?? request.TransferAgency.Name;
 
 
-            runner.Save(path + $"{request.DocName} - письмо {ReplaceInvalidChars(first)}" + ".docx");
+            runner.Save(path + $"{request.DocName} - письмо {first.ReplaceInvalidChars()}" + ".docx");
 
             try { ZipFile.CreateFromDirectory(path, path + request.DocName + ".zip"); } catch { }
 
@@ -208,10 +210,6 @@ namespace RosreestDocks.Helpers
             return list;
         }
 
-        private string ReplaceInvalidChars(string filename)
-        {
-            return string.Join("_", filename.Split(Path.GetInvalidFileNameChars()));
-        }
 
     }
 }
